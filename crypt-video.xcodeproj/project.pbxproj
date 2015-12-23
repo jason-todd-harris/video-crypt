@@ -502,6 +502,7 @@
 				96C8E33E1C21E816002AF21B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		96C8E33F1C21E816002AF21B /* Build configuration list for PBXNativeTarget "crypt-videoTests" */ = {
 			isa = XCConfigurationList;
@@ -510,6 +511,7 @@
 				96C8E3411C21E816002AF21B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		96C8E3421C21E816002AF21B /* Build configuration list for PBXNativeTarget "crypt-videoUITests" */ = {
 			isa = XCConfigurationList;
@@ -518,6 +520,7 @@
 				96C8E3441C21E816002AF21B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 

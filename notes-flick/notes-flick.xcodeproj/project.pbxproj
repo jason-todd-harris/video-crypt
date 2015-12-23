@@ -1,0 +1,538 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		966E538D1C2AE834001F93CB /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 966E538C1C2AE834001F93CB /* main.m */; };
+		966E53901C2AE834001F93CB /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 966E538F1C2AE834001F93CB /* AppDelegate.m */; };
+		966E53931C2AE834001F93CB /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 966E53921C2AE834001F93CB /* ViewController.m */; };
+		966E53961C2AE834001F93CB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 966E53941C2AE834001F93CB /* Main.storyboard */; };
+		966E53991C2AE834001F93CB /* notes_flick.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 966E53971C2AE834001F93CB /* notes_flick.xcdatamodeld */; };
+		966E539B1C2AE834001F93CB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 966E539A1C2AE834001F93CB /* Assets.xcassets */; };
+		966E539E1C2AE834001F93CB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 966E539C1C2AE834001F93CB /* LaunchScreen.storyboard */; };
+		966E53A91C2AE835001F93CB /* notes_flickTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 966E53A81C2AE835001F93CB /* notes_flickTests.m */; };
+		966E53B41C2AE835001F93CB /* notes_flickUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 966E53B31C2AE835001F93CB /* notes_flickUITests.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		966E53A51C2AE835001F93CB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 966E53801C2AE834001F93CB /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 966E53871C2AE834001F93CB;
+			remoteInfo = "notes-flick";
+		};
+		966E53B01C2AE835001F93CB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 966E53801C2AE834001F93CB /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 966E53871C2AE834001F93CB;
+			remoteInfo = "notes-flick";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		966E53881C2AE834001F93CB /* notes-flick.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "notes-flick.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		966E538C1C2AE834001F93CB /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		966E538E1C2AE834001F93CB /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		966E538F1C2AE834001F93CB /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		966E53911C2AE834001F93CB /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		966E53921C2AE834001F93CB /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		966E53951C2AE834001F93CB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		966E53981C2AE834001F93CB /* notes_flick.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = notes_flick.xcdatamodel; sourceTree = "<group>"; };
+		966E539A1C2AE834001F93CB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		966E539D1C2AE834001F93CB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		966E539F1C2AE834001F93CB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		966E53A41C2AE835001F93CB /* notes-flickTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "notes-flickTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		966E53A81C2AE835001F93CB /* notes_flickTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = notes_flickTests.m; sourceTree = "<group>"; };
+		966E53AA1C2AE835001F93CB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		966E53AF1C2AE835001F93CB /* notes-flickUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "notes-flickUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		966E53B31C2AE835001F93CB /* notes_flickUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = notes_flickUITests.m; sourceTree = "<group>"; };
+		966E53B51C2AE835001F93CB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		966E53851C2AE834001F93CB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		966E53A11C2AE835001F93CB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		966E53AC1C2AE835001F93CB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		966E537F1C2AE834001F93CB = {
+			isa = PBXGroup;
+			children = (
+				966E538A1C2AE834001F93CB /* notes-flick */,
+				966E53A71C2AE835001F93CB /* notes-flickTests */,
+				966E53B21C2AE835001F93CB /* notes-flickUITests */,
+				966E53891C2AE834001F93CB /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		966E53891C2AE834001F93CB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				966E53881C2AE834001F93CB /* notes-flick.app */,
+				966E53A41C2AE835001F93CB /* notes-flickTests.xctest */,
+				966E53AF1C2AE835001F93CB /* notes-flickUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		966E538A1C2AE834001F93CB /* notes-flick */ = {
+			isa = PBXGroup;
+			children = (
+				966E538E1C2AE834001F93CB /* AppDelegate.h */,
+				966E538F1C2AE834001F93CB /* AppDelegate.m */,
+				966E53911C2AE834001F93CB /* ViewController.h */,
+				966E53921C2AE834001F93CB /* ViewController.m */,
+				966E53941C2AE834001F93CB /* Main.storyboard */,
+				966E539A1C2AE834001F93CB /* Assets.xcassets */,
+				966E539C1C2AE834001F93CB /* LaunchScreen.storyboard */,
+				966E539F1C2AE834001F93CB /* Info.plist */,
+				966E53971C2AE834001F93CB /* notes_flick.xcdatamodeld */,
+				966E538B1C2AE834001F93CB /* Supporting Files */,
+			);
+			path = "notes-flick";
+			sourceTree = "<group>";
+		};
+		966E538B1C2AE834001F93CB /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				966E538C1C2AE834001F93CB /* main.m */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		966E53A71C2AE835001F93CB /* notes-flickTests */ = {
+			isa = PBXGroup;
+			children = (
+				966E53A81C2AE835001F93CB /* notes_flickTests.m */,
+				966E53AA1C2AE835001F93CB /* Info.plist */,
+			);
+			path = "notes-flickTests";
+			sourceTree = "<group>";
+		};
+		966E53B21C2AE835001F93CB /* notes-flickUITests */ = {
+			isa = PBXGroup;
+			children = (
+				966E53B31C2AE835001F93CB /* notes_flickUITests.m */,
+				966E53B51C2AE835001F93CB /* Info.plist */,
+			);
+			path = "notes-flickUITests";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		966E53871C2AE834001F93CB /* notes-flick */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 966E53B81C2AE835001F93CB /* Build configuration list for PBXNativeTarget "notes-flick" */;
+			buildPhases = (
+				966E53841C2AE834001F93CB /* Sources */,
+				966E53851C2AE834001F93CB /* Frameworks */,
+				966E53861C2AE834001F93CB /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "notes-flick";
+			productName = "notes-flick";
+			productReference = 966E53881C2AE834001F93CB /* notes-flick.app */;
+			productType = "com.apple.product-type.application";
+		};
+		966E53A31C2AE835001F93CB /* notes-flickTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 966E53BB1C2AE835001F93CB /* Build configuration list for PBXNativeTarget "notes-flickTests" */;
+			buildPhases = (
+				966E53A01C2AE835001F93CB /* Sources */,
+				966E53A11C2AE835001F93CB /* Frameworks */,
+				966E53A21C2AE835001F93CB /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				966E53A61C2AE835001F93CB /* PBXTargetDependency */,
+			);
+			name = "notes-flickTests";
+			productName = "notes-flickTests";
+			productReference = 966E53A41C2AE835001F93CB /* notes-flickTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		966E53AE1C2AE835001F93CB /* notes-flickUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 966E53BE1C2AE835001F93CB /* Build configuration list for PBXNativeTarget "notes-flickUITests" */;
+			buildPhases = (
+				966E53AB1C2AE835001F93CB /* Sources */,
+				966E53AC1C2AE835001F93CB /* Frameworks */,
+				966E53AD1C2AE835001F93CB /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				966E53B11C2AE835001F93CB /* PBXTargetDependency */,
+			);
+			name = "notes-flickUITests";
+			productName = "notes-flickUITests";
+			productReference = 966E53AF1C2AE835001F93CB /* notes-flickUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		966E53801C2AE834001F93CB /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0720;
+				ORGANIZATIONNAME = "jason harris";
+				TargetAttributes = {
+					966E53871C2AE834001F93CB = {
+						CreatedOnToolsVersion = 7.2;
+					};
+					966E53A31C2AE835001F93CB = {
+						CreatedOnToolsVersion = 7.2;
+						TestTargetID = 966E53871C2AE834001F93CB;
+					};
+					966E53AE1C2AE835001F93CB = {
+						CreatedOnToolsVersion = 7.2;
+						TestTargetID = 966E53871C2AE834001F93CB;
+					};
+				};
+			};
+			buildConfigurationList = 966E53831C2AE834001F93CB /* Build configuration list for PBXProject "notes-flick" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 966E537F1C2AE834001F93CB;
+			productRefGroup = 966E53891C2AE834001F93CB /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				966E53871C2AE834001F93CB /* notes-flick */,
+				966E53A31C2AE835001F93CB /* notes-flickTests */,
+				966E53AE1C2AE835001F93CB /* notes-flickUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		966E53861C2AE834001F93CB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				966E539E1C2AE834001F93CB /* LaunchScreen.storyboard in Resources */,
+				966E539B1C2AE834001F93CB /* Assets.xcassets in Resources */,
+				966E53961C2AE834001F93CB /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		966E53A21C2AE835001F93CB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		966E53AD1C2AE835001F93CB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		966E53841C2AE834001F93CB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				966E53931C2AE834001F93CB /* ViewController.m in Sources */,
+				966E53991C2AE834001F93CB /* notes_flick.xcdatamodeld in Sources */,
+				966E53901C2AE834001F93CB /* AppDelegate.m in Sources */,
+				966E538D1C2AE834001F93CB /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		966E53A01C2AE835001F93CB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				966E53A91C2AE835001F93CB /* notes_flickTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		966E53AB1C2AE835001F93CB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				966E53B41C2AE835001F93CB /* notes_flickUITests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		966E53A61C2AE835001F93CB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 966E53871C2AE834001F93CB /* notes-flick */;
+			targetProxy = 966E53A51C2AE835001F93CB /* PBXContainerItemProxy */;
+		};
+		966E53B11C2AE835001F93CB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 966E53871C2AE834001F93CB /* notes-flick */;
+			targetProxy = 966E53B01C2AE835001F93CB /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		966E53941C2AE834001F93CB /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				966E53951C2AE834001F93CB /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		966E539C1C2AE834001F93CB /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				966E539D1C2AE834001F93CB /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		966E53B61C2AE835001F93CB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		966E53B71C2AE835001F93CB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		966E53B91C2AE835001F93CB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = "notes-flick/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "jason.harris.notes-flick";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		966E53BA1C2AE835001F93CB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = "notes-flick/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "jason.harris.notes-flick";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		966E53BC1C2AE835001F93CB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				INFOPLIST_FILE = "notes-flickTests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "jason.harris.notes-flickTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/notes-flick.app/notes-flick";
+			};
+			name = Debug;
+		};
+		966E53BD1C2AE835001F93CB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				INFOPLIST_FILE = "notes-flickTests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "jason.harris.notes-flickTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/notes-flick.app/notes-flick";
+			};
+			name = Release;
+		};
+		966E53BF1C2AE835001F93CB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				INFOPLIST_FILE = "notes-flickUITests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "jason.harris.notes-flickUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_TARGET_NAME = "notes-flick";
+				USES_XCTRUNNER = YES;
+			};
+			name = Debug;
+		};
+		966E53C01C2AE835001F93CB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				INFOPLIST_FILE = "notes-flickUITests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "jason.harris.notes-flickUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_TARGET_NAME = "notes-flick";
+				USES_XCTRUNNER = YES;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		966E53831C2AE834001F93CB /* Build configuration list for PBXProject "notes-flick" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				966E53B61C2AE835001F93CB /* Debug */,
+				966E53B71C2AE835001F93CB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		966E53B81C2AE835001F93CB /* Build configuration list for PBXNativeTarget "notes-flick" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				966E53B91C2AE835001F93CB /* Debug */,
+				966E53BA1C2AE835001F93CB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		966E53BB1C2AE835001F93CB /* Build configuration list for PBXNativeTarget "notes-flickTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				966E53BC1C2AE835001F93CB /* Debug */,
+				966E53BD1C2AE835001F93CB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		966E53BE1C2AE835001F93CB /* Build configuration list for PBXNativeTarget "notes-flickUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				966E53BF1C2AE835001F93CB /* Debug */,
+				966E53C01C2AE835001F93CB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		966E53971C2AE834001F93CB /* notes_flick.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				966E53981C2AE834001F93CB /* notes_flick.xcdatamodel */,
+			);
+			currentVersion = 966E53981C2AE834001F93CB /* notes_flick.xcdatamodel */;
+			path = notes_flick.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
+	};
+	rootObject = 966E53801C2AE834001F93CB /* Project object */;
+}
