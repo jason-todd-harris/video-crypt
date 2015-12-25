@@ -19,6 +19,7 @@
 		966E53C61C2C763E001F93CB /* NoteView.m in Sources */ = {isa = PBXBuildFile; fileRef = 966E53C51C2C763E001F93CB /* NoteView.m */; };
 		966E53CB1C2DB239001F93CB /* NoteObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 966E53CA1C2DB239001F93CB /* NoteObject.m */; };
 		966E53CE1C2DBB95001F93CB /* AllTheNotes.m in Sources */ = {isa = PBXBuildFile; fileRef = 966E53CD1C2DBB95001F93CB /* AllTheNotes.m */; };
+		966E53D81C2DE497001F93CB /* NotesColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 966E53D71C2DE497001F93CB /* NotesColor.m */; };
 		9AF889F4E0F5256C71C6967F /* libPods-notes-flick.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BA11649155924697D49ED49B /* libPods-notes-flick.a */; };
 /* End PBXBuildFile section */
 
@@ -64,6 +65,8 @@
 		966E53CA1C2DB239001F93CB /* NoteObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NoteObject.m; sourceTree = "<group>"; };
 		966E53CC1C2DBB95001F93CB /* AllTheNotes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AllTheNotes.h; sourceTree = "<group>"; };
 		966E53CD1C2DBB95001F93CB /* AllTheNotes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AllTheNotes.m; sourceTree = "<group>"; };
+		966E53D61C2DE497001F93CB /* NotesColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NotesColor.h; sourceTree = "<group>"; };
+		966E53D71C2DE497001F93CB /* NotesColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NotesColor.m; sourceTree = "<group>"; };
 		9CF1B1C01B7DCDA54A3FFB95 /* Pods-notes-flick.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-notes-flick.debug.xcconfig"; path = "Pods/Target Support Files/Pods-notes-flick/Pods-notes-flick.debug.xcconfig"; sourceTree = "<group>"; };
 		BA11649155924697D49ED49B /* libPods-notes-flick.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-notes-flick.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -142,6 +145,8 @@
 				966E53CD1C2DBB95001F93CB /* AllTheNotes.m */,
 				966E539F1C2AE834001F93CB /* Info.plist */,
 				966E53971C2AE834001F93CB /* notes_flick.xcdatamodeld */,
+				966E53D61C2DE497001F93CB /* NotesColor.h */,
+				966E53D71C2DE497001F93CB /* NotesColor.m */,
 				966E538B1C2AE834001F93CB /* Supporting Files */,
 			);
 			path = "notes-flick";
@@ -370,6 +375,7 @@
 				966E53C61C2C763E001F93CB /* NoteView.m in Sources */,
 				966E53CB1C2DB239001F93CB /* NoteObject.m in Sources */,
 				966E538D1C2AE834001F93CB /* main.m in Sources */,
+				966E53D81C2DE497001F93CB /* NotesColor.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

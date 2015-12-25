@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "AllTheNotes.h"
 
 @interface ViewController : UIViewController
 

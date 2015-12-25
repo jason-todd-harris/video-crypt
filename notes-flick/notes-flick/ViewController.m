@@ -66,21 +66,21 @@
     CGFloat arrayIndexFract = subviewFraction * self.stackView.arrangedSubviews.count;
     NSLog(@". \n point in stack: %@ \n point in view: %@ \n index fract: %1.3f \n index # %lu \n subview count: %lu",NSStringFromCGPoint(point),NSStringFromCGPoint(pointInWindow), subviewFraction * self.stackView.arrangedSubviews.count,@(arrayIndexFract).integerValue *1 ,self.stackView.arrangedSubviews.count);
     
-    NoteView *oldNote = self.stackView.arrangedSubviews[@(arrayIndexFract).integerValue *1];
+    NoteView *oldNoteView = self.stackView.arrangedSubviews[@(arrayIndexFract).integerValue *1];
 
-    CGPoint relativeToWindow = [oldNote convertPoint:oldNote.bounds.origin toView:[UIApplication sharedApplication].keyWindow.rootViewController.view];
+    CGPoint relativeToWindow = [oldNoteView convertPoint:oldNoteView.bounds.origin toView:[UIApplication sharedApplication].keyWindow.rootViewController.view];
     
     [UIView animateWithDuration:0.5
                           delay:0.0
                         options: UIViewAnimationOptionCurveEaseInOut
                      animations:^{
-                         oldNote.hidden = YES;
+                         oldNoteView.hidden = YES;
                          [self.view layoutIfNeeded];
                      }
                      completion:nil];
-    [oldNote removeFromSuperview];
+    [oldNoteView removeFromSuperview];
     
-    NoteView *animatedNote = [[NoteView alloc] initWithSize:oldNote.noteSizeValue withText:oldNote.textValue];
+    NoteView *animatedNote = [[NoteView alloc] initWithSize:self.noteSize withNote:oldNoteView.theNoteObject];
     
     [self.topView addSubview:animatedNote];
     
@@ -111,10 +111,11 @@
 {
     NSUInteger i = 0;
     NSMutableArray *mutableSubviews = [@[] mutableCopy];
-    for (i = 0; i <15; i++)
+    for (i = 0; i <[AllTheNotes sharedNotes].notesArray.count; i++)
     {
-        NoteView *dummyNoteView = [[NoteView alloc] initWithSize:self.noteSize withText:@(i).stringValue];
-        [mutableSubviews addObject:dummyNoteView];
+        
+        NoteView *newNoteView = [[NoteView alloc] initWithSize:self.noteSize withNote:[AllTheNotes sharedNotes].notesArray[i]];
+        [mutableSubviews addObject:newNoteView];
     }
     
     self.stackView = [[UIStackView alloc] initWithArrangedSubviews:mutableSubviews];

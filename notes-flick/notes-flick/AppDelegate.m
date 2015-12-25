@@ -22,8 +22,8 @@
     // Override point for customization after application launch.
     [AllTheNotes sharedNotes];
     [AllTheNotes updateAppNotesFromNSDefaults];
-    
-//    [self setUpSomeDummyNotes];
+//    [self setUpSomeDummyNotes];    
+
     NSUserDefaults *userDefaults = [AllTheNotes sharedNotes].userDefaults;
     NSMutableArray *defaultNotes = [[userDefaults objectForKey:@"notesArray"] mutableCopy];
     NSLog(@"%@",defaultNotes);
@@ -35,10 +35,15 @@
     NSUInteger i = 0;
     NSMutableArray *mutableNotes = [@[] mutableCopy];
     NSMutableArray *defaultNotes = [AllTheNotes sharedNotes].notesArray;
-    for (i = 0; i <15; i++)
+    for (i = 0; i <10; i++)
     {
         NSString *string = [NSString stringWithFormat:@"%@ text",@(i).stringValue];
-        NoteObject *dummyNote = [[NoteObject alloc] initWithNote:string withDate:nil orderNumber:i];
+        NoteObject *dummyNote = [[NoteObject alloc] initWithNote:string
+                                                        withDate:nil
+                                                     orderNumber:i
+                                                        priority:1
+                                                           color:nil
+                                                      crossedOut:NO];
         [mutableNotes addObject:dummyNote];
     }
     

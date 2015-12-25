@@ -7,6 +7,7 @@
 //
 
 #import "AllTheNotes.h"
+#import "NotesColor.h"
 
 
 @implementation AllTheNotes
@@ -45,7 +46,18 @@
         dateFormatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
         NSDate *theDate = [dateFormatter dateFromString:eachNote[@"date"]];
         NSNumber *orderNumber = eachNote[@"order"];
-        NoteObject *aNoteObject = [[NoteObject alloc] initWithNote:eachNote[@"text"] withDate:theDate orderNumber:orderNumber.integerValue];
+        NSNumber *notePriority = eachNote[@"priority"];
+        NSString *colorString = eachNote[@"color"];
+        UIColor *noteColor = [UIColor colorWithString:colorString];
+        NSNumber *crossedOut = eachNote[@"crossedOut"];
+        NoteObject *aNoteObject = [[NoteObject alloc] initWithNote:eachNote[@"text"]
+                                                          withDate:theDate
+                                                       orderNumber:orderNumber.integerValue
+                                                          priority:notePriority.integerValue
+                                                             color:noteColor
+                                                        crossedOut:crossedOut.integerValue
+                                   ];
+        
         [aNoteArray addObject:aNoteObject];
     }
     [AllTheNotes sharedNotes].notesArray = aNoteArray;
@@ -59,9 +71,13 @@
         NSDateFormatter * dateFormatter = [[NSDateFormatter alloc] init];
         dateFormatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
         NSString *dateString = [dateFormatter stringFromDate:eachNote.noteDate];
+        NSString *colorString = [UIColor stringFromColor:eachNote.noteColor];
         NSDictionary *noteDictionary = @{@"date":dateString,
                                          @"text":eachNote.noteText,
-                                         @"order":@(eachNote.orderNumber)
+                                         @"order":@(eachNote.orderNumber),
+                                         @"priority":@(eachNote.notePriority),
+                                         @"color" : colorString,
+                                         @"crossedOut":@(eachNote.crossedOut)
                                          };
         [dictionaryArray addObject:noteDictionary];
     }
