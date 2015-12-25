@@ -81,7 +81,7 @@
     }];
 }
 
--(void)removeFromSuperview
+-(void)removeFromSuperview //ALSO REMOVES FROM THE PERSISTENT ARRAY
 {
     [[AllTheNotes sharedNotes].notesArray removeObject:self.theNoteObject];
     [AllTheNotes updateDefaultsWithNotes];

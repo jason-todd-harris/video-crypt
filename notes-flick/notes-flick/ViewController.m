@@ -84,8 +84,6 @@
     
     [self.topView addSubview:animatedNote];
     
-    
-    animatedNote.backgroundColor = [UIColor greenColor];
     [animatedNote mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.view).offset(relativeToWindow.x);
         make.top.equalTo(self.view).offset(relativeToWindow.y);
