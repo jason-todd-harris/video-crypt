@@ -16,6 +16,9 @@
 		966E539E1C2AE834001F93CB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 966E539C1C2AE834001F93CB /* LaunchScreen.storyboard */; };
 		966E53A91C2AE835001F93CB /* notes_flickTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 966E53A81C2AE835001F93CB /* notes_flickTests.m */; };
 		966E53B41C2AE835001F93CB /* notes_flickUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 966E53B31C2AE835001F93CB /* notes_flickUITests.m */; };
+		966E53C61C2C763E001F93CB /* NoteView.m in Sources */ = {isa = PBXBuildFile; fileRef = 966E53C51C2C763E001F93CB /* NoteView.m */; };
+		966E53CB1C2DB239001F93CB /* NoteObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 966E53CA1C2DB239001F93CB /* NoteObject.m */; };
+		966E53CE1C2DBB95001F93CB /* AllTheNotes.m in Sources */ = {isa = PBXBuildFile; fileRef = 966E53CD1C2DBB95001F93CB /* AllTheNotes.m */; };
 		9AF889F4E0F5256C71C6967F /* libPods-notes-flick.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BA11649155924697D49ED49B /* libPods-notes-flick.a */; };
 /* End PBXBuildFile section */
 
@@ -55,6 +58,12 @@
 		966E53AF1C2AE835001F93CB /* notes-flickUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "notes-flickUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		966E53B31C2AE835001F93CB /* notes_flickUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = notes_flickUITests.m; sourceTree = "<group>"; };
 		966E53B51C2AE835001F93CB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		966E53C41C2C763E001F93CB /* NoteView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NoteView.h; sourceTree = "<group>"; };
+		966E53C51C2C763E001F93CB /* NoteView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NoteView.m; sourceTree = "<group>"; };
+		966E53C91C2DB239001F93CB /* NoteObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NoteObject.h; sourceTree = "<group>"; };
+		966E53CA1C2DB239001F93CB /* NoteObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NoteObject.m; sourceTree = "<group>"; };
+		966E53CC1C2DBB95001F93CB /* AllTheNotes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AllTheNotes.h; sourceTree = "<group>"; };
+		966E53CD1C2DBB95001F93CB /* AllTheNotes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AllTheNotes.m; sourceTree = "<group>"; };
 		9CF1B1C01B7DCDA54A3FFB95 /* Pods-notes-flick.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-notes-flick.debug.xcconfig"; path = "Pods/Target Support Files/Pods-notes-flick/Pods-notes-flick.debug.xcconfig"; sourceTree = "<group>"; };
 		BA11649155924697D49ED49B /* libPods-notes-flick.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-notes-flick.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -122,9 +131,15 @@
 				966E538F1C2AE834001F93CB /* AppDelegate.m */,
 				966E53911C2AE834001F93CB /* ViewController.h */,
 				966E53921C2AE834001F93CB /* ViewController.m */,
+				966E53C41C2C763E001F93CB /* NoteView.h */,
+				966E53C51C2C763E001F93CB /* NoteView.m */,
 				966E53941C2AE834001F93CB /* Main.storyboard */,
 				966E539A1C2AE834001F93CB /* Assets.xcassets */,
 				966E539C1C2AE834001F93CB /* LaunchScreen.storyboard */,
+				966E53C91C2DB239001F93CB /* NoteObject.h */,
+				966E53CA1C2DB239001F93CB /* NoteObject.m */,
+				966E53CC1C2DBB95001F93CB /* AllTheNotes.h */,
+				966E53CD1C2DBB95001F93CB /* AllTheNotes.m */,
 				966E539F1C2AE834001F93CB /* Info.plist */,
 				966E53971C2AE834001F93CB /* notes_flick.xcdatamodeld */,
 				966E538B1C2AE834001F93CB /* Supporting Files */,
@@ -349,8 +364,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				966E53931C2AE834001F93CB /* ViewController.m in Sources */,
+				966E53CE1C2DBB95001F93CB /* AllTheNotes.m in Sources */,
 				966E53991C2AE834001F93CB /* notes_flick.xcdatamodeld in Sources */,
 				966E53901C2AE834001F93CB /* AppDelegate.m in Sources */,
+				966E53C61C2C763E001F93CB /* NoteView.m in Sources */,
+				966E53CB1C2DB239001F93CB /* NoteObject.m in Sources */,
 				966E538D1C2AE834001F93CB /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -507,6 +525,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = "notes-flick/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = "jason.harris.notes-flick";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};

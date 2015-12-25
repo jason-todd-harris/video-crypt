@@ -7,6 +7,9 @@
 //
 
 #import "AppDelegate.h"
+#import "NoteObject.h"
+#import "AllTheNotes.h"
+
 
 @interface AppDelegate ()
 
@@ -17,7 +20,35 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+    [AllTheNotes sharedNotes];
+    [AllTheNotes updateAppNotesFromNSDefaults];
+    
+//    [self setUpSomeDummyNotes];
+    NSUserDefaults *userDefaults = [AllTheNotes sharedNotes].userDefaults;
+    NSMutableArray *defaultNotes = [[userDefaults objectForKey:@"notesArray"] mutableCopy];
+    NSLog(@"%@",defaultNotes);
     return YES;
+}
+
+-(void)setUpSomeDummyNotes
+{
+    NSUInteger i = 0;
+    NSMutableArray *mutableNotes = [@[] mutableCopy];
+    NSMutableArray *defaultNotes = [AllTheNotes sharedNotes].notesArray;
+    for (i = 0; i <15; i++)
+    {
+        NSString *string = [NSString stringWithFormat:@"%@ text",@(i).stringValue];
+        NoteObject *dummyNote = [[NoteObject alloc] initWithNote:string withDate:nil orderNumber:i];
+        [mutableNotes addObject:dummyNote];
+    }
+    
+    
+    
+    [defaultNotes addObjectsFromArray:mutableNotes];
+    [AllTheNotes sharedNotes].notesArray = defaultNotes;
+    [AllTheNotes updateDefaultsWithNotes];
+    
+    
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {
