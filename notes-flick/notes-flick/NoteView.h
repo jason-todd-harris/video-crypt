@@ -16,6 +16,7 @@
 @property (nonatomic, strong) UILabel *interiorTextBox;
 @property (nonatomic, strong) NoteObject *theNoteObject;
 @property (nonatomic, strong) UIColor *noteColor;
+@property (nonatomic, assign) BOOL crossedOut;
 
 
 

@@ -17,10 +17,13 @@
 
 
 +(UIColor *)notesYellow;
++(UIColor *)notesRed;
 +(UIColor *)notesOrange;
++(UIColor *)notesBlue;
++(UIColor *)notesBrown;
 +(UIColor *)notesDarkGray;
 +(UIColor *)notesLightGray;
 +(UIColor *)notesMediumGray;
-+(UIColor *)notesBlue;
++(UIColor *)notesMilk;
 
 @end

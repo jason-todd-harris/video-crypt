@@ -38,9 +38,25 @@
         }];
         [self setNoteSizeValue:noteSize];
         [self setTheNoteObject:theNote];
+        [self setCrossedOut:theNote.crossedOut];
     }
     
     return self;
+}
+-(void)setCrossedOut:(BOOL)crossedOut
+{
+    _crossedOut = crossedOut;
+    _theNoteObject.crossedOut = crossedOut;
+    
+    if(crossedOut)
+    {
+        self.alpha = 0.5;
+    } else
+    {
+        self.alpha = 1;
+    }
+    
+    
 }
 
 -(void)setTheNoteObject:(NoteObject *)theNoteObject
@@ -58,10 +74,11 @@
          _noteColor = noteColor;
     } else
     {
-        _noteColor = [UIColor yellowColor];
+        _noteColor = [UIColor notesYellow];
     }
     
     self.backgroundColor = _noteColor;
+    _theNoteObject.noteColor = noteColor;
 }
 
 
@@ -70,6 +87,7 @@
     _textValue = textValue;
     _interiorTextBox.text = textValue;
     _interiorTextBox.textAlignment = NSTextAlignmentCenter;
+    _theNoteObject.noteText = textValue;
 }
 
 
@@ -84,7 +102,6 @@
 -(void)removeFromSuperview //ALSO REMOVES FROM THE PERSISTENT ARRAY
 {
     [[AllTheNotes sharedNotes].notesArray removeObject:self.theNoteObject];
-    [AllTheNotes updateDefaultsWithNotes];
     [self removeConstraints:self.constraints];
     [super removeFromSuperview];
 }

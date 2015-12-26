@@ -35,25 +35,46 @@
     NSUInteger i = 0;
     NSMutableArray *mutableNotes = [@[] mutableCopy];
     NSMutableArray *defaultNotes = [AllTheNotes sharedNotes].notesArray;
-    for (i = 0; i <10; i++)
+    for (i = 0; i <21; i++)
     {
+        
         NSString *string = [NSString stringWithFormat:@"%@ text",@(i).stringValue];
         NoteObject *dummyNote = [[NoteObject alloc] initWithNote:string
                                                         withDate:nil
                                                      orderNumber:i
                                                         priority:1
-                                                           color:nil
+                                                           color:[self colorPicker:i]
                                                       crossedOut:NO];
         [mutableNotes addObject:dummyNote];
     }
-    
-    
     
     [defaultNotes addObjectsFromArray:mutableNotes];
     [AllTheNotes sharedNotes].notesArray = defaultNotes;
     [AllTheNotes updateDefaultsWithNotes];
     
     
+}
+
+-(UIColor *)colorPicker:(NSUInteger)i
+{
+    if ( i%4 == 0 )
+    {
+        return [UIColor notesYellow];
+    } else if (i%4 == 1)
+    {
+        return [UIColor notesOrange];
+    } else if (i%4 == 2)
+    {
+        return [UIColor notesRed];
+    } else if (i%4 == 3)
+    {
+        return [UIColor notesBlue];
+    }
+
+
+    
+    
+    return nil;
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {

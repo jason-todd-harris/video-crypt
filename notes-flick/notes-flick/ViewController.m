@@ -15,7 +15,8 @@
 @property (nonatomic, strong) UIStackView *stackView;
 @property (nonatomic, strong) UIView *outsideStackview;
 @property (nonatomic, strong) UIView *contentView;
-@property (nonatomic, strong) UISwipeGestureRecognizer *swipeGesture;
+@property (nonatomic, strong) UISwipeGestureRecognizer *swipeGestureUp;
+@property (nonatomic, strong) UISwipeGestureRecognizer *swipeGestureDown;
 @property (nonatomic, strong) UIView *topView;
 @property (nonatomic, assign) CGFloat noteSize;
 
@@ -28,15 +29,19 @@
     
     self.noteSize = 75;
     
-    self.swipeGesture = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeReceived:)];
-    self.swipeGesture.direction = UISwipeGestureRecognizerDirectionUp;
-    [self.swipeGesture setDelegate:self];
+    self.swipeGestureUp = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeReceived:)];
+    self.swipeGestureUp.direction = UISwipeGestureRecognizerDirectionUp;
+    [self.swipeGestureUp setDelegate:self];
+    self.swipeGestureDown = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeReceived:)];
+    self.swipeGestureDown.direction = UISwipeGestureRecognizerDirectionDown;
+    [self.swipeGestureDown setDelegate:self];
+    
     
     self.scrollView = [[UIScrollView alloc] init];
     self.scrollView.delegate = self;
     self.scrollView.pagingEnabled = YES;
     self.scrollView.showsHorizontalScrollIndicator = NO;
-    self.scrollView.backgroundColor = [UIColor yellowColor];
+    self.scrollView.backgroundColor = [UIColor notesBrown];
     [self.view addSubview:self.scrollView];
     [self.scrollView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.equalTo(self.view);
@@ -58,21 +63,92 @@
     return YES;
 }
 
+-(void)populateStackview
+{
+    NSUInteger i = 0;
+    NSMutableArray *mutableSubviews = [@[] mutableCopy];
+    for (i = 0; i <[AllTheNotes sharedNotes].notesArray.count; i++)
+    {
+        NoteView *newNoteView = [[NoteView alloc] initWithSize:self.noteSize withNote:[AllTheNotes sharedNotes].notesArray[i]];
+        [mutableSubviews addObject:newNoteView];
+    }
+    
+    self.stackView = [[UIStackView alloc] initWithArrangedSubviews:mutableSubviews];
+    
+    [self.scrollView addSubview:self.stackView];
+    
+    [self.stackView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(self.scrollView);
+        make.centerY.equalTo(self.view);
+    }];
+    
+    [self.stackView addGestureRecognizer:self.swipeGestureUp];
+    [self.stackView addGestureRecognizer:self.swipeGestureDown];
+    
+    
+    self.stackView.backgroundColor = [UIColor blueColor];
+    self.stackView.axis = UILayoutConstraintAxisHorizontal;
+    self.stackView.contentMode = UIViewContentModeScaleToFill;
+    self.stackView.distribution = UIStackViewDistributionEqualSpacing;
+    self.stackView.alignment = UIStackViewAlignmentCenter;
+    self.stackView.spacing = 20;
+    
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+#pragma mark - gestures
+
 -(void)swipeReceived:(UISwipeGestureRecognizer *)swipeGestureRecognizer
+{
+    if (swipeGestureRecognizer.direction == UISwipeGestureRecognizerDirectionUp)
+    {
+        [self removeNote:swipeGestureRecognizer];
+    } else if (swipeGestureRecognizer.direction == UISwipeGestureRecognizerDirectionDown)
+    {
+        [self crossOutNote:swipeGestureRecognizer];
+    }
+    
+    
+}
+
+-(void)crossOutNote:(UISwipeGestureRecognizer *)swipeGestureRecognizer
+{
+    CGPoint point = [swipeGestureRecognizer locationInView:self.stackView];
+    CGFloat subviewFraction = point.x / self.stackView.bounds.size.width;
+    CGFloat arrayIndexFract = subviewFraction * self.stackView.arrangedSubviews.count;
+    NoteView *oldNoteView = self.stackView.arrangedSubviews[@(arrayIndexFract).integerValue *1];
+    
+    [UIView animateWithDuration:0.5
+                          delay:0.0
+                        options: UIViewAnimationOptionCurveEaseIn
+                     animations:^{
+                         oldNoteView.crossedOut = !oldNoteView.crossedOut;
+                         [AllTheNotes updateDefaultsWithNotes];
+                         [self.view layoutIfNeeded];
+                     }
+                     completion:nil];
+    
+}
+
+-(void)removeNote:(UISwipeGestureRecognizer *)swipeGestureRecognizer
 {
     CGPoint point = [swipeGestureRecognizer locationInView:self.stackView];
     CGPoint pointInWindow = [swipeGestureRecognizer locationInView:self.view];
     CGFloat subviewFraction = point.x / self.stackView.bounds.size.width;
     CGFloat arrayIndexFract = subviewFraction * self.stackView.arrangedSubviews.count;
-    NSLog(@". \n point in stack: %@ \n point in view: %@ \n index fract: %1.3f \n index # %lu \n subview count: %lu",NSStringFromCGPoint(point),NSStringFromCGPoint(pointInWindow), subviewFraction * self.stackView.arrangedSubviews.count,@(arrayIndexFract).integerValue *1 ,self.stackView.arrangedSubviews.count);
+//    NSLog(@". \n point in stack: %@ \n point in view: %@ \n index fract: %1.3f \n index # %lu \n subview count: %lu",NSStringFromCGPoint(point),NSStringFromCGPoint(pointInWindow), subviewFraction * self.stackView.arrangedSubviews.count,@(arrayIndexFract).integerValue *1 ,self.stackView.arrangedSubviews.count);
     
     NoteView *oldNoteView = self.stackView.arrangedSubviews[@(arrayIndexFract).integerValue *1];
-
+    
     CGPoint relativeToWindow = [oldNoteView convertPoint:oldNoteView.bounds.origin toView:[UIApplication sharedApplication].keyWindow.rootViewController.view];
     
     [UIView animateWithDuration:0.5
                           delay:0.0
-                        options: UIViewAnimationOptionCurveEaseInOut
+                        options: UIViewAnimationOptionCurveEaseIn
                      animations:^{
                          oldNoteView.hidden = YES;
                          [self.view layoutIfNeeded];
@@ -96,50 +172,15 @@
                      animations:^{
                          [animatedNote mas_remakeConstraints:^(MASConstraintMaker *make) {
                              make.bottom.equalTo(self.view.mas_top);
+                             make.left.equalTo(self.view).offset(pointInWindow.x-self.noteSize/2);
+                             make.height.and.width.equalTo(@(self.noteSize/2));
                          }];
                          [self.view layoutIfNeeded];
                      }
-                     completion:Nil];
-    
-}
-
-
-
--(void)populateStackview
-{
-    NSUInteger i = 0;
-    NSMutableArray *mutableSubviews = [@[] mutableCopy];
-    for (i = 0; i <[AllTheNotes sharedNotes].notesArray.count; i++)
-    {
-        
-        NoteView *newNoteView = [[NoteView alloc] initWithSize:self.noteSize withNote:[AllTheNotes sharedNotes].notesArray[i]];
-        [mutableSubviews addObject:newNoteView];
-    }
-    
-    self.stackView = [[UIStackView alloc] initWithArrangedSubviews:mutableSubviews];
-    
-    [self.scrollView addSubview:self.stackView];
-    
-    [self.stackView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(self.scrollView);
-        make.centerY.equalTo(self.view);
-    }];
-    
-    [self.stackView addGestureRecognizer:self.swipeGesture];
-    
-    
-    self.stackView.backgroundColor = [UIColor blueColor];
-    self.stackView.axis = UILayoutConstraintAxisHorizontal;
-    self.stackView.contentMode = UIViewContentModeScaleToFill;
-    self.stackView.distribution = UIStackViewDistributionEqualSpacing;
-    self.stackView.alignment = UIStackViewAlignmentCenter;
-    self.stackView.spacing = 20;
-    
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+                     completion:^(BOOL finished) {
+                         [animatedNote removeFromSuperview];
+                         [AllTheNotes updateDefaultsWithNotes];
+                     }];
 }
 
 //-(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
