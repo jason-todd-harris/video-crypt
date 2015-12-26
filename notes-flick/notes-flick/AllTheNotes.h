@@ -12,6 +12,9 @@
 @interface AllTheNotes : NSObject
 @property (nonatomic, strong) NSUserDefaults *userDefaults;
 @property (nonatomic, strong) NSMutableArray *notesArray;
+@property (nonatomic, strong) NSMutableArray *deletedArray;
+@property (nonatomic, assign) CGFloat defaultNoteSize;
+
 //@property (nonatomic, strong) NSMutableArray *notesDictionariesArray;
 
 -(instancetype)init;

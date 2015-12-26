@@ -32,9 +32,11 @@
     {
         _interiorTextBox = [[UILabel alloc] init];
         _interiorTextBox.textAlignment = NSTextAlignmentCenter;
+        _interiorTextBox.backgroundColor = [UIColor colorWithRed:100/255 green:0/255 blue:0/255 alpha:0.0];// debugging text box
         [self addSubview:_interiorTextBox];
         [_interiorTextBox mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.edges.equalTo(self);
+            make.height.and.width.equalTo(self);
+            make.center.equalTo(self);
         }];
         [self setNoteSizeValue:noteSize];
         [self setTheNoteObject:theNote];
@@ -50,7 +52,7 @@
     
     if(crossedOut)
     {
-        self.alpha = 0.5;
+        self.alpha = 0.25;
     } else
     {
         self.alpha = 1;
@@ -105,9 +107,6 @@
     [self removeConstraints:self.constraints];
     [super removeFromSuperview];
 }
-
-
-
 
 
 

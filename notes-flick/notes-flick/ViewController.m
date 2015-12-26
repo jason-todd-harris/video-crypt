@@ -17,6 +17,7 @@
 @property (nonatomic, strong) UIView *contentView;
 @property (nonatomic, strong) UISwipeGestureRecognizer *swipeGestureUp;
 @property (nonatomic, strong) UISwipeGestureRecognizer *swipeGestureDown;
+@property (nonatomic, strong) UIPinchGestureRecognizer *pinchGesture;
 @property (nonatomic, strong) UIView *topView;
 @property (nonatomic, assign) CGFloat noteSize;
 
@@ -26,20 +27,30 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [self setUpEntireScreen];
+
+}
+
+-(void)setUpEntireScreen
+{
     
-    self.noteSize = 75;
+    self.noteSize = [AllTheNotes sharedNotes].defaultNoteSize;
     
     self.swipeGestureUp = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeReceived:)];
     self.swipeGestureUp.direction = UISwipeGestureRecognizerDirectionUp;
-    [self.swipeGestureUp setDelegate:self];
+    self.swipeGestureUp.delegate = self;
     self.swipeGestureDown = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeReceived:)];
     self.swipeGestureDown.direction = UISwipeGestureRecognizerDirectionDown;
-    [self.swipeGestureDown setDelegate:self];
+    self.swipeGestureDown.delegate = self;
+    self.pinchGesture = [[UIPinchGestureRecognizer alloc]  initWithTarget:self action:@selector(pinchReceived:)];
+    self.pinchGesture.delegate = self;
     
     
     self.scrollView = [[UIScrollView alloc] init];
     self.scrollView.delegate = self;
     self.scrollView.pagingEnabled = YES;
+    self.scrollView.contentInset = UIEdgeInsetsMake(0, 10, 0, 10);
+    self.scrollView.clipsToBounds = YES;
     self.scrollView.showsHorizontalScrollIndicator = NO;
     self.scrollView.backgroundColor = [UIColor notesBrown];
     [self.view addSubview:self.scrollView];
@@ -84,6 +95,7 @@
     
     [self.stackView addGestureRecognizer:self.swipeGestureUp];
     [self.stackView addGestureRecognizer:self.swipeGestureDown];
+    [self.stackView addGestureRecognizer:self.pinchGesture];
     
     
     self.stackView.backgroundColor = [UIColor blueColor];
@@ -91,7 +103,7 @@
     self.stackView.contentMode = UIViewContentModeScaleToFill;
     self.stackView.distribution = UIStackViewDistributionEqualSpacing;
     self.stackView.alignment = UIStackViewAlignmentCenter;
-    self.stackView.spacing = 20;
+    self.stackView.spacing = 10;
     
 }
 
@@ -101,6 +113,45 @@
 }
 
 #pragma mark - gestures
+
+-(void)pinchReceived:(UIPinchGestureRecognizer *)pinchGestureRecog
+{
+    if (pinchGestureRecog.velocity > 0 && self.noteSize != [AllTheNotes sharedNotes].defaultNoteSize)
+    {
+        [UIView animateWithDuration:0.5
+                              delay:0.0
+                            options: UIViewAnimationOptionCurveEaseInOut
+                         animations:^{
+                             self.noteSize = [AllTheNotes sharedNotes].defaultNoteSize;
+                             for (NoteView *eachNote in self.stackView.arrangedSubviews) {
+                                 eachNote.noteSizeValue = self.noteSize;   
+                             }
+                             [self.view layoutIfNeeded];
+                         }
+                         completion:nil];
+
+    } else if (pinchGestureRecog.velocity < 0 && self.noteSize == [AllTheNotes sharedNotes].defaultNoteSize)
+    {
+        [UIView animateWithDuration:0.5
+                              delay:0.0
+                            options: UIViewAnimationOptionCurveEaseInOut
+                         animations:^{
+                             self.noteSize = [AllTheNotes sharedNotes].defaultNoteSize / 2;
+                             for (NoteView *eachNote in self.stackView.arrangedSubviews) {
+                                 eachNote.noteSizeValue = self.noteSize;
+                             }
+                             [self.view layoutIfNeeded];
+                         }
+                         completion:nil];
+
+    }
+    
+    
+    
+//    [self.view layoutIfNeeded];
+    
+    NSLog(@"velocity: %1.1f scale: %1.1f", pinchGestureRecog.velocity, pinchGestureRecog.scale);
+}
 
 -(void)swipeReceived:(UISwipeGestureRecognizer *)swipeGestureRecognizer
 {
@@ -164,6 +215,9 @@
         make.left.equalTo(self.view).offset(relativeToWindow.x);
         make.top.equalTo(self.view).offset(relativeToWindow.y);
     }];
+    [animatedNote.interiorTextBox mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(animatedNote);
+    }];
     [self.view layoutIfNeeded];
     
     [UIView animateWithDuration:0.5
@@ -174,6 +228,9 @@
                              make.bottom.equalTo(self.view.mas_top);
                              make.left.equalTo(self.view).offset(pointInWindow.x-self.noteSize/2);
                              make.height.and.width.equalTo(@(self.noteSize/2));
+                         }];
+                         [animatedNote.interiorTextBox mas_remakeConstraints:^(MASConstraintMaker *make) {
+                             make.edges.equalTo(animatedNote);
                          }];
                          [self.view layoutIfNeeded];
                      }
