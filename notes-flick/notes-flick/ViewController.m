@@ -8,18 +8,23 @@
 
 #import "ViewController.h"
 #import <Masonry.h>
+#import "NewNoteViewController.h"
 #import "NoteView.h"
 
-@interface ViewController () <UIGestureRecognizerDelegate, UIScrollViewDelegate>
+@interface ViewController () <UIGestureRecognizerDelegate, UIScrollViewDelegate, NewNoteViewControllerDelegate>
 @property (nonatomic, strong) UIScrollView *scrollView;
 @property (nonatomic, strong) UIStackView *stackView;
-@property (nonatomic, strong) UIView *outsideStackview;
-@property (nonatomic, strong) UIView *contentView;
+@property (nonatomic, strong) UIView *topView;
+
+@property (nonatomic, strong) UIBarButtonItem *addNoteButton;
+@property (nonatomic, strong) NewNoteViewController *veryNewNoteVC;
+
 @property (nonatomic, strong) UISwipeGestureRecognizer *swipeGestureUp;
 @property (nonatomic, strong) UISwipeGestureRecognizer *swipeGestureDown;
 @property (nonatomic, strong) UIPinchGestureRecognizer *pinchGesture;
-@property (nonatomic, strong) UIView *topView;
+
 @property (nonatomic, assign) CGFloat noteSize;
+@property (nonatomic, assign) CGFloat spacing;
 @property (nonatomic, assign) NSUInteger pageIndex;
 
 @end
@@ -29,12 +34,12 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self setUpEntireScreen];
-
+    [self setUpAddNoteButton];
 }
 
 -(void)setUpEntireScreen
 {
-    
+    self.spacing = 10;
     self.noteSize = [AllTheNotes sharedNotes].defaultNoteSize;
     
     self.swipeGestureUp = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeReceived:)];
@@ -54,7 +59,7 @@
     self.scrollView.userInteractionEnabled = YES;
     self.scrollView.pagingEnabled = YES;
     self.scrollView.clipsToBounds = NO;
-    self.scrollView.contentInset = UIEdgeInsetsMake(0, 10, 0, 10);
+    self.scrollView.contentInset = UIEdgeInsetsMake(0, self.spacing, 0, self.spacing);
     self.scrollView.showsHorizontalScrollIndicator = NO;
     self.scrollView.backgroundColor = [UIColor notesBrown];
     [self.view addSubview:self.scrollView];
@@ -72,6 +77,22 @@
     }];
 }
 
+-(void)setUpAddNoteButton
+{
+    self.addNoteButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd
+                                                                       target:self
+                                                                       action:@selector(addNoteButtonWasPressed:)];
+    self.addNoteButton.tintColor = [UIColor notesYellow];
+    self.navigationItem.rightBarButtonItem = self.addNoteButton;
+    
+//    [self.addNoteButton mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.top.equalTo(self.view.mas_topMargin).offset(self.spacing*2);
+//        make.right.equalTo(self.view).offset(-self.spacing);
+//    }];
+    
+}
+
+#pragma mark - WORKING WITH THE NOTES
 
 -(void)populateStackview
 {
@@ -106,54 +127,73 @@
     
 }
 
+-(void)newNoteResult:(NSDictionary *)result
+{
+    NSLog(@"result dict: %@",result);
+    
+}
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
 
+#pragma mark - button presses
+
+-(void)addNoteButtonWasPressed:(UIButton *)buttonPressed
+{
+    self.veryNewNoteVC = [[NewNoteViewController alloc] init];
+    self.veryNewNoteVC.delegate = self;
+    self.veryNewNoteVC.noteOrder = self.stackView.arrangedSubviews.count;
+//    [self.veryNewNoteVC setModalPresentationStyle:UIModalPresentationFullScreen];
+//    [self presentViewController:self.veryNewNoteVC animated:YES completion:nil];
+    [self showViewController:self.veryNewNoteVC sender:self];
+    
+}
+
+
 #pragma mark - gestures
 
 -(void)pinchReceived:(UIPinchGestureRecognizer *)pinchGestureRecog
 {
-    [self.scrollView setZoomScale:pinchGestureRecog.scale animated:YES];
-    [self.scrollView layoutIfNeeded];
-    NSLog(@"%1.2f",self.scrollView.zoomScale);
+    //INITIAL ATTEMPT AT GETTING UIScrollView TO ZOOM
+//    [self.scrollView setZoomScale:pinchGestureRecog.scale animated:YES];
+//    [self.scrollView layoutIfNeeded];
+//    NSLog(@"%1.2f",self.scrollView.zoomScale);
     
-//    if (pinchGestureRecog.velocity > 0 && self.noteSize != [AllTheNotes sharedNotes].defaultNoteSize)
-//    {
-//        [UIView animateWithDuration:0.5
-//                              delay:0.0
-//                            options: UIViewAnimationOptionCurveEaseInOut
-//                         animations:^{
-//                             self.noteSize = [AllTheNotes sharedNotes].defaultNoteSize;
-//                             for (NoteView *eachNote in self.stackView.arrangedSubviews) {
-//                                 eachNote.noteSizeValue = self.noteSize;   
-//                             }
-//                             [self.view layoutIfNeeded];
-//                         }
-//                         completion:nil];
-//
-//    } else if (pinchGestureRecog.velocity < 0 && self.noteSize == [AllTheNotes sharedNotes].defaultNoteSize)
-//    {
-//        [UIView animateWithDuration:0.5
-//                              delay:0.0
-//                            options: UIViewAnimationOptionCurveEaseInOut
-//                         animations:^{
-//                             self.noteSize = [AllTheNotes sharedNotes].defaultNoteSize / 2;
-//                             for (NoteView *eachNote in self.stackView.arrangedSubviews) {
-//                                 eachNote.noteSizeValue = self.noteSize;
-//                             }
-//                             [self.view layoutIfNeeded];
-//                         }
-//                         completion:nil];
-//
-//    }
+    if (pinchGestureRecog.velocity > 0 && self.noteSize != [AllTheNotes sharedNotes].defaultNoteSize)
+    {
+        [UIView animateWithDuration:0.5
+                              delay:0.0
+                            options: UIViewAnimationOptionCurveEaseInOut
+                         animations:^{
+                             self.noteSize = [AllTheNotes sharedNotes].defaultNoteSize;
+                             for (NoteView *eachNote in self.stackView.arrangedSubviews) {
+                                 eachNote.noteSizeValue = self.noteSize;   
+                             }
+                             self.scrollView.pagingEnabled = YES;
+                             [self.view layoutIfNeeded];
+                         }
+                         completion:nil];
+
+    } else if (pinchGestureRecog.velocity < 0 && self.noteSize == [AllTheNotes sharedNotes].defaultNoteSize)
+    {
+        [UIView animateWithDuration:0.5
+                              delay:0.0
+                            options: UIViewAnimationOptionCurveEaseInOut
+                         animations:^{
+                             self.noteSize = [AllTheNotes sharedNotes].defaultNoteSize / 3;
+                             for (NoteView *eachNote in self.stackView.arrangedSubviews) {
+                                 eachNote.noteSizeValue = self.noteSize;
+                             }
+                             self.scrollView.pagingEnabled = NO;
+                             [self.view layoutIfNeeded];
+                         }
+                         completion:nil];
+
+    }
     
-    
-    
-//    [self.view layoutIfNeeded];
-    
-    NSLog(@"velocity: %1.1f scale: %1.1f", pinchGestureRecog.velocity, pinchGestureRecog.scale);
+//    NSLog(@"velocity: %1.1f scale: %1.1f", pinchGestureRecog.velocity, pinchGestureRecog.scale);
 }
 
 -(void)swipeReceived:(UISwipeGestureRecognizer *)swipeGestureRecognizer
@@ -241,18 +281,28 @@
                          [animatedNote removeFromSuperview];
                          [AllTheNotes updateDefaultsWithNotes];
                      }];
+    [self updateNoteOrderNumbers];
 }
 
 #pragma mark - scrolling
 
+-(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
+{
+    id i;
+    i = i;
+    [super touchesEnded:touches withEvent:event];
+    NSLog(@"user touched this object: %@",touches.anyObject.view.class);
+}
+
+
 -(void)scrollViewWillBeginZooming:(UIScrollView *)scrollView withView:(UIView *)view
 {
-    NSLog(@"scroll view zooming");
+    NSLog(@"SCROLL IS ZOOMING !!!!!!!!!!!!!!!!!!!");
 }
 
 //-(BOOL)scrollViewShouldScrollToTop:(UIScrollView *)scrollView
 //{
-//    
+//
 //    return YES;
 //}
 
@@ -276,12 +326,16 @@
 //    NSLog(@"%lu %d", self.pageIndex, (int)targetContentOffset->x);
 //}
 
-//-(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
-//{
-//    id i;
-//    i = i;
-//    [super touchesEnded:touches withEvent:event];
-//    NSLog(@"user touched this object: %@",touches.anyObject.view.class);
-//}
+
+#pragma mark - update order
+-(void)updateNoteOrderNumbers
+{
+    NSUInteger i = 0;
+    for (NoteObject *eachNote in [AllTheNotes sharedNotes].notesArray) {
+        eachNote.orderNumber = i;
+        i++;
+    }
+}
+
 
 @end

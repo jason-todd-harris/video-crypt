@@ -20,6 +20,7 @@
 		966E53CB1C2DB239001F93CB /* NoteObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 966E53CA1C2DB239001F93CB /* NoteObject.m */; };
 		966E53CE1C2DBB95001F93CB /* AllTheNotes.m in Sources */ = {isa = PBXBuildFile; fileRef = 966E53CD1C2DBB95001F93CB /* AllTheNotes.m */; };
 		966E53D81C2DE497001F93CB /* NotesColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 966E53D71C2DE497001F93CB /* NotesColor.m */; };
+		966E53DE1C2F1EF9001F93CB /* NewNoteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 966E53DD1C2F1EF9001F93CB /* NewNoteViewController.m */; };
 		9AF889F4E0F5256C71C6967F /* libPods-notes-flick.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BA11649155924697D49ED49B /* libPods-notes-flick.a */; };
 /* End PBXBuildFile section */
 
@@ -67,6 +68,8 @@
 		966E53CD1C2DBB95001F93CB /* AllTheNotes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AllTheNotes.m; sourceTree = "<group>"; };
 		966E53D61C2DE497001F93CB /* NotesColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NotesColor.h; sourceTree = "<group>"; };
 		966E53D71C2DE497001F93CB /* NotesColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NotesColor.m; sourceTree = "<group>"; };
+		966E53DC1C2F1EF9001F93CB /* NewNoteViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewNoteViewController.h; sourceTree = "<group>"; };
+		966E53DD1C2F1EF9001F93CB /* NewNoteViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewNoteViewController.m; sourceTree = "<group>"; };
 		9CF1B1C01B7DCDA54A3FFB95 /* Pods-notes-flick.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-notes-flick.debug.xcconfig"; path = "Pods/Target Support Files/Pods-notes-flick/Pods-notes-flick.debug.xcconfig"; sourceTree = "<group>"; };
 		BA11649155924697D49ED49B /* libPods-notes-flick.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-notes-flick.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -136,6 +139,8 @@
 				966E53921C2AE834001F93CB /* ViewController.m */,
 				966E53C41C2C763E001F93CB /* NoteView.h */,
 				966E53C51C2C763E001F93CB /* NoteView.m */,
+				966E53DC1C2F1EF9001F93CB /* NewNoteViewController.h */,
+				966E53DD1C2F1EF9001F93CB /* NewNoteViewController.m */,
 				966E53941C2AE834001F93CB /* Main.storyboard */,
 				966E539A1C2AE834001F93CB /* Assets.xcassets */,
 				966E539C1C2AE834001F93CB /* LaunchScreen.storyboard */,
@@ -200,6 +205,7 @@
 				966E53861C2AE834001F93CB /* Resources */,
 				7A5E521920BA42FA7B7A418F /* Embed Pods Frameworks */,
 				37A1F8401CB08DF2E94F20EA /* Copy Pods Resources */,
+				OBJCLEANCUSTOMRUNSCRIPTT /* Objective-Clean Run Script */,
 			);
 			buildRules = (
 			);
@@ -361,6 +367,20 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-notes-flick/Pods-notes-flick-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+		OBJCLEANCUSTOMRUNSCRIPTT /* Objective-Clean Run Script */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Objective-Clean Run Script";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/bash;
+			shellScript = "if [[ -z ${SKIP_OBJCLEAN} || ${SKIP_OBJCLEAN} != 1 ]]; then\nif [[ -d \"${LOCAL_APPS_DIR}/Objective-Clean.app\" ]]; then \n\"${LOCAL_APPS_DIR}\"/Objective-Clean.app/Contents/Resources/ObjClean.app/Contents/MacOS/ObjClean \"${SRCROOT}\" \nelse\necho \"warning: You have to install and set up Objective-Clean to use its features!\" \nfi\nfi";
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -370,6 +390,7 @@
 			files = (
 				966E53931C2AE834001F93CB /* ViewController.m in Sources */,
 				966E53CE1C2DBB95001F93CB /* AllTheNotes.m in Sources */,
+				966E53DE1C2F1EF9001F93CB /* NewNoteViewController.m in Sources */,
 				966E53991C2AE834001F93CB /* notes_flick.xcdatamodeld in Sources */,
 				966E53901C2AE834001F93CB /* AppDelegate.m in Sources */,
 				966E53C61C2C763E001F93CB /* NoteView.m in Sources */,

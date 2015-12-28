@@ -20,7 +20,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
-    [AllTheNotes sharedNotes].defaultNoteSize = self.window.frame.size.width / 2;
+    [AllTheNotes sharedNotes].defaultNoteSize = self.window.frame.size.width -20;
     [AllTheNotes updateAppNotesFromNSDefaults];
 //    [self setUpSomeDummyNotes];    
 
@@ -35,7 +35,7 @@
     NSUInteger i = 0;
     NSMutableArray *mutableNotes = [@[] mutableCopy];
     NSMutableArray *defaultNotes = [@[] mutableCopy];// [AllTheNotes sharedNotes].notesArray;
-    for (i = 0; i <10; i++)
+    for (i = 0; i <14; i++)
     {
         
         NSString *string = [NSString stringWithFormat:@"%@ text",@(i).stringValue];
