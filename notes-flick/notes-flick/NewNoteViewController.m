@@ -24,6 +24,13 @@
     self.view.backgroundColor = [UIColor notesDarkGray];
     [self placeTextField];
     
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave target:self action:@selector(addNote:)];
+}
+
+-(void)addNote:(UIBarButtonItem *)barButton
+{
+    NSLog(@"add pressed");
+    
 }
 
 -(void)placeTextField
