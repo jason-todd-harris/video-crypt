@@ -8,19 +8,20 @@
 
 #import "ViewController.h"
 #import <Masonry.h>
-#import "NewNoteViewController.h"
+#import "NoteViewController.h"
 #import "NoteView.h"
 
-@interface ViewController () <UIGestureRecognizerDelegate, UIScrollViewDelegate, NewNoteViewControllerDelegate>
+@interface ViewController () <UIGestureRecognizerDelegate, UIScrollViewDelegate, NoteViewControllerDelegate>
 @property (nonatomic, strong) UIScrollView *scrollView;
 @property (nonatomic, strong) UIStackView *stackView;
 @property (nonatomic, strong) UIView *topView;
 
 @property (nonatomic, strong) UIBarButtonItem *addNoteButton;
-@property (nonatomic, strong) NewNoteViewController *veryNewNoteVC;
+@property (nonatomic, strong) NoteViewController *veryNewNoteVC;
 
 @property (nonatomic, strong) UISwipeGestureRecognizer *swipeGestureUp;
 @property (nonatomic, strong) UISwipeGestureRecognizer *swipeGestureDown;
+@property (nonatomic, strong) UITapGestureRecognizer *doubleTapGesture;
 @property (nonatomic, strong) UIPinchGestureRecognizer *pinchGesture;
 
 @property (nonatomic, assign) CGFloat noteSize;
@@ -50,6 +51,8 @@
     self.swipeGestureDown.delegate = self;
     self.pinchGesture = [[UIPinchGestureRecognizer alloc]  initWithTarget:self action:@selector(pinchReceived:)];
     self.pinchGesture.delegate = self;
+    self.doubleTapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleTapReceived:)];
+    self.doubleTapGesture.numberOfTapsRequired = 2;
     
     
     self.scrollView = [[UIScrollView alloc] init];
@@ -110,6 +113,7 @@
     [self.stackView addGestureRecognizer:self.swipeGestureUp];
     [self.stackView addGestureRecognizer:self.swipeGestureDown];
     [self.stackView addGestureRecognizer:self.pinchGesture];
+    [self.stackView addGestureRecognizer:self.doubleTapGesture];
     
     
     self.stackView.backgroundColor = [UIColor blueColor];
@@ -132,34 +136,69 @@
     }
     return mutableSubviews;
 }
+
+-(void)newNoteViewControllerEditing:(BOOL)areWeEditing noteViewToEdit:(NoteView *)noteViewToEdit
+{
+    self.veryNewNoteVC = [[NoteViewController alloc] init];
+    self.veryNewNoteVC.delegate = self;
     
+    if (areWeEditing)
+    {
+        self.veryNewNoteVC.theNoteView = noteViewToEdit;
+        self.veryNewNoteVC.noteTextView.text = noteViewToEdit.textValue;
+        self.veryNewNoteVC.noteOrder = noteViewToEdit.theNoteObject.orderNumber;
+    } else
+    {
+        self.veryNewNoteVC.noteOrder = self.stackView.arrangedSubviews.count;
+    }
+    
+    self.veryNewNoteVC.areWeEditing = areWeEditing;
+    [self showViewController:self.veryNewNoteVC sender:self];
+}
+
 #pragma mark - ADDING NEW NOTES
 
 -(void)addNoteButtonWasPressed:(UIButton *)buttonPressed
 {
-    self.veryNewNoteVC = [[NewNoteViewController alloc] init];
-    self.veryNewNoteVC.delegate = self;
-    self.veryNewNoteVC.noteOrder = self.stackView.arrangedSubviews.count;
-//    [self.veryNewNoteVC setModalPresentationStyle:UIModalPresentationFullScreen];
-//    [self presentViewController:self.veryNewNoteVC animated:YES completion:nil];
-    [self showViewController:self.veryNewNoteVC sender:self];
+    
+    [self newNoteViewControllerEditing:NO noteViewToEdit:nil];
     
 }
 
--(void)newNoteResult:(NSDictionary *)result
+
+-(void)newNoteResult:(NSDictionary *)result updatedNoteView:(NoteView *)updatedNoteView
 {
     NSLog(@"result dict: %@",result);
     [self.navigationController popViewControllerAnimated:YES];
-    NSUInteger orderNumber = [AllTheNotes sharedNotes].notesArray.count;
+    //HOW MANY CURRENTLY LIVE THERE
+    NSNumber *orderNSNumber = result[@"noteOrder"];
+    NSUInteger orderNumber = orderNSNumber.integerValue;
+    //PRIORITY
+    NSNumber *nsNumberPriority = result[@"priority"];
+    NSUInteger priority = nsNumberPriority.integerValue;
+    //CREATE THE NEW NOTE OBJECT
     NoteObject *newNoteObject = [[NoteObject alloc] initWithNote:result[@"noteText"]
                                                         withDate:nil
                                                      orderNumber:orderNumber
-                                                        priority:1
+                                                        priority:priority
                                                            color:result[@"color"]
                                                       crossedOut:NO];
-    [[AllTheNotes sharedNotes].notesArray insertObject:newNoteObject atIndex:orderNumber];
+    if(updatedNoteView)
+    {
+        updatedNoteView.backgroundColor = result[@"color"];
+        updatedNoteView.textValue = result[@"noteText"];
+        updatedNoteView.theNoteObject.notePriority = priority;
+    } else //IF WE'RE ADDING A NEW NOTE DO THIS
+    {
+        //ADD THE NOTE TO DATA STORE
+        [[AllTheNotes sharedNotes].notesArray insertObject:newNoteObject atIndex:orderNumber];
+        
+        //ADD NOTE TO STACKVIEW
+        [self addNoteToView:[AllTheNotes sharedNotes].notesArray[orderNumber] afterNumber:orderNumber];
+    }
     
-    [self addNoteToView:[AllTheNotes sharedNotes].notesArray[orderNumber] afterNumber:orderNumber];
+    [self updateNoteOrderNumbers];
+    [AllTheNotes updateDefaultsWithNotes];
 }
 
 
@@ -167,9 +206,6 @@
 {
     NoteView *newNoteView = [[NoteView alloc] initWithSize:self.noteSize withNote:newNoteObject];
     [self.stackView insertArrangedSubview:newNoteView atIndex:orderNumber];
-    
-    [AllTheNotes updateDefaultsWithNotes];
-    [self updateNoteOrderNumbers];
 }
 
 
@@ -215,6 +251,17 @@
     }
     
 //    NSLog(@"velocity: %1.1f scale: %1.1f", pinchGestureRecog.velocity, pinchGestureRecog.scale);
+}
+
+
+-(void)doubleTapReceived:(UITapGestureRecognizer *)tapGestureRecognizer
+{
+    CGPoint point = [tapGestureRecognizer locationInView:self.stackView];
+    CGFloat subviewFraction = point.x / self.stackView.bounds.size.width;
+    CGFloat arrayIndexFract = subviewFraction * self.stackView.arrangedSubviews.count;
+    NoteView *tappedNoteView = self.stackView.arrangedSubviews[@(arrayIndexFract).integerValue *1];
+    [self newNoteViewControllerEditing:YES noteViewToEdit:tappedNoteView];
+    
 }
 
 -(void)swipeReceived:(UISwipeGestureRecognizer *)swipeGestureRecognizer

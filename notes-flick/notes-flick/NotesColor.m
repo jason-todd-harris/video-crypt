@@ -12,19 +12,19 @@
 
 +(UIColor *)colorWithString:(NSString *)string
 {
-    if ([string isEqualToString:@"yellow"])
+    if ([string isEqualToString:@"Yellow"])
     {
         return [UIColor notesYellow];
-    } else if ([string isEqualToString:@"red"])
+    } else if ([string isEqualToString:@"Red"])
     {
         return [UIColor notesRed];
-    } else if ([string isEqualToString:@"orange"])
+    } else if ([string isEqualToString:@"Orange"])
     {
         return [UIColor notesOrange];
-    } else if ([string isEqualToString:@"blue"])
+    } else if ([string isEqualToString:@"Blue"])
     {
         return [UIColor notesBlue];
-    } else if ([string isEqualToString:@"brown"])
+    } else if ([string isEqualToString:@"Brown"])
     {
         return [UIColor notesBrown];
     }
@@ -35,22 +35,22 @@
 +(NSString *)stringFromColor:(UIColor *)theColor
 {
     if ([theColor isEqual:[UIColor notesYellow]]) {
-        return @"yellow";
+        return @"Yellow";
     } else if ([theColor isEqual:[UIColor notesRed]])
     {
-        return @"red";
+        return @"Red";
     } else if ([theColor isEqual:[UIColor notesOrange]])
     {
-        return @"orange";
+        return @"Orange";
     } else if ([theColor isEqual:[UIColor notesBlue]])
     {
-        return @"blue";
+        return @"Blue";
     } else if ([theColor isEqual:[UIColor notesBrown]])
     {
-        return @"brown";
+        return @"Brown";
     }
     
-    return @"yellow";
+    return @"Yellow";
 }
 
 
