@@ -27,6 +27,7 @@
 {
     _notesArray = NSMutableArray.new;
     _userDefaults = [NSUserDefaults standardUserDefaults];
+    _colorArray = @[ [UIColor notesYellow], [UIColor notesOrange], [UIColor notesRed], [UIColor notesBlue] ];
     
 }
 

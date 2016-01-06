@@ -8,10 +8,12 @@
 
 #import "NewNoteViewController.h"
 #import <Masonry.h>
+#import "AllTheNotes.h"
 #import "NotesColor.h"
 
 @interface NewNoteViewController ()
-
+@property (nonatomic, assign) CGFloat navBarHeight;
+@property (nonatomic, strong) UIBarButtonItem *colorToggle;
 
 
 @end
@@ -20,17 +22,35 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
+    self.navBarHeight = self.navigationController.navigationBar.frame.size.height;
     self.view.backgroundColor = [UIColor notesDarkGray];
     [self placeTextField];
     
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave target:self action:@selector(addNote:)];
+    
+    UIBarButtonItem *addNoteButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave target:self action:@selector(addNote:)];
+    UIBarButtonItem *flexibleSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+    self.colorToggle = [[UIBarButtonItem alloc] initWithTitle:@"Yellow"
+                                                        style:UIBarButtonItemStylePlain
+                                                        target:self
+                                                        action:@selector(toggleColors:)];
+    self.navigationItem.rightBarButtonItems = @[addNoteButton , flexibleSpace, self.colorToggle, flexibleSpace];
+    
 }
 
 -(void)addNote:(UIBarButtonItem *)barButton
 {
     NSLog(@"add pressed");
     
+    NSDictionary *noteDictionary = @{@"color" : self.noteTextView.backgroundColor ,
+                                     @"noteText" : self.noteTextView.text};
+    [self.delegate newNoteResult:noteDictionary];
+    
+}
+
+-(void)toggleColors:(UIBarButtonItem *)barButton
+{
+    self.colorToggle.title = @"Blue";
+    self.noteTextView.backgroundColor = [UIColor notesBlue];
 }
 
 -(void)placeTextField
@@ -39,7 +59,9 @@
     self.noteTextView.backgroundColor = [UIColor notesYellow];
     [self.view addSubview:self.noteTextView];
     [self.noteTextView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(self.view).insets(UIEdgeInsetsMake(40, 20, 75, 20));
+        make.height.and.width.equalTo(@([AllTheNotes sharedNotes].defaultNoteSize));
+        make.top.equalTo(self.self.mas_topLayoutGuideBottom).offset(20);
+        make.centerX.equalTo(self.view);
     }];
     
 }

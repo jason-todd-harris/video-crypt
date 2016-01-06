@@ -24,9 +24,9 @@
     [AllTheNotes updateAppNotesFromNSDefaults];
 //    [self setUpSomeDummyNotes];    
 
-    NSUserDefaults *userDefaults = [AllTheNotes sharedNotes].userDefaults;
-    NSMutableArray *defaultNotes = [[userDefaults objectForKey:@"notesArray"] mutableCopy];
-    NSLog(@"%@",defaultNotes);
+//    NSUserDefaults *userDefaults = [AllTheNotes sharedNotes].userDefaults;
+//    NSMutableArray *defaultNotes = [[userDefaults objectForKey:@"notesArray"] mutableCopy];
+//    NSLog(@"%@",defaultNotes);
     return YES;
 }
 
@@ -43,7 +43,7 @@
                                                         withDate:nil
                                                      orderNumber:i
                                                         priority:1
-                                                           color:[self colorPicker:i]
+                                                           color:[AllTheNotes sharedNotes].colorArray[i%4]
                                                       crossedOut:NO];
         [mutableNotes addObject:dummyNote];
     }
@@ -55,27 +55,6 @@
     
 }
 
--(UIColor *)colorPicker:(NSUInteger)i
-{
-    if ( i%4 == 0 )
-    {
-        return [UIColor notesYellow];
-    } else if (i%4 == 1)
-    {
-        return [UIColor notesOrange];
-    } else if (i%4 == 2)
-    {
-        return [UIColor notesRed];
-    } else if (i%4 == 3)
-    {
-        return [UIColor notesBlue];
-    }
-
-
-    
-    
-    return nil;
-}
 
 - (void)applicationWillResignActive:(UIApplication *)application {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.

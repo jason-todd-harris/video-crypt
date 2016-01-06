@@ -13,6 +13,8 @@
 @property (nonatomic, strong) NSUserDefaults *userDefaults;
 @property (nonatomic, strong) NSMutableArray *notesArray;
 @property (nonatomic, strong) NSMutableArray *deletedArray;
+@property (nonatomic, strong) NSArray *colorArray;
+
 @property (nonatomic, assign) CGFloat defaultNoteSize;
 
 //@property (nonatomic, strong) NSMutableArray *notesDictionariesArray;

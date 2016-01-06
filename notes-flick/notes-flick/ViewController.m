@@ -64,17 +64,19 @@
     self.scrollView.backgroundColor = [UIColor notesBrown];
     [self.view addSubview:self.scrollView];
     [self.scrollView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(self.view);
+        make.edges.equalTo(self.view); //.insets(UIEdgeInsetsMake(10, 10, 10, 10)); //TRIED SETTING INSETS AND STILL DOESN'T FIX
     }];
     
     [self populateStackview];
     
     self.topView = UIView.new;
+//    self.topView.backgroundColor = [UIColor greenColor]; // FOR DEBUGGING STUFF
     [self.view addSubview:self.topView];
     self.topView.userInteractionEnabled = NO;
     [self.topView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.equalTo(self.view);
     }];
+    
 }
 
 -(void)setUpAddNoteButton
@@ -96,16 +98,8 @@
 
 -(void)populateStackview
 {
-    NSUInteger i = 0;
-    NSMutableArray *mutableSubviews = [@[] mutableCopy];
-    for (i = 0; i <[AllTheNotes sharedNotes].notesArray.count; i++)
-    {
-        NoteView *newNoteView = [[NoteView alloc] initWithSize:self.noteSize withNote:[AllTheNotes sharedNotes].notesArray[i]];
-        [mutableSubviews addObject:newNoteView];
-    }
     
-    self.stackView = [[UIStackView alloc] initWithArrangedSubviews:mutableSubviews];
-    
+    self.stackView = [[UIStackView alloc] initWithArrangedSubviews:[self returnSubviewsBasedOnDataStore]];
     [self.scrollView addSubview:self.stackView];
     
     [self.stackView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -127,18 +121,19 @@
     
 }
 
--(void)newNoteResult:(NSDictionary *)result
+-(NSMutableArray *)returnSubviewsBasedOnDataStore
 {
-    NSLog(@"result dict: %@",result);
+    NSUInteger i = 0;
+    NSMutableArray *mutableSubviews = [@[] mutableCopy];
+    for (i = 0; i <[AllTheNotes sharedNotes].notesArray.count; i++)
+    {
+        NoteView *newNoteView = [[NoteView alloc] initWithSize:self.noteSize withNote:[AllTheNotes sharedNotes].notesArray[i]];
+        [mutableSubviews addObject:newNoteView];
+    }
+    return mutableSubviews;
+}
     
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
-#pragma mark - button presses
+#pragma mark - ADDING NEW NOTES
 
 -(void)addNoteButtonWasPressed:(UIButton *)buttonPressed
 {
@@ -149,6 +144,32 @@
 //    [self presentViewController:self.veryNewNoteVC animated:YES completion:nil];
     [self showViewController:self.veryNewNoteVC sender:self];
     
+}
+
+-(void)newNoteResult:(NSDictionary *)result
+{
+    NSLog(@"result dict: %@",result);
+    [self.navigationController popViewControllerAnimated:YES];
+    NSUInteger orderNumber = [AllTheNotes sharedNotes].notesArray.count;
+    NoteObject *newNoteObject = [[NoteObject alloc] initWithNote:result[@"noteText"]
+                                                        withDate:nil
+                                                     orderNumber:orderNumber
+                                                        priority:1
+                                                           color:result[@"color"]
+                                                      crossedOut:NO];
+    [[AllTheNotes sharedNotes].notesArray insertObject:newNoteObject atIndex:orderNumber];
+    
+    [self addNoteToView:[AllTheNotes sharedNotes].notesArray[orderNumber] afterNumber:orderNumber];
+}
+
+
+-(void)addNoteToView:(NoteObject *)newNoteObject afterNumber:(NSUInteger)orderNumber
+{
+    NoteView *newNoteView = [[NoteView alloc] initWithSize:self.noteSize withNote:newNoteObject];
+    [self.stackView insertArrangedSubview:newNoteView atIndex:orderNumber];
+    
+    [AllTheNotes updateDefaultsWithNotes];
+    [self updateNoteOrderNumbers];
 }
 
 
@@ -331,10 +352,26 @@
 -(void)updateNoteOrderNumbers
 {
     NSUInteger i = 0;
-    for (NoteObject *eachNote in [AllTheNotes sharedNotes].notesArray) {
-        eachNote.orderNumber = i;
+    
+//    for (NoteObject *eachNote in [AllTheNotes sharedNotes].notesArray) {
+//        eachNote.orderNumber = i;
+//        i++;
+//    }
+    
+    i = 0;
+    
+    for (NoteView *eachNoteView in self.stackView.arrangedSubviews) {
+        eachNoteView.theNoteObject.orderNumber = i;
         i++;
     }
+    
+    
+}
+
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
 }
 
 
