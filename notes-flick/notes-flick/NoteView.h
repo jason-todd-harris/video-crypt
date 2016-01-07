@@ -18,8 +18,7 @@
 @property (nonatomic, strong) UIColor *noteColor;
 @property (nonatomic, assign) BOOL crossedOut;
 
-
-
+//@property (nonatomic, strong, readonly) UIColor *backgroundColor;
 //+(NoteView *)newNoteSize:(CGFloat)noteSize withText:(NSString *)text;
 
 -(instancetype)initWithSize:(CGFloat)noteSize withNote:(NoteObject *)theNote;

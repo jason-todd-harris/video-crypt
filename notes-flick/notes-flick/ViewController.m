@@ -87,7 +87,7 @@
     self.addNoteButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd
                                                                        target:self
                                                                        action:@selector(addNoteButtonWasPressed:)];
-    self.addNoteButton.tintColor = [UIColor notesYellow];
+    self.addNoteButton.tintColor = [UIColor notesBlue];
     self.navigationItem.rightBarButtonItem = self.addNoteButton;
     
 //    [self.addNoteButton mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -103,12 +103,26 @@
 {
     
     self.stackView = [[UIStackView alloc] initWithArrangedSubviews:[self returnSubviewsBasedOnDataStore]];
+
+//    //DEBUG DUMMY LABEL
+//    UILabel *dummyLabel = [[UILabel alloc] init];
+//    [dummyLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.height.and.width.equalTo(@(self.noteSize *1.2));
+//    }];
+//    dummyLabel.text = @"BLAH BLAH";
+//    dummyLabel.backgroundColor = [UIColor notesMilk];
+//    dummyLabel.textAlignment = NSTextAlignmentCenter;
+//    [self.stackView addArrangedSubview:dummyLabel];
+//    //DEBUG DUMMY LABEL
+    
     [self.scrollView addSubview:self.stackView];
     
     [self.stackView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.equalTo(self.scrollView);
         make.centerY.equalTo(self.view);
     }];
+    
+    
     
     [self.stackView addGestureRecognizer:self.swipeGestureUp];
     [self.stackView addGestureRecognizer:self.swipeGestureDown];
@@ -122,6 +136,12 @@
     self.stackView.distribution = UIStackViewDistributionEqualSpacing;
     self.stackView.alignment = UIStackViewAlignmentCenter;
     self.stackView.spacing = 20;
+    
+//    //BROKEN ATTEMPT AT USING SCROLLING
+//    self.stackView.userInteractionEnabled = NO;
+//    [self.scrollView addGestureRecognizer:self.swipeGestureUp];
+//    [self.scrollView addGestureRecognizer:self.swipeGestureDown];
+//    [self.scrollView addGestureRecognizer:self.doubleTapGesture];
     
 }
 
@@ -168,15 +188,13 @@
 
 -(void)newNoteResult:(NSDictionary *)result updatedNoteView:(NoteView *)updatedNoteView
 {
-    NSLog(@"result dict: %@",result);
+//    NSLog(@"result dict: %@",result);
     [self.navigationController popViewControllerAnimated:YES];
-    //HOW MANY CURRENTLY LIVE THERE
     NSNumber *orderNSNumber = result[@"noteOrder"];
     NSUInteger orderNumber = orderNSNumber.integerValue;
-    //PRIORITY
     NSNumber *nsNumberPriority = result[@"priority"];
     NSUInteger priority = nsNumberPriority.integerValue;
-    //CREATE THE NEW NOTE OBJECT
+    
     NoteObject *newNoteObject = [[NoteObject alloc] initWithNote:result[@"noteText"]
                                                         withDate:nil
                                                      orderNumber:orderNumber
@@ -188,6 +206,7 @@
         updatedNoteView.backgroundColor = result[@"color"];
         updatedNoteView.textValue = result[@"noteText"];
         updatedNoteView.theNoteObject.notePriority = priority;
+        
     } else //IF WE'RE ADDING A NEW NOTE DO THIS
     {
         //ADD THE NOTE TO DATA STORE
@@ -226,7 +245,16 @@
                          animations:^{
                              self.noteSize = [AllTheNotes sharedNotes].defaultNoteSize;
                              for (NoteView *eachNote in self.stackView.arrangedSubviews) {
-                                 eachNote.noteSizeValue = self.noteSize;   
+//                                 if ([eachNote isKindOfClass:[NoteView class]])
+//                                 {
+                                     eachNote.noteSizeValue = self.noteSize;
+//                                 } else
+//                                 {
+//                                     UILabel *theLabel = (UILabel *)eachNote;
+//                                     [theLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+//                                         make.height.and.width.equalTo(@(self.noteSize * 1.2));
+//                                     }];
+//                                 }
                              }
                              self.scrollView.pagingEnabled = YES;
                              [self.view layoutIfNeeded];
@@ -241,7 +269,16 @@
                          animations:^{
                              self.noteSize = [AllTheNotes sharedNotes].defaultNoteSize / 3;
                              for (NoteView *eachNote in self.stackView.arrangedSubviews) {
-                                 eachNote.noteSizeValue = self.noteSize;
+//                                 if ([eachNote isKindOfClass:[NoteView class]])
+//                                 {
+                                       eachNote.noteSizeValue = self.noteSize;
+//                                 } else
+//                                 {
+//                                     UILabel *theLabel = (UILabel *)eachNote;
+//                                     [theLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+//                                         make.height.and.width.equalTo(@(self.noteSize * 1.2));
+//                                     }];
+//                                 }
                              }
                              self.scrollView.pagingEnabled = NO;
                              [self.view layoutIfNeeded];
@@ -365,8 +402,15 @@
 
 -(void)scrollViewWillBeginZooming:(UIScrollView *)scrollView withView:(UIView *)view
 {
-    NSLog(@"SCROLL IS ZOOMING !!!!!!!!!!!!!!!!!!!");
+    NSLog(@"SCROLL IS ZOOMED TO: %1.1f", self.scrollView.zoomScale);
 }
+
+//-(UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView
+//{
+//    return self.stackView;
+//}
+
+
 
 //-(BOOL)scrollViewShouldScrollToTop:(UIScrollView *)scrollView
 //{

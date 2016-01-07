@@ -11,6 +11,11 @@
 #import "NotesColor.h"
 #import "AllTheNotes.h"
 
+@interface NoteView ()
+//@property (nonatomic, strong) UIColor *backgroundColor;
+
+@end
+
 @implementation NoteView
 
 -(instancetype)init
@@ -33,6 +38,7 @@
         _interiorTextBox = [[UILabel alloc] init];
         _interiorTextBox.textAlignment = NSTextAlignmentCenter;
         _interiorTextBox.backgroundColor = [UIColor colorWithRed:100/255 green:0/255 blue:0/255 alpha:0.0];// debugging text box
+        _interiorTextBox.numberOfLines = 0;
         [self addSubview:_interiorTextBox];
         [_interiorTextBox mas_makeConstraints:^(MASConstraintMaker *make) {
             make.height.and.width.equalTo(self);
@@ -52,13 +58,26 @@
     
     if(crossedOut)
     {
-        self.alpha = 0.25;
+        self.alpha = 0.333;
     } else
     {
         self.alpha = 1;
     }
     
     
+}
+
+-(void)setBackgroundColor:(UIColor *)backgroundColor
+{
+    [super setBackgroundColor:backgroundColor];
+    if(backgroundColor)
+    {
+        _noteColor = backgroundColor;
+    } else
+    {
+        _noteColor = [UIColor notesYellow];
+    }
+    _theNoteObject.noteColor = backgroundColor;
 }
 
 -(void)setTheNoteObject:(NoteObject *)theNoteObject
