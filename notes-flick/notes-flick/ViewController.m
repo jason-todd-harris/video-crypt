@@ -26,6 +26,7 @@
 @property (nonatomic, strong) UIPinchGestureRecognizer *pinchGesture;
 
 @property (nonatomic, assign) CGFloat spacing;
+@property (nonatomic, assign) CGFloat transformScalar;
 @property (nonatomic, assign) NSUInteger pageIndex;
 
 @end
@@ -37,6 +38,7 @@
     [super viewDidLoad];
     [self setUpEntireScreen];
     [self setUpAddNoteButton];
+    self.transformScalar = 3;
 }
 
 -(void)setUpEntireScreen
@@ -63,7 +65,6 @@
     self.scrollView.userInteractionEnabled = YES;
     self.scrollView.pagingEnabled = YES;
     self.scrollView.clipsToBounds = NO;
-    self.scrollView.contentInset = UIEdgeInsetsMake(0, self.spacing, 0, self.spacing);
     self.scrollView.showsHorizontalScrollIndicator = NO;
     self.scrollView.backgroundColor = [UIColor notesBrown];
     [self.view addSubview:self.scrollView];
@@ -105,20 +106,20 @@
     
     self.stackView = [[UIStackView alloc] initWithArrangedSubviews:[self returnSubviewsBasedOnDataStore]];
 
-    //DEBUG DUMMY LABEL
-    NSUInteger count = 0;
-    
-    for (count = 0; count <5; count++) {
-        UILabel *dummyLabel = [[UILabel alloc] init];
-        [dummyLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.height.and.width.equalTo(@(self.noteSize *1.2));
-        }];
-        dummyLabel.text = @"BLAH BLAH";
-        dummyLabel.backgroundColor = [UIColor notesMilk];
-        dummyLabel.textAlignment = NSTextAlignmentCenter;
-        [self.stackView addArrangedSubview:dummyLabel];
-    }
-    //DEBUG DUMMY LABEL
+//    //DEBUG DUMMY LABELS
+//    
+//    for (NSUInteger count = 0; count <10; count++) {
+//        UILabel *dummyLabel = [[UILabel alloc] init];
+//        dummyLabel.contentMode = UIViewContentModeCenter;
+//        [dummyLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+//            make.height.and.width.equalTo(@(self.noteSize *1.2));
+//        }];
+//        dummyLabel.text = @"BLAH BLAH";
+//        dummyLabel.backgroundColor = [UIColor notesMilk];
+//        dummyLabel.textAlignment = NSTextAlignmentCenter;
+//        [self.stackView addArrangedSubview:dummyLabel];
+//    }
+//    //DEBUG DUMMY LABELS
     
     [self.scrollView addSubview:self.stackView];
     
@@ -140,7 +141,7 @@
     self.stackView.contentMode = UIViewContentModeScaleToFill;
     self.stackView.distribution = UIStackViewDistributionEqualSpacing;
     self.stackView.alignment = UIStackViewAlignmentCenter;
-    self.stackView.spacing = 20;
+    self.stackView.spacing = 0;
     
 //    //BROKEN ATTEMPT AT USING SCROLLING
 //    self.stackView.userInteractionEnabled = NO;
@@ -155,6 +156,8 @@
     NSMutableArray *mutableSubviews = [@[] mutableCopy];
     for (NoteView *eachNoteView in [AllTheNotes sharedNotes].notesArray) {
         eachNoteView.noteSizeValue = [AllTheNotes sharedNotes].currentNoteSize;
+        NSString *fontName = eachNoteView.interiorTextBox.font.fontName;
+        eachNoteView.interiorTextBox.font = [UIFont fontWithName:fontName size:self.noteSize/5];
         [mutableSubviews addObject:eachNoteView];
     }
     
@@ -239,53 +242,47 @@
 
 -(void)pinchReceived:(UIPinchGestureRecognizer *)pinchGestureRecog
 {
-    //INITIAL ATTEMPT AT GETTING UIScrollView TO ZOOM
-//    [self.scrollView setZoomScale:pinchGestureRecog.scale animated:YES];
-//    [self.scrollView layoutIfNeeded];
-//    NSLog(@"%1.2f",self.scrollView.zoomScale);
     
-    if (pinchGestureRecog.velocity > 0 && self.noteSize != [AllTheNotes sharedNotes].defaultNoteSize)
+    NoteView *note = [AllTheNotes sharedNotes].notesArray[0];
+    UIFont *font = note.interiorTextBox.font;
+    NSString *fontName = note.interiorTextBox.font.fontName;
+    
+    
+    if (pinchGestureRecog.velocity > 0 && self.noteSize != [AllTheNotes sharedNotes].defaultNoteSize) //MAKE LARGER
     {
-        [UIView animateWithDuration:0.5
+        [UIView animateWithDuration:0.75
                               delay:0.0
                             options: UIViewAnimationOptionCurveEaseInOut
                          animations:^{
                              self.noteSize = [AllTheNotes sharedNotes].defaultNoteSize;
                              for (NoteView *eachNote in self.stackView.arrangedSubviews) {
-                                 if ([eachNote isKindOfClass:[NoteView class]])
-                                 {
-                                     eachNote.noteSizeValue = self.noteSize;
-                                 } else
-                                 {
-                                     UILabel *theLabel = (UILabel *)eachNote;
-                                     [theLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
-                                         make.height.and.width.equalTo(@(self.noteSize * 1.2));
-                                     }];
-                                 }
+                                 eachNote.noteSizeValue = self.noteSize;
+                                 eachNote.interiorTextBox.transform = CGAffineTransformScale(eachNote.interiorTextBox.transform, self.transformScalar, self.transformScalar);  //FOR ANIMATING FONT SIZE
                              }
                              self.scrollView.pagingEnabled = YES;
                              [self.view layoutIfNeeded];
                          }
-                         completion:nil];
+                         completion:^(BOOL finished) {
+                             for (NoteView *eachNote in self.stackView.arrangedSubviews) {
+                                 eachNote.interiorTextBox.transform = CGAffineTransformScale(eachNote.interiorTextBox.transform, 1/self.transformScalar, 1/self.transformScalar);  //FOR ANIMATING FONT SIZE
+                                 eachNote.interiorTextBox.font = [UIFont fontWithName:fontName size:font.pointSize * self.transformScalar];
+                             }
+                         }];
 
-    } else if (pinchGestureRecog.velocity < 0 && self.noteSize == [AllTheNotes sharedNotes].defaultNoteSize)
+    } else if (pinchGestureRecog.velocity < 0 && self.noteSize == [AllTheNotes sharedNotes].defaultNoteSize) //MAKE SMALLER
     {
-        [UIView animateWithDuration:0.5
+        for (NoteView *eachNote in self.stackView.arrangedSubviews) { //FOR ANIMATING FONT SIZE
+            eachNote.interiorTextBox.transform = CGAffineTransformScale(eachNote.interiorTextBox.transform, self.transformScalar, self.transformScalar);
+            eachNote.interiorTextBox.font = [UIFont fontWithName:fontName size:font.pointSize / self.transformScalar];
+        }
+        [UIView animateWithDuration:0.75
                               delay:0.0
                             options: UIViewAnimationOptionCurveEaseInOut
                          animations:^{
                              self.noteSize = [AllTheNotes sharedNotes].defaultNoteSize / 3;
                              for (NoteView *eachNote in self.stackView.arrangedSubviews) {
-                                 if ([eachNote isKindOfClass:[NoteView class]])
-                                 {
-                                       eachNote.noteSizeValue = self.noteSize;
-                                 } else
-                                 {
-                                     UILabel *theLabel = (UILabel *)eachNote;
-                                     [theLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
-                                         make.height.and.width.equalTo(@(self.noteSize * 1.2));
-                                     }];
-                                 }
+                                 eachNote.noteSizeValue = self.noteSize;
+                                 eachNote.interiorTextBox.transform = CGAffineTransformScale(eachNote.interiorTextBox.transform, 1.0/self.transformScalar, 1.0/self.transformScalar); //FOR ANIMATING FONT SIZE
                              }
                              self.scrollView.pagingEnabled = NO;
                              [self.view layoutIfNeeded];

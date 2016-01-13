@@ -12,6 +12,8 @@
 
 
 @interface AppDelegate ()
+@property (nonatomic, assign) CGFloat screenWidth;
+@property (nonatomic, assign) CGFloat screenHeight;
 
 @end
 
@@ -20,7 +22,8 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
-    [AllTheNotes sharedNotes].defaultNoteSize = self.window.frame.size.width -20;
+    [self setScreenHeightandWidth];
+    [AllTheNotes sharedNotes].defaultNoteSize = self.screenHeight;
     [AllTheNotes sharedNotes].currentNoteSize = [AllTheNotes sharedNotes].defaultNoteSize;
     [AllTheNotes updateAppNotesFromNSDefaults];
 //    [self setUpSomeDummyNotes];    
@@ -55,6 +58,13 @@
     [AllTheNotes updateDefaultsWithNotes];
     
     
+}
+
+-(void)setScreenHeightandWidth
+{
+    CGSize screenSize = [UIScreen mainScreen].bounds.size;
+    self.screenWidth = MAX(screenSize.width, screenSize.height);
+    self.screenHeight = MIN(screenSize.width, screenSize.height);
 }
 
 

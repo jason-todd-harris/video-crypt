@@ -45,13 +45,21 @@
         _orderNumber = orderNumber;
         _notePriority = notePriority;
         _crossedOut = crossedOut;
+        //INNER VIEW
+        _interiorView = [[UIView alloc] init];
+        [self addSubview:_interiorView];
+        [_interiorView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.edges.equalTo(self).insets(UIEdgeInsetsMake(10, 10, 10, 10));
+        }];
         //TEXT BOX
         _interiorTextBox = [[UILabel alloc] init];
+        _interiorTextBox.contentMode = UIViewContentModeCenter;
+//        _interiorTextBox.backgroundColor = [UIColor greenColor];
         [self setTextValue:textValue];
-        [self addSubview:_interiorTextBox];
+        [_interiorView addSubview:_interiorTextBox];
         [_interiorTextBox mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.height.and.width.equalTo(self);
-            make.center.equalTo(self);
+            make.height.and.width.equalTo(self.interiorView);
+            make.center.equalTo(self.interiorView);
         }];
         //SETTERS
         [self setNoteColor:noteColor];
@@ -123,7 +131,7 @@
         _noteColor = [UIColor notesYellow];
     }
     
-    self.backgroundColor = _noteColor;
+    self.interiorView.backgroundColor = _noteColor;
 }
 
 

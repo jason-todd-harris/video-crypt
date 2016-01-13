@@ -10,14 +10,13 @@
 
 @interface NoteView : UIView
 
+@property (nonatomic, strong) UILabel *interiorTextBox;
+@property (nonatomic, strong) UIView *interiorView;
+
 @property (nonatomic, strong) NSString *textValue;
 @property (nonatomic, assign) CGFloat noteSizeValue;
-@property (nonatomic, strong) UILabel *interiorTextBox;
 @property (nonatomic, strong) UIColor *noteColor;
 @property (nonatomic, assign) BOOL crossedOut;
-
-
-//ADDING
 @property (nonatomic, strong) NSDate *noteDate;
 @property (nonatomic, assign) NSUInteger orderNumber;
 @property (nonatomic, assign) NSUInteger notePriority;
