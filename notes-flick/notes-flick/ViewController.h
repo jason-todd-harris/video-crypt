@@ -10,7 +10,6 @@
 #import "AllTheNotes.h"
 
 @interface ViewController : UIViewController
-@property (nonatomic, assign) CGFloat noteSize;
 
 @end
 

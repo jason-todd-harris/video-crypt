@@ -14,6 +14,8 @@
 @interface NoteViewController ()
 @property (nonatomic, assign) CGFloat navBarHeight;
 @property (nonatomic, strong) UIBarButtonItem *colorToggle;
+@property (nonatomic, assign) CGFloat screenHeight;
+@property (nonatomic, assign) CGFloat screenWidth;
 
 
 @end
@@ -22,29 +24,33 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.view.backgroundColor = [UIColor notesDarkGray];
-    
+    self.view.backgroundColor = [UIColor notesBrown];
+    [self setScreenHeightandWidth];
     [self placeTextField];
     [self createAndPlaceBarButtonItems];
-    
     
 }
 
 -(void)placeTextField
 {
     self.noteTextView = [[UITextView alloc] init];
+    self.noteTextView.layer.cornerRadius = 15;
     self.noteTextView.backgroundColor = [UIColor notesYellow];
+    self.noteTextView.font = [UIFont fontWithName:self.noteTextView.font.fontName size:self.fontSize];
+    self.noteTextView.textAlignment = NSTextAlignmentCenter;
+    
     [self.view addSubview:self.noteTextView];
+    CGFloat boxSize = self.screenWidth - self.layoutGuideSize - 30;
     [self.noteTextView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.height.and.width.equalTo(@([AllTheNotes sharedNotes].defaultNoteSize));
-//        make.top.equalTo(self.self.mas_topLayoutGuideBottom).offset(20);
-        make.centerY.equalTo(self.view);
+        make.top.equalTo(self.mas_topLayoutGuideBottom).offset(15);
+        make.height.and.width.equalTo(@(boxSize));
         make.centerX.equalTo(self.view);
     }];
     
+    
     if (self.areWeEditing)
     {
-        self.noteTextView.backgroundColor = self.theNoteView.backgroundColor;
+        self.noteTextView.backgroundColor = self.theNoteView.interiorView.backgroundColor;
         self.noteTextView.text = self.theNoteView.textValue;
     }
     
@@ -89,6 +95,14 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+
+-(void)setScreenHeightandWidth
+{
+    CGSize screenSize = [UIScreen mainScreen].bounds.size;
+    self.screenHeight = MAX(screenSize.width, screenSize.height);
+    self.screenWidth = MIN(screenSize.width, screenSize.height);
 }
 
 /*

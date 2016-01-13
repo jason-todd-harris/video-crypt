@@ -21,9 +21,13 @@
 @property (nonatomic, weak) id<NoteViewControllerDelegate> delegate;
 
 @property (nonatomic, strong) UITextView *noteTextView;
+@property (nonatomic, strong) NoteView *theNoteView;
+
 @property (nonatomic, assign) NSUInteger noteOrder;
 @property (nonatomic, assign) BOOL areWeEditing;
-@property (nonatomic, strong) NoteView *theNoteView;
+
+@property (nonatomic, assign) CGFloat layoutGuideSize;
+@property (nonatomic, assign) CGFloat fontSize;
 
 
 @end

@@ -47,6 +47,7 @@
         _crossedOut = crossedOut;
         //INNER VIEW
         _interiorView = [[UIView alloc] init];
+        _interiorView.layer.cornerRadius = 15;
         [self addSubview:_interiorView];
         [_interiorView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.edges.equalTo(self).insets(UIEdgeInsetsMake(10, 10, 10, 10));
@@ -98,7 +99,7 @@
     _crossedOut = crossedOut;
     if(crossedOut)
     {
-        self.alpha = 0.333;
+        self.alpha = 0.5;
     } else
     {
         self.alpha = 1;

@@ -25,9 +25,13 @@
 @property (nonatomic, strong) UITapGestureRecognizer *doubleTapGesture;
 @property (nonatomic, strong) UIPinchGestureRecognizer *pinchGesture;
 
-@property (nonatomic, assign) CGFloat spacing;
-@property (nonatomic, assign) CGFloat transformScalar;
 @property (nonatomic, assign) NSUInteger pageIndex;
+@property (nonatomic, assign) CGFloat transformScalar;
+@property (nonatomic, assign) CGFloat spacing;
+@property (nonatomic, assign) CGFloat noteSize;
+@property (nonatomic, assign) CGFloat fontDivisor;
+@property (nonatomic, assign) CGFloat largeFontSize;
+
 
 @end
 
@@ -43,8 +47,10 @@
 
 -(void)setUpEntireScreen
 {
-    self.spacing = 10;
     self.noteSize = [AllTheNotes sharedNotes].defaultNoteSize;
+    self.spacing = 20;
+    self.fontDivisor = 7;
+    self.largeFontSize = [AllTheNotes sharedNotes].defaultNoteSize / self.fontDivisor;
     
     self.swipeGestureUp = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeReceived:)];
     self.swipeGestureUp.direction = UISwipeGestureRecognizerDirectionUp;
@@ -89,7 +95,7 @@
     self.addNoteButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd
                                                                        target:self
                                                                        action:@selector(addNoteButtonWasPressed:)];
-    self.addNoteButton.tintColor = [UIColor notesBlue];
+    self.addNoteButton.tintColor = [UIColor notesBrown];
     self.navigationItem.rightBarButtonItem = self.addNoteButton;
     
 //    [self.addNoteButton mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -105,21 +111,6 @@
 {
     
     self.stackView = [[UIStackView alloc] initWithArrangedSubviews:[self returnSubviewsBasedOnDataStore]];
-
-//    //DEBUG DUMMY LABELS
-//    
-//    for (NSUInteger count = 0; count <10; count++) {
-//        UILabel *dummyLabel = [[UILabel alloc] init];
-//        dummyLabel.contentMode = UIViewContentModeCenter;
-//        [dummyLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-//            make.height.and.width.equalTo(@(self.noteSize *1.2));
-//        }];
-//        dummyLabel.text = @"BLAH BLAH";
-//        dummyLabel.backgroundColor = [UIColor notesMilk];
-//        dummyLabel.textAlignment = NSTextAlignmentCenter;
-//        [self.stackView addArrangedSubview:dummyLabel];
-//    }
-//    //DEBUG DUMMY LABELS
     
     [self.scrollView addSubview:self.stackView];
     
@@ -157,7 +148,7 @@
     for (NoteView *eachNoteView in [AllTheNotes sharedNotes].notesArray) {
         eachNoteView.noteSizeValue = [AllTheNotes sharedNotes].currentNoteSize;
         NSString *fontName = eachNoteView.interiorTextBox.font.fontName;
-        eachNoteView.interiorTextBox.font = [UIFont fontWithName:fontName size:self.noteSize/5];
+        eachNoteView.interiorTextBox.font = [UIFont fontWithName:fontName size:self.largeFontSize];
         [mutableSubviews addObject:eachNoteView];
     }
     
@@ -169,6 +160,8 @@
 {
     self.veryNewNoteVC = [[NoteViewController alloc] init];
     self.veryNewNoteVC.delegate = self;
+    self.veryNewNoteVC.layoutGuideSize = self.topLayoutGuide.length;
+    self.veryNewNoteVC.fontSize = self.largeFontSize;
     
     if (areWeEditing)
     {
@@ -210,10 +203,11 @@
                                                   priority:priority
                                                      color:result[@"color"]
                                                 crossedOut:NO];
+    newNoteView.interiorTextBox.font = [UIFont fontWithName:newNoteView.interiorTextBox.font.fontName size:self.noteSize / self.fontDivisor];
     
     if(updatedNoteView)
     {
-        updatedNoteView.backgroundColor = result[@"color"];
+        updatedNoteView.noteColor = result[@"color"];
         updatedNoteView.textValue = result[@"noteText"];
         updatedNoteView.notePriority = priority;
         
@@ -224,7 +218,14 @@
         
         //ADD NOTE TO STACKVIEW
         [self addNoteToView:[AllTheNotes sharedNotes].notesArray[orderNumber] afterNumber:orderNumber];
-    }
+        [UIView animateWithDuration:0.75
+                              delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+                                  self.scrollView.contentOffset = CGPointMake(self.scrollView.contentSize.width, 0);
+                                  NSLog(@"%@",NSStringFromCGPoint(self.scrollView.contentOffset));
+                              } completion:^(BOOL finished) {
+                                  //
+                              }];
+        }
     
     [self updateNoteOrderNumbers];
     [AllTheNotes updateDefaultsWithNotes];
@@ -244,7 +245,6 @@
 {
     
     NoteView *note = [AllTheNotes sharedNotes].notesArray[0];
-    UIFont *font = note.interiorTextBox.font;
     NSString *fontName = note.interiorTextBox.font.fontName;
     
     
@@ -265,7 +265,7 @@
                          completion:^(BOOL finished) {
                              for (NoteView *eachNote in self.stackView.arrangedSubviews) {
                                  eachNote.interiorTextBox.transform = CGAffineTransformScale(eachNote.interiorTextBox.transform, 1/self.transformScalar, 1/self.transformScalar);  //FOR ANIMATING FONT SIZE
-                                 eachNote.interiorTextBox.font = [UIFont fontWithName:fontName size:font.pointSize * self.transformScalar];
+                                 eachNote.interiorTextBox.font = [UIFont fontWithName:fontName size:self.largeFontSize];
                              }
                          }];
 
@@ -273,7 +273,7 @@
     {
         for (NoteView *eachNote in self.stackView.arrangedSubviews) { //FOR ANIMATING FONT SIZE
             eachNote.interiorTextBox.transform = CGAffineTransformScale(eachNote.interiorTextBox.transform, self.transformScalar, self.transformScalar);
-            eachNote.interiorTextBox.font = [UIFont fontWithName:fontName size:font.pointSize / self.transformScalar];
+            eachNote.interiorTextBox.font = [UIFont fontWithName:fontName size:self.largeFontSize / self.transformScalar];
         }
         [UIView animateWithDuration:0.75
                               delay:0.0
@@ -287,7 +287,11 @@
                              self.scrollView.pagingEnabled = NO;
                              [self.view layoutIfNeeded];
                          }
-                         completion:nil];
+                         completion:^(BOOL finished) {
+                             for (NoteView *eachNote in self.stackView.arrangedSubviews) { //FOR ANIMATING FONT SIZE
+                                 eachNote.interiorTextBox.font = [UIFont fontWithName:fontName size:self.largeFontSize / self.transformScalar];
+                             }
+                         }];
 
     }
     
@@ -357,6 +361,7 @@
                          [self.view layoutIfNeeded];
                      }
                      completion:nil];
+    
     [oldNoteView removeFromSuperview];
     
     NoteView *animatedNote = [[NoteView alloc] initWithNoteView:oldNoteView];
@@ -370,20 +375,21 @@
     [animatedNote.interiorTextBox mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.edges.equalTo(animatedNote);
     }];
-    [self.view layoutIfNeeded];
     
-    [UIView animateWithDuration:0.5
+    [self.view layoutIfNeeded];
+    animatedNote.interiorTextBox.transform = CGAffineTransformScale(animatedNote.interiorTextBox.transform, 2, 2);
+    UIFont *font = animatedNote.interiorTextBox.font;
+    animatedNote.interiorTextBox.font = [UIFont fontWithName:font.fontName size:self.noteSize / self.fontDivisor / 2];
+    [UIView animateWithDuration:0.4
                           delay:0.0
                         options: UIViewAnimationOptionCurveEaseIn
                      animations:^{
                          [animatedNote mas_remakeConstraints:^(MASConstraintMaker *make) {
                              make.bottom.equalTo(self.view.mas_top);
-                             make.left.equalTo(self.view).offset(pointInWindow.x-self.noteSize/2);
-                             make.height.and.width.equalTo(@(self.noteSize/2));
+                             make.centerX.equalTo(self.view.mas_left).offset(pointInWindow.x);
+                             make.height.and.width.equalTo(@(self.noteSize/2.0));
                          }];
-                         [animatedNote.interiorTextBox mas_remakeConstraints:^(MASConstraintMaker *make) {
-                             make.edges.equalTo(animatedNote);
-                         }];
+                         animatedNote.interiorTextBox.transform = CGAffineTransformScale(animatedNote.interiorTextBox.transform, 1.0/2, 1.0/2);
                          [self.view layoutIfNeeded];
                      }
                      completion:^(BOOL finished) {
