@@ -151,7 +151,7 @@
     NSMutableArray *mutableSubviews = [@[] mutableCopy];
     for (i = 0; i <[AllTheNotes sharedNotes].notesArray.count; i++)
     {
-        NoteView *newNoteView = [[NoteView alloc] initWithSize:self.noteSize withNote:[AllTheNotes sharedNotes].notesArray[i]];
+        NoteView *newNoteView = [[NoteView alloc] initWithSize:self.noteSize withNote:[AllTheNotes sharedNotes].notesArray[i]]; //REFACTOR
         [mutableSubviews addObject:newNoteView];
     }
     return mutableSubviews;

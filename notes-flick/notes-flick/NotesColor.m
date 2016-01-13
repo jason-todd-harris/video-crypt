@@ -57,17 +57,17 @@
 
 +(UIColor *)notesYellow { return [UIColor colorWithRed:237/255.0 green:201/255.0 blue:81/255.0 alpha:1]; }
 
-+(UIColor *)notesRed { return [UIColor colorWithRed:204/255.0 green:51/255.0 blue:63/255.0 alpha:1]; }
++(UIColor *)notesRed { return [UIColor colorWithRed:252/255.0 green:157/255.0 blue:154/255.0 alpha:1]; }
 
-+(UIColor *)notesOrange { return [UIColor colorWithRed:235/255.0 green:104/255.0 blue:65/255.0 alpha:1]; }
++(UIColor *)notesOrange { return [UIColor colorWithRed:249/255.0 green:205/255.0 blue:173/255.0 alpha:1]; }
 
-+(UIColor *)notesBlue { return [UIColor colorWithRed:0/255.0 green:160/255.0 blue:176/255.0 alpha:1]; }
++(UIColor *)notesBlue { return [UIColor colorWithRed:131/255.0 green:206/255.0 blue:202/255.0 alpha:1]; }
 
-+(UIColor *)notesBrown { return [UIColor colorWithRed:106/255.0 green:74/255.0 blue:60/255.0 alpha:1]; }
++(UIColor *)notesBrown { return [UIColor colorWithRed:254/255.0 green:67/255.0 blue:101/255.0 alpha:1]; }
 
 //not set up to go from color to string yet:
 
-+(UIColor *)notesDarkGray { return [ UIColor colorWithRed:66/255.0 green:66/255.0 blue:66/255.0 alpha:1]; }
++(UIColor *)notesDarkGray { return [ UIColor colorWithRed:131/255.0 green:175/255.0 blue:155/255.0 alpha:1]; }
 
 +(UIColor *)notesLightGray { return [UIColor colorWithRed:233/255.0 green:233/255.0 blue:233/255.0 alpha:1]; }
 

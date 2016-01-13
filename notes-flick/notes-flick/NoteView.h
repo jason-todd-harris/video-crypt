@@ -18,8 +18,12 @@
 @property (nonatomic, strong) UIColor *noteColor;
 @property (nonatomic, assign) BOOL crossedOut;
 
-//@property (nonatomic, strong, readonly) UIColor *backgroundColor;
-//+(NoteView *)newNoteSize:(CGFloat)noteSize withText:(NSString *)text;
+
+//ADDING
+@property (nonatomic, strong) NSDate *noteDate;
+@property (nonatomic, assign) NSUInteger orderNumber;
+@property (nonatomic, assign) NSUInteger notePriority;
+
 
 -(instancetype)initWithSize:(CGFloat)noteSize withNote:(NoteObject *)theNote;
 -(void)removeFromSuperview;
