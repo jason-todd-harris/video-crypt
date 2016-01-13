@@ -56,6 +56,7 @@
         _interiorTextBox = [[UILabel alloc] init];
         _interiorTextBox.contentMode = UIViewContentModeCenter;
 //        _interiorTextBox.backgroundColor = [UIColor greenColor];
+//        _interiorTextBox.alpha = 0.5;
         [self setTextValue:textValue];
         [_interiorView addSubview:_interiorTextBox];
         [_interiorTextBox mas_makeConstraints:^(MASConstraintMaker *make) {

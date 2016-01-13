@@ -49,7 +49,7 @@
 {
     self.noteSize = [AllTheNotes sharedNotes].defaultNoteSize;
     self.spacing = 20;
-    self.fontDivisor = 7;
+    self.fontDivisor = 9;
     self.largeFontSize = [AllTheNotes sharedNotes].defaultNoteSize / self.fontDivisor;
     
     self.swipeGestureUp = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeReceived:)];
@@ -242,19 +242,14 @@
 -(void)pinchReceived:(UIPinchGestureRecognizer *)pinchGestureRecog
 {
     CGPoint locationInView = [pinchGestureRecog locationInView:self.view];
-    NSLog(@"location in view: %@",NSStringFromCGPoint(locationInView) );
-    
     NoteView *note = [AllTheNotes sharedNotes].notesArray[0];
     NSString *fontName = note.interiorTextBox.font.fontName;
     CGFloat offsetFranction = self.scrollView.contentOffset.x / (self.scrollView.contentSize.width - self.view.frame.size.width);
-    NSLog(@"offset fraction %1.3f",self.scrollView.contentOffset.x / (self.scrollView.contentSize.width - self.view.frame.size.width));
-    NSLog(@"screen width: %1.1f",self.view.frame.size.width);
-    NSLog(@"content offset: %1.1f",self.scrollView.contentOffset.x);
-    NSLog(@"content size: %1.1f",self.scrollView.contentSize.width);
-    NSLog(@"content fraction: %1.3f \n.",self.scrollView.contentOffset.x / self.scrollView.contentSize.width);
+
+    
     if (pinchGestureRecog.velocity > 0 && self.noteSize != [AllTheNotes sharedNotes].defaultNoteSize) //ZOOM IN
     {
-        [UIView animateWithDuration:0.75
+        [UIView animateWithDuration:5.75
                               delay:0.0
                             options: UIViewAnimationOptionCurveEaseInOut
                          animations:^{
