@@ -6,8 +6,8 @@
 //  Copyright © 2015 jason harris. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
-#import "NoteObject.h"
+#import <UIKit/UIKit.h>
+
 
 @interface AllTheNotes : NSObject
 @property (nonatomic, strong) NSUserDefaults *userDefaults;
@@ -16,6 +16,7 @@
 @property (nonatomic, strong) NSArray *colorArray;
 
 @property (nonatomic, assign) CGFloat defaultNoteSize;
+@property (nonatomic, assign) CGFloat currentNoteSize;
 
 //@property (nonatomic, strong) NSMutableArray *notesDictionariesArray;
 

@@ -17,7 +17,6 @@
 		966E53A91C2AE835001F93CB /* notes_flickTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 966E53A81C2AE835001F93CB /* notes_flickTests.m */; };
 		966E53B41C2AE835001F93CB /* notes_flickUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 966E53B31C2AE835001F93CB /* notes_flickUITests.m */; };
 		966E53C61C2C763E001F93CB /* NoteView.m in Sources */ = {isa = PBXBuildFile; fileRef = 966E53C51C2C763E001F93CB /* NoteView.m */; };
-		966E53CB1C2DB239001F93CB /* NoteObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 966E53CA1C2DB239001F93CB /* NoteObject.m */; };
 		966E53CE1C2DBB95001F93CB /* AllTheNotes.m in Sources */ = {isa = PBXBuildFile; fileRef = 966E53CD1C2DBB95001F93CB /* AllTheNotes.m */; };
 		966E53D81C2DE497001F93CB /* NotesColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 966E53D71C2DE497001F93CB /* NotesColor.m */; };
 		966E53DE1C2F1EF9001F93CB /* NoteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 966E53DD1C2F1EF9001F93CB /* NoteViewController.m */; };
@@ -63,8 +62,6 @@
 		966E53B51C2AE835001F93CB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		966E53C41C2C763E001F93CB /* NoteView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NoteView.h; sourceTree = "<group>"; };
 		966E53C51C2C763E001F93CB /* NoteView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NoteView.m; sourceTree = "<group>"; };
-		966E53C91C2DB239001F93CB /* NoteObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NoteObject.h; sourceTree = "<group>"; };
-		966E53CA1C2DB239001F93CB /* NoteObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NoteObject.m; sourceTree = "<group>"; };
 		966E53CC1C2DBB95001F93CB /* AllTheNotes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AllTheNotes.h; sourceTree = "<group>"; };
 		966E53CD1C2DBB95001F93CB /* AllTheNotes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AllTheNotes.m; sourceTree = "<group>"; };
 		966E53D61C2DE497001F93CB /* NotesColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NotesColor.h; sourceTree = "<group>"; };
@@ -141,8 +138,6 @@
 				966E53921C2AE834001F93CB /* ViewController.m */,
 				966E53C41C2C763E001F93CB /* NoteView.h */,
 				966E53C51C2C763E001F93CB /* NoteView.m */,
-				966E53C91C2DB239001F93CB /* NoteObject.h */,
-				966E53CA1C2DB239001F93CB /* NoteObject.m */,
 				966E53DC1C2F1EF9001F93CB /* NoteViewController.h */,
 				966E53DD1C2F1EF9001F93CB /* NoteViewController.m */,
 				966E53941C2AE834001F93CB /* Main.storyboard */,
@@ -398,7 +393,6 @@
 				966E53991C2AE834001F93CB /* notes_flick.xcdatamodeld in Sources */,
 				966E53901C2AE834001F93CB /* AppDelegate.m in Sources */,
 				966E53C61C2C763E001F93CB /* NoteView.m in Sources */,
-				966E53CB1C2DB239001F93CB /* NoteObject.m in Sources */,
 				966E538D1C2AE834001F93CB /* main.m in Sources */,
 				966E53D81C2DE497001F93CB /* NotesColor.m in Sources */,
 			);

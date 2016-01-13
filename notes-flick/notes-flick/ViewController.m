@@ -10,6 +10,7 @@
 #import <Masonry.h>
 #import "NoteViewController.h"
 #import "NoteView.h"
+#import "NotesColor.h"
 
 @interface ViewController () <UIGestureRecognizerDelegate, UIScrollViewDelegate, NoteViewControllerDelegate>
 @property (nonatomic, strong) UIScrollView *scrollView;
@@ -24,13 +25,13 @@
 @property (nonatomic, strong) UITapGestureRecognizer *doubleTapGesture;
 @property (nonatomic, strong) UIPinchGestureRecognizer *pinchGesture;
 
-@property (nonatomic, assign) CGFloat noteSize;
 @property (nonatomic, assign) CGFloat spacing;
 @property (nonatomic, assign) NSUInteger pageIndex;
 
 @end
 
 @implementation ViewController
+
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -104,16 +105,20 @@
     
     self.stackView = [[UIStackView alloc] initWithArrangedSubviews:[self returnSubviewsBasedOnDataStore]];
 
-//    //DEBUG DUMMY LABEL
-//    UILabel *dummyLabel = [[UILabel alloc] init];
-//    [dummyLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.height.and.width.equalTo(@(self.noteSize *1.2));
-//    }];
-//    dummyLabel.text = @"BLAH BLAH";
-//    dummyLabel.backgroundColor = [UIColor notesMilk];
-//    dummyLabel.textAlignment = NSTextAlignmentCenter;
-//    [self.stackView addArrangedSubview:dummyLabel];
-//    //DEBUG DUMMY LABEL
+    //DEBUG DUMMY LABEL
+    NSUInteger count = 0;
+    
+    for (count = 0; count <5; count++) {
+        UILabel *dummyLabel = [[UILabel alloc] init];
+        [dummyLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.height.and.width.equalTo(@(self.noteSize *1.2));
+        }];
+        dummyLabel.text = @"BLAH BLAH";
+        dummyLabel.backgroundColor = [UIColor notesMilk];
+        dummyLabel.textAlignment = NSTextAlignmentCenter;
+        [self.stackView addArrangedSubview:dummyLabel];
+    }
+    //DEBUG DUMMY LABEL
     
     [self.scrollView addSubview:self.stackView];
     
@@ -147,13 +152,13 @@
 
 -(NSMutableArray *)returnSubviewsBasedOnDataStore
 {
-    NSUInteger i = 0;
     NSMutableArray *mutableSubviews = [@[] mutableCopy];
-    for (i = 0; i <[AllTheNotes sharedNotes].notesArray.count; i++)
-    {
-        NoteView *newNoteView = [[NoteView alloc] initWithSize:self.noteSize withNote:[AllTheNotes sharedNotes].notesArray[i]]; //REFACTOR
-        [mutableSubviews addObject:newNoteView];
+    for (NoteView *eachNoteView in [AllTheNotes sharedNotes].notesArray) {
+        eachNoteView.noteSizeValue = [AllTheNotes sharedNotes].currentNoteSize;
+        [mutableSubviews addObject:eachNoteView];
     }
+    
+    
     return mutableSubviews;
 }
 
@@ -166,7 +171,7 @@
     {
         self.veryNewNoteVC.theNoteView = noteViewToEdit;
         self.veryNewNoteVC.noteTextView.text = noteViewToEdit.textValue;
-        self.veryNewNoteVC.noteOrder = noteViewToEdit.theNoteObject.orderNumber;
+        self.veryNewNoteVC.noteOrder = noteViewToEdit.orderNumber;
     } else
     {
         self.veryNewNoteVC.noteOrder = self.stackView.arrangedSubviews.count;
@@ -195,22 +200,24 @@
     NSNumber *nsNumberPriority = result[@"priority"];
     NSUInteger priority = nsNumberPriority.integerValue;
     
-    NoteObject *newNoteObject = [[NoteObject alloc] initWithNote:result[@"noteText"]
-                                                        withDate:nil
-                                                     orderNumber:orderNumber
-                                                        priority:priority
-                                                           color:result[@"color"]
-                                                      crossedOut:NO];
+    NoteView *newNoteView = [[NoteView alloc] initWithText:result[@"noteText"]
+                                                  noteSize:self.noteSize
+                                                  withDate:nil
+                                               orderNumber:orderNumber
+                                                  priority:priority
+                                                     color:result[@"color"]
+                                                crossedOut:NO];
+    
     if(updatedNoteView)
     {
         updatedNoteView.backgroundColor = result[@"color"];
         updatedNoteView.textValue = result[@"noteText"];
-        updatedNoteView.theNoteObject.notePriority = priority;
+        updatedNoteView.notePriority = priority;
         
     } else //IF WE'RE ADDING A NEW NOTE DO THIS
     {
         //ADD THE NOTE TO DATA STORE
-        [[AllTheNotes sharedNotes].notesArray insertObject:newNoteObject atIndex:orderNumber];
+        [[AllTheNotes sharedNotes].notesArray insertObject:newNoteView atIndex:orderNumber];
         
         //ADD NOTE TO STACKVIEW
         [self addNoteToView:[AllTheNotes sharedNotes].notesArray[orderNumber] afterNumber:orderNumber];
@@ -221,10 +228,10 @@
 }
 
 
--(void)addNoteToView:(NoteObject *)newNoteObject afterNumber:(NSUInteger)orderNumber
+-(void)addNoteToView:(NoteView *)newNoteView afterNumber:(NSUInteger)orderNumber
 {
-    NoteView *newNoteView = [[NoteView alloc] initWithSize:self.noteSize withNote:newNoteObject];
     [self.stackView insertArrangedSubview:newNoteView atIndex:orderNumber];
+    [self updateNoteOrderNumbers];
 }
 
 
@@ -245,16 +252,16 @@
                          animations:^{
                              self.noteSize = [AllTheNotes sharedNotes].defaultNoteSize;
                              for (NoteView *eachNote in self.stackView.arrangedSubviews) {
-//                                 if ([eachNote isKindOfClass:[NoteView class]])
-//                                 {
+                                 if ([eachNote isKindOfClass:[NoteView class]])
+                                 {
                                      eachNote.noteSizeValue = self.noteSize;
-//                                 } else
-//                                 {
-//                                     UILabel *theLabel = (UILabel *)eachNote;
-//                                     [theLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
-//                                         make.height.and.width.equalTo(@(self.noteSize * 1.2));
-//                                     }];
-//                                 }
+                                 } else
+                                 {
+                                     UILabel *theLabel = (UILabel *)eachNote;
+                                     [theLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+                                         make.height.and.width.equalTo(@(self.noteSize * 1.2));
+                                     }];
+                                 }
                              }
                              self.scrollView.pagingEnabled = YES;
                              [self.view layoutIfNeeded];
@@ -269,16 +276,16 @@
                          animations:^{
                              self.noteSize = [AllTheNotes sharedNotes].defaultNoteSize / 3;
                              for (NoteView *eachNote in self.stackView.arrangedSubviews) {
-//                                 if ([eachNote isKindOfClass:[NoteView class]])
-//                                 {
+                                 if ([eachNote isKindOfClass:[NoteView class]])
+                                 {
                                        eachNote.noteSizeValue = self.noteSize;
-//                                 } else
-//                                 {
-//                                     UILabel *theLabel = (UILabel *)eachNote;
-//                                     [theLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
-//                                         make.height.and.width.equalTo(@(self.noteSize * 1.2));
-//                                     }];
-//                                 }
+                                 } else
+                                 {
+                                     UILabel *theLabel = (UILabel *)eachNote;
+                                     [theLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+                                         make.height.and.width.equalTo(@(self.noteSize * 1.2));
+                                     }];
+                                 }
                              }
                              self.scrollView.pagingEnabled = NO;
                              [self.view layoutIfNeeded];
@@ -355,7 +362,7 @@
                      completion:nil];
     [oldNoteView removeFromSuperview];
     
-    NoteView *animatedNote = [[NoteView alloc] initWithSize:self.noteSize withNote:oldNoteView.theNoteObject];
+    NoteView *animatedNote = [[NoteView alloc] initWithNoteView:oldNoteView];
     
     [self.topView addSubview:animatedNote];
     
@@ -444,15 +451,10 @@
 {
     NSUInteger i = 0;
     
-//    for (NoteObject *eachNote in [AllTheNotes sharedNotes].notesArray) {
-//        eachNote.orderNumber = i;
-//        i++;
-//    }
-    
     i = 0;
     
     for (NoteView *eachNoteView in self.stackView.arrangedSubviews) {
-        eachNoteView.theNoteObject.orderNumber = i;
+        eachNoteView.orderNumber = i;
         i++;
     }
     
@@ -463,6 +465,12 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+-(void)setNoteSize:(CGFloat)noteSize
+{
+    _noteSize = noteSize;
+    [AllTheNotes sharedNotes].currentNoteSize = noteSize;
 }
 
 

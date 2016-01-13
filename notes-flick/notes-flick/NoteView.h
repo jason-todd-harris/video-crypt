@@ -7,14 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "NoteObject.h"
 
 @interface NoteView : UIView
 
 @property (nonatomic, strong) NSString *textValue;
 @property (nonatomic, assign) CGFloat noteSizeValue;
 @property (nonatomic, strong) UILabel *interiorTextBox;
-@property (nonatomic, strong) NoteObject *theNoteObject;
 @property (nonatomic, strong) UIColor *noteColor;
 @property (nonatomic, assign) BOOL crossedOut;
 
@@ -25,7 +23,16 @@
 @property (nonatomic, assign) NSUInteger notePriority;
 
 
--(instancetype)initWithSize:(CGFloat)noteSize withNote:(NoteObject *)theNote;
+- (instancetype)initWithText:(NSString *)textValue
+                    noteSize:(CGFloat)noteSizeValue
+                    withDate:(NSDate *)date
+                 orderNumber:(NSUInteger)orderNumber
+                    priority:(NSUInteger)notePriority
+                       color:(UIColor *)noteColor
+                  crossedOut:(BOOL)crossedOut;
+
+- (instancetype)initWithNoteView:(NoteView *)noteView;
+
 -(void)removeFromSuperview;
 
 @end

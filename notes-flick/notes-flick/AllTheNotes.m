@@ -8,7 +8,7 @@
 
 #import "AllTheNotes.h"
 #import "NotesColor.h"
-
+#import "NoteView.h"
 
 @implementation AllTheNotes
 
@@ -27,7 +27,7 @@
 {
     _notesArray = NSMutableArray.new;
     _userDefaults = [NSUserDefaults standardUserDefaults];
-    _colorArray = @[ [UIColor notesYellow], [UIColor notesOrange], [UIColor notesRed], [UIColor notesBlue] ];
+    _colorArray = @[ [UIColor notesYellow], [UIColor notesOrange], [UIColor notesRed], [UIColor notesBlue], [UIColor notesGreen] ];
     
 }
 
@@ -41,6 +41,7 @@
     {
          dictionaryArray = [[AllTheNotes sharedNotes].userDefaults objectForKey:@"notesArray"];
     }
+    
     for (NSDictionary *eachNote in dictionaryArray)
     {
         NSDateFormatter * dateFormatter = [[NSDateFormatter alloc] init];
@@ -51,15 +52,16 @@
         NSString *colorString = eachNote[@"color"];
         UIColor *noteColor = [UIColor colorWithString:colorString];
         NSNumber *crossedOut = eachNote[@"crossedOut"];
-        NoteObject *aNoteObject = [[NoteObject alloc] initWithNote:eachNote[@"text"]
-                                                          withDate:theDate
-                                                       orderNumber:orderNumber.integerValue
-                                                          priority:notePriority.integerValue
-                                                             color:noteColor
-                                                        crossedOut:crossedOut.integerValue
-                                   ];
         
-        [aNoteArray addObject:aNoteObject];
+        NoteView *aNoteView = [[NoteView alloc] initWithText:eachNote[@"text"]
+                                                    noteSize:[AllTheNotes sharedNotes].currentNoteSize
+                                                    withDate:theDate
+                                                 orderNumber:orderNumber.integerValue
+                                                    priority:notePriority.integerValue
+                                                       color:noteColor
+                                                  crossedOut:crossedOut.integerValue];
+        
+        [aNoteArray addObject:aNoteView];
     }
     [AllTheNotes sharedNotes].notesArray = aNoteArray;
     
@@ -68,13 +70,13 @@
 +(void)updateDefaultsWithNotes
 {
     NSMutableArray *dictionaryArray = NSMutableArray.new;
-    for (NoteObject *eachNote in [AllTheNotes sharedNotes].notesArray) {
+    for (NoteView *eachNote in [AllTheNotes sharedNotes].notesArray) {
         NSDateFormatter * dateFormatter = [[NSDateFormatter alloc] init];
         dateFormatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
         NSString *dateString = [dateFormatter stringFromDate:eachNote.noteDate];
         NSString *colorString = [UIColor stringFromColor:eachNote.noteColor];
         NSDictionary *noteDictionary = @{@"date":dateString,
-                                         @"text":eachNote.noteText,
+                                         @"text":eachNote.textValue,
                                          @"order":@(eachNote.orderNumber),
                                          @"priority":@(eachNote.notePriority),
                                          @"color" : colorString,

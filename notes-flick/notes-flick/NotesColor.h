@@ -20,6 +20,7 @@
 +(UIColor *)notesRed;
 +(UIColor *)notesOrange;
 +(UIColor *)notesBlue;
++(UIColor *)notesGreen;
 +(UIColor *)notesBrown;
 +(UIColor *)notesDarkGray;
 +(UIColor *)notesLightGray;

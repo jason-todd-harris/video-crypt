@@ -20,42 +20,74 @@
 
 -(instancetype)init
 {
-    NoteObject *theNote = [[NoteObject alloc] initWithNote:@"init used"
-                                                  withDate:nil
-                                               orderNumber:0
-                                                  priority:1
-                                                     color:nil
-                                                crossedOut:0];
-    self = [self initWithSize:50 withNote:theNote];
+    self = [self initWithText:@"init used" noteSize:50 withDate:nil orderNumber:0 priority:1 color:nil crossedOut:NO];
     return self;
 }
 
--(instancetype)initWithSize:(CGFloat)noteSize withNote:(NoteObject *)theNote
+- (instancetype)initWithText:(NSString *)textValue
+                    noteSize:(CGFloat)noteSizeValue
+                    withDate:(NSDate *)date
+                 orderNumber:(NSUInteger)orderNumber
+                    priority:(NSUInteger)notePriority
+                       color:(UIColor *)noteColor
+                  crossedOut:(BOOL)crossedOut
 {
     self = [super init];
     if(self)
     {
+        if(date)
+        {
+            _noteDate = date;
+        } else
+        {
+            _noteDate = [NSDate date];
+        }
+        _orderNumber = orderNumber;
+        _notePriority = notePriority;
+        _crossedOut = crossedOut;
+        //TEXT BOX
         _interiorTextBox = [[UILabel alloc] init];
-        _interiorTextBox.textAlignment = NSTextAlignmentCenter;
-        _interiorTextBox.backgroundColor = [UIColor colorWithRed:100/255 green:0/255 blue:0/255 alpha:0.0];// debugging text box
-        _interiorTextBox.numberOfLines = 0;
+        [self setTextValue:textValue];
         [self addSubview:_interiorTextBox];
         [_interiorTextBox mas_makeConstraints:^(MASConstraintMaker *make) {
             make.height.and.width.equalTo(self);
             make.center.equalTo(self);
         }];
-        [self setNoteSizeValue:noteSize];
-        [self setTheNoteObject:theNote];
-        [self setCrossedOut:theNote.crossedOut];
+        //SETTERS
+        [self setNoteColor:noteColor];
+        [self setCrossedOut:crossedOut];
+        [self setNoteSizeValue:noteSizeValue];
+        
     }
     
     return self;
 }
+
+
+-(instancetype)initWithNoteView:(NoteView *)noteView
+{
+    self = [self initWithText:noteView.textValue
+                     noteSize:noteView.noteSizeValue
+                     withDate:noteView.noteDate
+                  orderNumber:noteView.orderNumber
+                     priority:noteView.notePriority
+                        color:noteView.noteColor
+                   crossedOut:noteView.crossedOut];
+    return self;
+}
+
+//-(void)setTheNoteObject:(NoteObject *)theNoteObject
+//{
+//    [self setTextValue:theNoteObject.noteText];
+//    [self setNoteColor:theNoteObject.noteColor];
+//    _theNoteObject = theNoteObject;
+//}
+
+
+
 -(void)setCrossedOut:(BOOL)crossedOut
 {
     _crossedOut = crossedOut;
-    _theNoteObject.crossedOut = crossedOut;
-    
     if(crossedOut)
     {
         self.alpha = 0.333;
@@ -77,15 +109,8 @@
     {
         _noteColor = [UIColor notesYellow];
     }
-    _theNoteObject.noteColor = backgroundColor;
 }
 
--(void)setTheNoteObject:(NoteObject *)theNoteObject
-{
-    [self setTextValue:theNoteObject.noteText];
-    [self setNoteColor:theNoteObject.noteColor];
-    _theNoteObject = theNoteObject;
-}
 
 
 -(void)setNoteColor:(UIColor *)noteColor
@@ -99,7 +124,6 @@
     }
     
     self.backgroundColor = _noteColor;
-    _theNoteObject.noteColor = noteColor;
 }
 
 
@@ -108,13 +132,19 @@
     _textValue = textValue;
     _interiorTextBox.text = textValue;
     _interiorTextBox.textAlignment = NSTextAlignmentCenter;
-    _theNoteObject.noteText = textValue;
+    _interiorTextBox.numberOfLines = 0;
 }
 
 
 -(void)setNoteSizeValue:(CGFloat)noteSizeValue
 {
-    _noteSizeValue = noteSizeValue;
+    if(noteSizeValue == 0)
+    {
+        _noteSizeValue = [AllTheNotes sharedNotes].currentNoteSize;
+    } else
+    {
+        _noteSizeValue = noteSizeValue;
+    }
     [self mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.height.and.width.equalTo(@(noteSizeValue));
     }];
@@ -122,7 +152,7 @@
 
 -(void)removeFromSuperview //ALSO REMOVES FROM THE PERSISTENT ARRAY
 {
-    [[AllTheNotes sharedNotes].notesArray removeObject:self.theNoteObject];
+    [[AllTheNotes sharedNotes].notesArray removeObject:self];
     [self removeConstraints:self.constraints];
     [super removeFromSuperview];
 }

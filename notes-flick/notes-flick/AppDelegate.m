@@ -7,8 +7,8 @@
 //
 
 #import "AppDelegate.h"
-#import "NoteObject.h"
 #import "AllTheNotes.h"
+#import "NoteView.h"
 
 
 @interface AppDelegate ()
@@ -21,6 +21,7 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     [AllTheNotes sharedNotes].defaultNoteSize = self.window.frame.size.width -20;
+    [AllTheNotes sharedNotes].currentNoteSize = [AllTheNotes sharedNotes].defaultNoteSize;
     [AllTheNotes updateAppNotesFromNSDefaults];
 //    [self setUpSomeDummyNotes];    
 
@@ -39,12 +40,13 @@
     {
         
         NSString *string = [NSString stringWithFormat:@"%@ text",@(i).stringValue];
-        NoteObject *dummyNote = [[NoteObject alloc] initWithNote:string
-                                                        withDate:nil
-                                                     orderNumber:i
-                                                        priority:1
-                                                           color:[AllTheNotes sharedNotes].colorArray[i%4]
-                                                      crossedOut:NO];
+        NoteView *dummyNote = [[NoteView alloc] initWithText:string
+                                                    noteSize:0
+                                                    withDate:nil
+                                                 orderNumber:i
+                                                    priority:1
+                                                       color:[AllTheNotes sharedNotes].colorArray[i%5]
+                                                  crossedOut:NO];
         [mutableNotes addObject:dummyNote];
     }
     
