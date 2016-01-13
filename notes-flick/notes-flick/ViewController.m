@@ -222,9 +222,7 @@
                               delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
                                   self.scrollView.contentOffset = CGPointMake(self.scrollView.contentSize.width, 0);
                                   NSLog(@"%@",NSStringFromCGPoint(self.scrollView.contentOffset));
-                              } completion:^(BOOL finished) {
-                                  //
-                              }];
+                              } completion:nil];
         }
     
     [self updateNoteOrderNumbers];
@@ -243,12 +241,17 @@
 
 -(void)pinchReceived:(UIPinchGestureRecognizer *)pinchGestureRecog
 {
+    CGPoint locationInView = [pinchGestureRecog locationInView:self.view];
+    NSLog(@"location in view: %@",NSStringFromCGPoint(locationInView) );
     
     NoteView *note = [AllTheNotes sharedNotes].notesArray[0];
     NSString *fontName = note.interiorTextBox.font.fontName;
-    
-    
-    if (pinchGestureRecog.velocity > 0 && self.noteSize != [AllTheNotes sharedNotes].defaultNoteSize) //MAKE LARGER
+    NSLog(@"offset fraction %1.3f",self.scrollView.contentOffset.x / (self.scrollView.contentSize.width - self.view.frame.size.width));
+    NSLog(@"screen width: %1.1f",self.view.frame.size.width);
+    NSLog(@"content offset: %1.1f",self.scrollView.contentOffset.x);
+    NSLog(@"content size: %1.1f",self.scrollView.contentSize.width);
+    NSLog(@"content fraction: %1.3f \n.",self.scrollView.contentOffset.x / self.scrollView.contentSize.width);
+    if (pinchGestureRecog.velocity > 0 && self.noteSize != [AllTheNotes sharedNotes].defaultNoteSize) //ZOOM IN
     {
         [UIView animateWithDuration:0.75
                               delay:0.0
@@ -259,17 +262,22 @@
                                  eachNote.noteSizeValue = self.noteSize;
                                  eachNote.interiorTextBox.transform = CGAffineTransformScale(eachNote.interiorTextBox.transform, self.transformScalar, self.transformScalar);  //FOR ANIMATING FONT SIZE
                              }
-                             self.scrollView.pagingEnabled = YES;
+//                             self.scrollView.pagingEnabled = YES;
+                             
+                             //SCROLLING AFTER ZOOM
+                             CGFloat offsetFranction = self.scrollView.contentOffset.x / (self.scrollView.contentSize.width - self.view.frame.size.width);
+                              self.scrollView.contentOffset = CGPointMake(offsetFranction * (self.scrollView.contentSize.width - self.view.frame.size.width) * self.transformScalar + self.view.frame.size.width, 0);
                              [self.view layoutIfNeeded];
                          }
                          completion:^(BOOL finished) {
                              for (NoteView *eachNote in self.stackView.arrangedSubviews) {
                                  eachNote.interiorTextBox.transform = CGAffineTransformScale(eachNote.interiorTextBox.transform, 1/self.transformScalar, 1/self.transformScalar);  //FOR ANIMATING FONT SIZE
                                  eachNote.interiorTextBox.font = [UIFont fontWithName:fontName size:self.largeFontSize];
+                                 [self.view layoutIfNeeded];
                              }
                          }];
 
-    } else if (pinchGestureRecog.velocity < 0 && self.noteSize == [AllTheNotes sharedNotes].defaultNoteSize) //MAKE SMALLER
+    } else if (pinchGestureRecog.velocity < 0 && self.noteSize == [AllTheNotes sharedNotes].defaultNoteSize) //ZOOM OUT
     {
         for (NoteView *eachNote in self.stackView.arrangedSubviews) { //FOR ANIMATING FONT SIZE
             eachNote.interiorTextBox.transform = CGAffineTransformScale(eachNote.interiorTextBox.transform, self.transformScalar, self.transformScalar);
@@ -282,13 +290,17 @@
                              self.noteSize = [AllTheNotes sharedNotes].defaultNoteSize / 3;
                              for (NoteView *eachNote in self.stackView.arrangedSubviews) {
                                  eachNote.noteSizeValue = self.noteSize;
-                                 eachNote.interiorTextBox.transform = CGAffineTransformScale(eachNote.interiorTextBox.transform, 1.0/self.transformScalar, 1.0/self.transformScalar); //FOR ANIMATING FONT SIZE
+                                 //FOR ANIMATING FONT SIZE
+                                 eachNote.interiorTextBox.transform = CGAffineTransformScale(eachNote.interiorTextBox.transform, 1.0/self.transformScalar, 1.0/self.transformScalar);
                              }
                              self.scrollView.pagingEnabled = NO;
+                             //SCROLLING TO CORRECT NOTE
+                             CGFloat offsetFranction = (self.scrollView.contentOffset.x ) / (self.scrollView.contentSize.width - self.view.frame.size.width);
+                              self.scrollView.contentOffset = CGPointMake(offsetFranction * (self.scrollView.contentSize.width - self.view.frame.size.width) / self.transformScalar - self.view.frame.size.width / self.transformScalar , 0);
                              [self.view layoutIfNeeded];
                          }
                          completion:^(BOOL finished) {
-                             for (NoteView *eachNote in self.stackView.arrangedSubviews) { //FOR ANIMATING FONT SIZE
+                             for (NoteView *eachNote in self.stackView.arrangedSubviews) { //FOR SETTING CORRECT FONT SIZE AFTER ANIMATION
                                  eachNote.interiorTextBox.font = [UIFont fontWithName:fontName size:self.largeFontSize / self.transformScalar];
                              }
                          }];
