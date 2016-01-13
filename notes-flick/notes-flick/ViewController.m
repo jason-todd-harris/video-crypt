@@ -246,6 +246,7 @@
     
     NoteView *note = [AllTheNotes sharedNotes].notesArray[0];
     NSString *fontName = note.interiorTextBox.font.fontName;
+    CGFloat offsetFranction = self.scrollView.contentOffset.x / (self.scrollView.contentSize.width - self.view.frame.size.width);
     NSLog(@"offset fraction %1.3f",self.scrollView.contentOffset.x / (self.scrollView.contentSize.width - self.view.frame.size.width));
     NSLog(@"screen width: %1.1f",self.view.frame.size.width);
     NSLog(@"content offset: %1.1f",self.scrollView.contentOffset.x);
@@ -263,10 +264,8 @@
                                  eachNote.interiorTextBox.transform = CGAffineTransformScale(eachNote.interiorTextBox.transform, self.transformScalar, self.transformScalar);  //FOR ANIMATING FONT SIZE
                              }
 //                             self.scrollView.pagingEnabled = YES;
-                             
                              //SCROLLING AFTER ZOOM
-                             CGFloat offsetFranction = self.scrollView.contentOffset.x / (self.scrollView.contentSize.width - self.view.frame.size.width);
-                              self.scrollView.contentOffset = CGPointMake(offsetFranction * (self.scrollView.contentSize.width - self.view.frame.size.width) * self.transformScalar + self.view.frame.size.width, 0);
+                              self.scrollView.contentOffset = CGPointMake(offsetFranction * (self.scrollView.contentSize.width - self.view.frame.size.width) * self.transformScalar + self.view.frame.size.width + (locationInView.x - self.view.frame.size.width/2) * self.transformScalar, 0);
                              [self.view layoutIfNeeded];
                          }
                          completion:^(BOOL finished) {
@@ -295,7 +294,6 @@
                              }
                              self.scrollView.pagingEnabled = NO;
                              //SCROLLING TO CORRECT NOTE
-                             CGFloat offsetFranction = (self.scrollView.contentOffset.x ) / (self.scrollView.contentSize.width - self.view.frame.size.width);
                               self.scrollView.contentOffset = CGPointMake(offsetFranction * (self.scrollView.contentSize.width - self.view.frame.size.width) / self.transformScalar - self.view.frame.size.width / self.transformScalar , 0);
                              [self.view layoutIfNeeded];
                          }
