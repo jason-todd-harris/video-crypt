@@ -73,6 +73,7 @@
     self.scrollView.clipsToBounds = NO;
     self.scrollView.showsHorizontalScrollIndicator = NO;
     self.scrollView.backgroundColor = [UIColor notesBrown];
+    [self.scrollView addGestureRecognizer:self.pinchGesture];
     [self.view addSubview:self.scrollView];
     [self.scrollView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.equalTo(self.view); //.insets(UIEdgeInsetsMake(10, 10, 10, 10)); //TRIED SETTING INSETS AND STILL DOESN'T FIX
@@ -218,11 +219,7 @@
         
         //ADD NOTE TO STACKVIEW
         [self addNoteToView:[AllTheNotes sharedNotes].notesArray[orderNumber] afterNumber:orderNumber];
-        [UIView animateWithDuration:0.75
-                              delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
-                                  self.scrollView.contentOffset = CGPointMake(self.scrollView.contentSize.width, 0);
-                                  NSLog(@"%@",NSStringFromCGPoint(self.scrollView.contentOffset));
-                              } completion:nil];
+        self.scrollView.contentOffset = CGPointMake(self.scrollView.contentSize.width, 0);
         }
     
     [self updateNoteOrderNumbers];
@@ -245,11 +242,16 @@
     NoteView *note = [AllTheNotes sharedNotes].notesArray[0];
     NSString *fontName = note.interiorTextBox.font.fontName;
     CGFloat offsetFranction = self.scrollView.contentOffset.x / (self.scrollView.contentSize.width - self.view.frame.size.width);
+    if(isnan(offsetFranction))
+    {
+        offsetFranction = 0;
+    }
+    NSLog(@".\n offset frac = %1.1f \n content offset: %@ \n scrollView Width: %1.1f",offsetFranction,NSStringFromCGPoint(self.scrollView.contentOffset),self.scrollView.contentSize.width);
 
     
     if (pinchGestureRecog.velocity > 0 && self.noteSize != [AllTheNotes sharedNotes].defaultNoteSize) //ZOOM IN
     {
-        [UIView animateWithDuration:5.75
+        [UIView animateWithDuration:0.5
                               delay:0.0
                             options: UIViewAnimationOptionCurveEaseInOut
                          animations:^{
@@ -260,7 +262,7 @@
                              }
                              self.scrollView.pagingEnabled = YES;
                              //SCROLLING AFTER ZOOM
-                              self.scrollView.contentOffset = CGPointMake(offsetFranction * (self.scrollView.contentSize.width - self.view.frame.size.width) * self.transformScalar + self.view.frame.size.width + (locationInView.x - self.view.frame.size.width/2) * self.transformScalar, 0); //REMOVE THE LAST PART IN ORDER TO STOP ZOOMING IN ON SPECIFIC NOTES AND JUST ZOOM IN GENERAL
+                             self.scrollView.contentOffset = CGPointMake(offsetFranction * (self.scrollView.contentSize.width - self.view.frame.size.width) * self.transformScalar + self.view.frame.size.width + (locationInView.x - self.view.frame.size.width/2) * self.transformScalar, 0); //REMOVE THE LAST PART IN ORDER TO STOP ZOOMING IN ON SPECIFIC NOTES AND JUST ZOOM IN GENERAL
                              [self.view layoutIfNeeded];
                          }
                          completion:^(BOOL finished) {
@@ -277,7 +279,7 @@
             eachNote.interiorTextBox.transform = CGAffineTransformScale(eachNote.interiorTextBox.transform, self.transformScalar, self.transformScalar);
             eachNote.interiorTextBox.font = [UIFont fontWithName:fontName size:self.largeFontSize / self.transformScalar];
         }
-        [UIView animateWithDuration:0.75
+        [UIView animateWithDuration:0.5
                               delay:0.0
                             options: UIViewAnimationOptionCurveEaseInOut
                          animations:^{
