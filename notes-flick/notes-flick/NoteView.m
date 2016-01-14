@@ -48,6 +48,7 @@
         //INNER VIEW
         _interiorView = [[UIView alloc] init];
         _interiorView.layer.cornerRadius = 15;
+        self.layer.cornerRadius = _interiorView.layer.cornerRadius;
         [self addSubview:_interiorView];
         CGFloat interiorSize = ([AllTheNotes sharedNotes].screenWidth - [AllTheNotes sharedNotes].navigationBarSize - 30);
         [_interiorView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -102,22 +103,10 @@
     {
         self.alpha = 1;
     }
+
     
     
 }
-
--(void)setBackgroundColor:(UIColor *)backgroundColor
-{
-    [super setBackgroundColor:backgroundColor];
-    if(backgroundColor)
-    {
-        _noteColor = backgroundColor;
-    } else
-    {
-        _noteColor = [UIColor notesYellow];
-    }
-}
-
 
 
 -(void)setNoteColor:(UIColor *)noteColor

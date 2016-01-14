@@ -470,14 +470,6 @@
 {
     if([AllTheNotes sharedNotes].deletedArray.lastObject)
     {
-
-        
-//        self.scrollView.contentOffset = CGPointMake(offsetFranction * (self.scrollView.contentSize.width - self.view.frame.size.width)
-        
-        
-        
-        
-        
         NoteView *lastDeletion = [[NoteView alloc] initWithNoteView:[AllTheNotes sharedNotes].deletedArray.lastObject];
         
         CGFloat contentOffset = self.scrollView.contentOffset.x;
@@ -493,11 +485,6 @@
 //        NSLog(@"width: %1.1f",contentWidth);
         
         
-        
-        
-        
-        
-        
         NSString *fontName = lastDeletion.interiorTextBox.font.fontName;
         lastDeletion.interiorTextBox.font = [UIFont fontWithName:fontName size:self.noteSize / self.fontDivisor];
         lastDeletion.noteSizeValue = self.noteSize;
@@ -509,18 +496,32 @@
                          animations:^{
                              [self.stackView insertArrangedSubview:lastDeletion atIndex:lastDeletion.orderNumber];
                              [[AllTheNotes sharedNotes].notesArray insertObject:lastDeletion atIndex:lastDeletion.orderNumber];
-                             if((fractionalWidth > contentOffset) && (fractionalWidth < contentEnd)) //SCROLLS TO THE OBJECT
+                             if((fractionalWidth > contentOffset) && (fractionalWidth < contentEnd - self.noteSize/2)) //SCROLLS TO THE OBJECT
                              {
                                  
                              } else
                              {
-                                 self.scrollView.contentOffset = CGPointMake(objectFraction*contentWidth, 0);
-                                 [self.view layoutIfNeeded];
+                                 self.scrollView.contentOffset = CGPointMake(objectFraction*contentWidth, 0); //SCROLL TO CONTENT
                              }
+                             
                              
                              [self.view layoutIfNeeded];
                          }
-                         completion:nil];
+                         completion:^(BOOL finished) {
+                             
+                             [UIView animateWithDuration:0.05
+                                                   delay:0.0
+                                                 options:UIViewAnimationOptionCurveLinear | UIViewAnimationOptionRepeat | UIViewAnimationOptionAutoreverse
+                                              animations:^{
+                                                  [UIView setAnimationRepeatCount:2];
+                                                  lastDeletion.backgroundColor = [UIColor notesMilk];
+                                                  [self.view layoutIfNeeded];
+                                              } completion:^(BOOL finished) {
+                                                  lastDeletion.backgroundColor = [UIColor clearColor];
+                                                  [self.view layoutIfNeeded];
+                                              }];
+                             
+                         }];
         
         [self updateNoteOrderNumbers];
     }
