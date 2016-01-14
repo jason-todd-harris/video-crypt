@@ -18,6 +18,8 @@
 @property (nonatomic, strong) UIView *topView;
 
 @property (nonatomic, strong) UIBarButtonItem *addNoteButton;
+@property (nonatomic, strong) UIBarButtonItem *undoBarButton;
+@property (nonatomic, strong) UIBarButtonItem *settingsBarButton;
 @property (nonatomic, strong) NoteViewController *veryNewNoteVC;
 
 @property (nonatomic, strong) UISwipeGestureRecognizer *swipeGestureUp;
@@ -27,10 +29,12 @@
 
 @property (nonatomic, assign) NSUInteger pageIndex;
 @property (nonatomic, assign) CGFloat transformScalar;
+@property (nonatomic, assign) CGFloat animationDuration;
 @property (nonatomic, assign) CGFloat spacing;
 @property (nonatomic, assign) CGFloat noteSize;
 @property (nonatomic, assign) CGFloat fontDivisor;
 @property (nonatomic, assign) CGFloat largeFontSize;
+@property (nonatomic, assign) BOOL alreadyLoaded;
 
 
 @end
@@ -40,18 +44,38 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self setUpEntireScreen];
-    [self setUpAddNoteButton];
     self.transformScalar = 3;
+    self.animationDuration = 0.5;
+    self.noteSize = [AllTheNotes sharedNotes].defaultNoteSize;
+    self.fontDivisor = 9;
+    self.largeFontSize = [AllTheNotes sharedNotes].defaultNoteSize / self.fontDivisor;
 }
+
+-(void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
+    
+    if(!self.alreadyLoaded)
+    {
+        [self runOnFirstLoad];
+    }
+}
+
+
+-(void)runOnFirstLoad
+{
+    [AllTheNotes sharedNotes].navigationBarSize = self.topLayoutGuide.length;
+    [self setUpNavigationBar];
+    [self setUpEntireScreen];
+    [self checkIfUndoShouldInteract];
+    self.alreadyLoaded = YES;
+}
+
+#pragma mark - screen setup
 
 -(void)setUpEntireScreen
 {
-    self.noteSize = [AllTheNotes sharedNotes].defaultNoteSize;
-    self.spacing = 20;
-    self.fontDivisor = 9;
-    self.largeFontSize = [AllTheNotes sharedNotes].defaultNoteSize / self.fontDivisor;
-    
     self.swipeGestureUp = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeReceived:)];
     self.swipeGestureUp.direction = UISwipeGestureRecognizerDirectionUp;
     self.swipeGestureUp.delegate = self;
@@ -73,16 +97,21 @@
     self.scrollView.clipsToBounds = NO;
     self.scrollView.showsHorizontalScrollIndicator = NO;
     self.scrollView.backgroundColor = [UIColor notesBrown];
+    
+    [self.scrollView addGestureRecognizer:self.swipeGestureUp];
+    [self.scrollView addGestureRecognizer:self.swipeGestureDown];
     [self.scrollView addGestureRecognizer:self.pinchGesture];
+    [self.scrollView addGestureRecognizer:self.doubleTapGesture];
+    
+    
     [self.view addSubview:self.scrollView];
     [self.scrollView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(self.view); //.insets(UIEdgeInsetsMake(10, 10, 10, 10)); //TRIED SETTING INSETS AND STILL DOESN'T FIX
+        make.edges.equalTo(self.view);
     }];
     
     [self populateStackview];
     
     self.topView = UIView.new;
-//    self.topView.backgroundColor = [UIColor greenColor]; // FOR DEBUGGING STUFF
     [self.view addSubview:self.topView];
     self.topView.userInteractionEnabled = NO;
     [self.topView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -91,19 +120,55 @@
     
 }
 
--(void)setUpAddNoteButton
+-(void)setUpNavigationBar
 {
+    //PLUS BUTTON
     self.addNoteButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd
                                                                        target:self
                                                                        action:@selector(addNoteButtonWasPressed:)];
     self.addNoteButton.tintColor = [UIColor notesBrown];
-    self.navigationItem.rightBarButtonItem = self.addNoteButton;
     
-//    [self.addNoteButton mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.top.equalTo(self.view.mas_topMargin).offset(self.spacing*2);
-//        make.right.equalTo(self.view).offset(-self.spacing);
-//    }];
+    //FLEXIBLE SPACE
+    UIBarButtonItem *flexibleSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
     
+    //UNDO BUTTON
+    UIImage *undoImage = [UIImage imageNamed:@"undoButton.png"];
+    CGFloat imageScaling = undoImage.size.height;
+    undoImage = [UIImage imageWithCGImage:undoImage.CGImage scale:1.8 orientation:undoImage.imageOrientation];
+    self.undoBarButton = [[UIBarButtonItem alloc] initWithImage:undoImage
+                                                          style:UIBarButtonItemStylePlain
+                                                         target:self
+                                                         action:@selector(undoLastDeletion:)];
+    self.undoBarButton.tintColor = [UIColor notesBrown];
+    
+    //SETTINGS BUTTON
+    UIImage *settingsImage = [UIImage imageNamed:@"gearButton"];
+    settingsImage = [UIImage imageWithCGImage:settingsImage.CGImage scale:1.8 orientation:settingsImage.imageOrientation];
+    self.settingsBarButton = [[UIBarButtonItem alloc] initWithImage:settingsImage
+                                                          style:UIBarButtonItemStylePlain
+                                                         target:self
+                                                         action:@selector(settingsButtonPressed:)];
+    self.settingsBarButton.tintColor = [UIColor notesBrown];
+    
+
+    
+    self.navigationItem.leftBarButtonItems = @[self.settingsBarButton,flexibleSpace,self.undoBarButton,flexibleSpace,self.addNoteButton];
+    UIView *addNoteView = [self.undoBarButton valueForKey:@"view"];
+    imageScaling = addNoteView.frame.size.height;
+    [self checkIfUndoShouldInteract];
+    
+}
+
+
+-(void)checkIfUndoShouldInteract
+{
+    if([AllTheNotes sharedNotes].deletedArray.count > 0)
+    {
+        self.undoBarButton.enabled = YES;
+    } else
+    {
+        self.undoBarButton.enabled = NO;
+    }
 }
 
 #pragma mark - WORKING WITH THE NOTES
@@ -127,20 +192,12 @@
     [self.stackView addGestureRecognizer:self.pinchGesture];
     [self.stackView addGestureRecognizer:self.doubleTapGesture];
     
-    
     self.stackView.backgroundColor = [UIColor blueColor];
     self.stackView.axis = UILayoutConstraintAxisHorizontal;
     self.stackView.contentMode = UIViewContentModeScaleToFill;
     self.stackView.distribution = UIStackViewDistributionEqualSpacing;
     self.stackView.alignment = UIStackViewAlignmentCenter;
     self.stackView.spacing = 0;
-    
-//    //BROKEN ATTEMPT AT USING SCROLLING
-//    self.stackView.userInteractionEnabled = NO;
-//    [self.scrollView addGestureRecognizer:self.swipeGestureUp];
-//    [self.scrollView addGestureRecognizer:self.swipeGestureDown];
-//    [self.scrollView addGestureRecognizer:self.doubleTapGesture];
-    
 }
 
 -(NSMutableArray *)returnSubviewsBasedOnDataStore
@@ -161,7 +218,7 @@
 {
     self.veryNewNoteVC = [[NoteViewController alloc] init];
     self.veryNewNoteVC.delegate = self;
-    self.veryNewNoteVC.layoutGuideSize = self.topLayoutGuide.length;
+    self.veryNewNoteVC.layoutGuideSize = [AllTheNotes sharedNotes].navigationBarSize;
     self.veryNewNoteVC.fontSize = self.largeFontSize;
     
     if (areWeEditing)
@@ -177,6 +234,8 @@
     self.veryNewNoteVC.areWeEditing = areWeEditing;
     [self showViewController:self.veryNewNoteVC sender:self];
 }
+
+
 
 #pragma mark - ADDING NEW NOTES
 
@@ -246,12 +305,14 @@
     {
         offsetFranction = 0;
     }
-    NSLog(@".\n offset frac = %1.1f \n content offset: %@ \n scrollView Width: %1.1f",offsetFranction,NSStringFromCGPoint(self.scrollView.contentOffset),self.scrollView.contentSize.width);
+//    NSLog(@".\n offset frac = %1.1f \n content offset: %@ \n scrollView Width: %1.1f",offsetFranction,NSStringFromCGPoint(self.scrollView.contentOffset),self.scrollView.contentSize.width);
 
     
     if (pinchGestureRecog.velocity > 0 && self.noteSize != [AllTheNotes sharedNotes].defaultNoteSize) //ZOOM IN
     {
-        [UIView animateWithDuration:0.5
+        [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
+        
+        [UIView animateWithDuration:self.animationDuration
                               delay:0.0
                             options: UIViewAnimationOptionCurveEaseInOut
                          animations:^{
@@ -271,6 +332,7 @@
                                  eachNote.interiorTextBox.font = [UIFont fontWithName:fontName size:self.largeFontSize];
                                  [self.view layoutIfNeeded];
                              }
+                             [[UIApplication sharedApplication] endIgnoringInteractionEvents];
                          }];
 
     } else if (pinchGestureRecog.velocity < 0 && self.noteSize == [AllTheNotes sharedNotes].defaultNoteSize) //ZOOM OUT
@@ -279,7 +341,8 @@
             eachNote.interiorTextBox.transform = CGAffineTransformScale(eachNote.interiorTextBox.transform, self.transformScalar, self.transformScalar);
             eachNote.interiorTextBox.font = [UIFont fontWithName:fontName size:self.largeFontSize / self.transformScalar];
         }
-        [UIView animateWithDuration:0.5
+        [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
+        [UIView animateWithDuration:self.animationDuration
                               delay:0.0
                             options: UIViewAnimationOptionCurveEaseInOut
                          animations:^{
@@ -298,6 +361,7 @@
                              for (NoteView *eachNote in self.stackView.arrangedSubviews) { //FOR SETTING CORRECT FONT SIZE AFTER ANIMATION
                                  eachNote.interiorTextBox.font = [UIFont fontWithName:fontName size:self.largeFontSize / self.transformScalar];
                              }
+                             [[UIApplication sharedApplication] endIgnoringInteractionEvents];
                          }];
 
     }
@@ -326,7 +390,6 @@
         [self crossOutNote:swipeGestureRecognizer];
     }
     
-    
 }
 
 -(void)crossOutNote:(UISwipeGestureRecognizer *)swipeGestureRecognizer
@@ -336,7 +399,7 @@
     CGFloat arrayIndexFract = subviewFraction * self.stackView.arrangedSubviews.count;
     NoteView *oldNoteView = self.stackView.arrangedSubviews[@(arrayIndexFract).integerValue *1];
     
-    [UIView animateWithDuration:0.5
+    [UIView animateWithDuration:self.animationDuration
                           delay:0.0
                         options: UIViewAnimationOptionCurveEaseIn
                      animations:^{
@@ -348,6 +411,8 @@
     
 }
 
+#pragma mark - remove and undo remove
+
 -(void)removeNote:(UISwipeGestureRecognizer *)swipeGestureRecognizer
 {
     CGPoint point = [swipeGestureRecognizer locationInView:self.stackView];
@@ -355,12 +420,12 @@
     CGFloat subviewFraction = point.x / self.stackView.bounds.size.width;
     CGFloat arrayIndexFract = subviewFraction * self.stackView.arrangedSubviews.count;
 //    NSLog(@". \n point in stack: %@ \n point in view: %@ \n index fract: %1.3f \n index # %lu \n subview count: %lu",NSStringFromCGPoint(point),NSStringFromCGPoint(pointInWindow), subviewFraction * self.stackView.arrangedSubviews.count,@(arrayIndexFract).integerValue *1 ,self.stackView.arrangedSubviews.count);
-    
+    [self updateNoteOrderNumbers];
     NoteView *oldNoteView = self.stackView.arrangedSubviews[@(arrayIndexFract).integerValue *1];
     
     CGPoint relativeToWindow = [oldNoteView convertPoint:oldNoteView.bounds.origin toView:[UIApplication sharedApplication].keyWindow.rootViewController.view];
     
-    [UIView animateWithDuration:0.5
+    [UIView animateWithDuration:self.animationDuration
                           delay:0.0
                         options: UIViewAnimationOptionCurveEaseIn
                      animations:^{
@@ -369,6 +434,7 @@
                      }
                      completion:nil];
     
+    [[AllTheNotes sharedNotes].deletedArray addObject:oldNoteView];
     [oldNoteView removeFromSuperview];
     
     NoteView *animatedNote = [[NoteView alloc] initWithNoteView:oldNoteView];
@@ -387,7 +453,7 @@
     animatedNote.interiorTextBox.transform = CGAffineTransformScale(animatedNote.interiorTextBox.transform, 2, 2);
     UIFont *font = animatedNote.interiorTextBox.font;
     animatedNote.interiorTextBox.font = [UIFont fontWithName:font.fontName size:self.noteSize / self.fontDivisor / 2];
-    [UIView animateWithDuration:0.4
+    [UIView animateWithDuration:self.animationDuration
                           delay:0.0
                         options: UIViewAnimationOptionCurveEaseIn
                      animations:^{
@@ -403,8 +469,45 @@
                          [animatedNote removeFromSuperview];
                          [AllTheNotes updateDefaultsWithNotes];
                      }];
+    [self checkIfUndoShouldInteract];
     [self updateNoteOrderNumbers];
 }
+
+-(void)undoLastDeletion:(UIButton *)buttonPressed
+{
+    if([AllTheNotes sharedNotes].deletedArray.lastObject)
+    {
+        NoteView *lastDeletion = [[NoteView alloc] initWithNoteView:[AllTheNotes sharedNotes].deletedArray.lastObject];
+        NSString *fontName = lastDeletion.interiorTextBox.font.fontName;
+        lastDeletion.interiorTextBox.font = [UIFont fontWithName:fontName size:self.noteSize / self.fontDivisor];
+        lastDeletion.noteSizeValue = self.noteSize;
+        [[AllTheNotes sharedNotes].deletedArray removeObject:[AllTheNotes sharedNotes].deletedArray.lastObject];
+        
+        [UIView animateWithDuration:self.animationDuration
+                              delay:0.0
+                            options: UIViewAnimationOptionCurveEaseIn
+                         animations:^{
+                             [self.stackView insertArrangedSubview:lastDeletion atIndex:lastDeletion.orderNumber];
+                             [[AllTheNotes sharedNotes].notesArray insertObject:lastDeletion atIndex:lastDeletion.orderNumber];
+                             [self.stackView layoutIfNeeded];
+                             [self.view layoutIfNeeded];
+                         }
+                         completion:nil];
+        
+        [self updateNoteOrderNumbers];
+    }
+    [self checkIfUndoShouldInteract];
+}
+
+#pragma mark - settings
+
+-(void)settingsButtonPressed:(UIButton *)buttonPressed
+{
+    
+    NSLog(@"settings pressed");
+}
+
+
 
 #pragma mark - scrolling
 
@@ -417,10 +520,10 @@
 }
 
 
--(void)scrollViewWillBeginZooming:(UIScrollView *)scrollView withView:(UIView *)view
-{
-    NSLog(@"SCROLL IS ZOOMED TO: %1.1f", self.scrollView.zoomScale);
-}
+//-(void)scrollViewWillBeginZooming:(UIScrollView *)scrollView withView:(UIView *)view
+//{
+//    NSLog(@"SCROLL IS ZOOMED TO: %1.1f", self.scrollView.zoomScale);
+//}
 
 //-(UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView
 //{
@@ -467,8 +570,6 @@
         eachNoteView.orderNumber = i;
         i++;
     }
-    
-    
 }
 
 

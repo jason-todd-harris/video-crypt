@@ -26,6 +26,7 @@
 -(void)commonInit
 {
     _notesArray = NSMutableArray.new;
+    _deletedArray = NSMutableArray.new;
     _userDefaults = [NSUserDefaults standardUserDefaults];
     _colorArray = @[ [UIColor notesYellow], [UIColor notesOrange], [UIColor notesRed], [UIColor notesBlue], [UIColor notesGreen] ];
     

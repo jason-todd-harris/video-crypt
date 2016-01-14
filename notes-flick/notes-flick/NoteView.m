@@ -86,14 +86,6 @@
     return self;
 }
 
-//-(void)setTheNoteObject:(NoteObject *)theNoteObject
-//{
-//    [self setTextValue:theNoteObject.noteText];
-//    [self setNoteColor:theNoteObject.noteColor];
-//    _theNoteObject = theNoteObject;
-//}
-
-
 
 -(void)setCrossedOut:(BOOL)crossedOut
 {

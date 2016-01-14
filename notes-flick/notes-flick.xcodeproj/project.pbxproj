@@ -21,6 +21,7 @@
 		966E53D81C2DE497001F93CB /* NotesColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 966E53D71C2DE497001F93CB /* NotesColor.m */; };
 		966E53DE1C2F1EF9001F93CB /* NoteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 966E53DD1C2F1EF9001F93CB /* NoteViewController.m */; };
 		966E53E01C3D7CBB001F93CB /* Entitlements.plist in Resources */ = {isa = PBXBuildFile; fileRef = 966E53DF1C3D7CBB001F93CB /* Entitlements.plist */; };
+		96D34ED91C480801001FD1E8 /* NavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96D34ED81C480801001FD1E8 /* NavigationController.m */; };
 		9AF889F4E0F5256C71C6967F /* libPods-notes-flick.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BA11649155924697D49ED49B /* libPods-notes-flick.a */; };
 /* End PBXBuildFile section */
 
@@ -69,6 +70,8 @@
 		966E53DC1C2F1EF9001F93CB /* NoteViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NoteViewController.h; sourceTree = "<group>"; };
 		966E53DD1C2F1EF9001F93CB /* NoteViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NoteViewController.m; sourceTree = "<group>"; };
 		966E53DF1C3D7CBB001F93CB /* Entitlements.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Entitlements.plist; sourceTree = "<group>"; };
+		96D34ED71C480801001FD1E8 /* NavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NavigationController.h; sourceTree = "<group>"; };
+		96D34ED81C480801001FD1E8 /* NavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NavigationController.m; sourceTree = "<group>"; };
 		9CF1B1C01B7DCDA54A3FFB95 /* Pods-notes-flick.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-notes-flick.debug.xcconfig"; path = "Pods/Target Support Files/Pods-notes-flick/Pods-notes-flick.debug.xcconfig"; sourceTree = "<group>"; };
 		BA11649155924697D49ED49B /* libPods-notes-flick.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-notes-flick.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -134,19 +137,18 @@
 			children = (
 				966E538E1C2AE834001F93CB /* AppDelegate.h */,
 				966E538F1C2AE834001F93CB /* AppDelegate.m */,
+				966E53941C2AE834001F93CB /* Main.storyboard */,
 				966E53911C2AE834001F93CB /* ViewController.h */,
 				966E53921C2AE834001F93CB /* ViewController.m */,
-				966E53C41C2C763E001F93CB /* NoteView.h */,
-				966E53C51C2C763E001F93CB /* NoteView.m */,
+				966E539A1C2AE834001F93CB /* Assets.xcassets */,
 				966E53DC1C2F1EF9001F93CB /* NoteViewController.h */,
 				966E53DD1C2F1EF9001F93CB /* NoteViewController.m */,
-				966E53941C2AE834001F93CB /* Main.storyboard */,
-				966E539A1C2AE834001F93CB /* Assets.xcassets */,
 				966E539C1C2AE834001F93CB /* LaunchScreen.storyboard */,
+				966E53C41C2C763E001F93CB /* NoteView.h */,
+				966E53C51C2C763E001F93CB /* NoteView.m */,
 				966E53CC1C2DBB95001F93CB /* AllTheNotes.h */,
 				966E53CD1C2DBB95001F93CB /* AllTheNotes.m */,
 				966E539F1C2AE834001F93CB /* Info.plist */,
-				966E53971C2AE834001F93CB /* notes_flick.xcdatamodeld */,
 				966E53D61C2DE497001F93CB /* NotesColor.h */,
 				966E53D71C2DE497001F93CB /* NotesColor.m */,
 				966E538B1C2AE834001F93CB /* Supporting Files */,
@@ -158,7 +160,10 @@
 			isa = PBXGroup;
 			children = (
 				966E538C1C2AE834001F93CB /* main.m */,
+				966E53971C2AE834001F93CB /* notes_flick.xcdatamodeld */,
 				966E53DF1C3D7CBB001F93CB /* Entitlements.plist */,
+				96D34ED71C480801001FD1E8 /* NavigationController.h */,
+				96D34ED81C480801001FD1E8 /* NavigationController.m */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -390,6 +395,7 @@
 				966E53931C2AE834001F93CB /* ViewController.m in Sources */,
 				966E53CE1C2DBB95001F93CB /* AllTheNotes.m in Sources */,
 				966E53DE1C2F1EF9001F93CB /* NoteViewController.m in Sources */,
+				96D34ED91C480801001FD1E8 /* NavigationController.m in Sources */,
 				966E53991C2AE834001F93CB /* notes_flick.xcdatamodeld in Sources */,
 				966E53901C2AE834001F93CB /* AppDelegate.m in Sources */,
 				966E53C61C2C763E001F93CB /* NoteView.m in Sources */,

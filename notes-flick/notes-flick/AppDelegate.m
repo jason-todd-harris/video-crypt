@@ -25,8 +25,9 @@
     [self setScreenHeightandWidth];
     [AllTheNotes sharedNotes].defaultNoteSize = self.screenWidth;
     [AllTheNotes sharedNotes].currentNoteSize = [AllTheNotes sharedNotes].defaultNoteSize;
+    
     [AllTheNotes updateAppNotesFromNSDefaults];
-//    [self setUpSomeDummyNotes];    
+    [self setUpSomeDummyNotes];    
 
 //    NSUserDefaults *userDefaults = [AllTheNotes sharedNotes].userDefaults;
 //    NSMutableArray *defaultNotes = [[userDefaults objectForKey:@"notesArray"] mutableCopy];

@@ -17,6 +17,7 @@
 
 @property (nonatomic, assign) CGFloat defaultNoteSize;
 @property (nonatomic, assign) CGFloat currentNoteSize;
+@property (nonatomic, assign) CGFloat navigationBarSize;
 
 //@property (nonatomic, strong) NSMutableArray *notesDictionariesArray;
 
