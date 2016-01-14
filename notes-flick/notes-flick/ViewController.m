@@ -470,7 +470,34 @@
 {
     if([AllTheNotes sharedNotes].deletedArray.lastObject)
     {
+
+        
+//        self.scrollView.contentOffset = CGPointMake(offsetFranction * (self.scrollView.contentSize.width - self.view.frame.size.width)
+        
+        
+        
+        
+        
         NoteView *lastDeletion = [[NoteView alloc] initWithNoteView:[AllTheNotes sharedNotes].deletedArray.lastObject];
+        
+        CGFloat contentOffset = self.scrollView.contentOffset.x;
+        CGFloat contentEnd = self.scrollView.contentOffset.x + self.view.frame.size.width;
+        CGFloat contentWidth = self.scrollView.contentSize.width;
+        CGFloat objectFraction = @(lastDeletion.orderNumber).floatValue / ([AllTheNotes sharedNotes].notesArray.count);
+        CGFloat fractionalWidth = objectFraction * contentWidth;
+        
+//        NSLog(@"fraction: %1.3f",objectFraction);
+//        NSLog(@"fraction width: %1.3f",fractionalWidth);
+//        NSLog(@"offset: %1.1f",contentOffset);
+//        NSLog(@"end: %1.1f",contentEnd);
+//        NSLog(@"width: %1.1f",contentWidth);
+        
+        
+        
+        
+        
+        
+        
         NSString *fontName = lastDeletion.interiorTextBox.font.fontName;
         lastDeletion.interiorTextBox.font = [UIFont fontWithName:fontName size:self.noteSize / self.fontDivisor];
         lastDeletion.noteSizeValue = self.noteSize;
@@ -482,7 +509,15 @@
                          animations:^{
                              [self.stackView insertArrangedSubview:lastDeletion atIndex:lastDeletion.orderNumber];
                              [[AllTheNotes sharedNotes].notesArray insertObject:lastDeletion atIndex:lastDeletion.orderNumber];
-                             [self.stackView layoutIfNeeded];
+                             if((fractionalWidth > contentOffset) && (fractionalWidth < contentEnd)) //SCROLLS TO THE OBJECT
+                             {
+                                 
+                             } else
+                             {
+                                 self.scrollView.contentOffset = CGPointMake(objectFraction*contentWidth, 0);
+                                 [self.view layoutIfNeeded];
+                             }
+                             
                              [self.view layoutIfNeeded];
                          }
                          completion:nil];
