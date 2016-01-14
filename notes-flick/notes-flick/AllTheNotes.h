@@ -16,8 +16,13 @@
 @property (nonatomic, strong) NSArray *colorArray;
 
 @property (nonatomic, assign) CGFloat defaultNoteSize;
+@property (nonatomic, assign) CGFloat largeInnerNoteSize;
 @property (nonatomic, assign) CGFloat currentNoteSize;
+
 @property (nonatomic, assign) CGFloat navigationBarSize;
+@property (nonatomic, assign) CGFloat screenHeight;
+@property (nonatomic, assign) CGFloat screenWidth;
+
 
 //@property (nonatomic, strong) NSMutableArray *notesDictionariesArray;
 

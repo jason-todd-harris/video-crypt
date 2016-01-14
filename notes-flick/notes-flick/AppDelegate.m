@@ -23,11 +23,11 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     [self setScreenHeightandWidth];
+    [AllTheNotes sharedNotes].navigationBarSize = 64;
     [AllTheNotes sharedNotes].defaultNoteSize = self.screenWidth;
     [AllTheNotes sharedNotes].currentNoteSize = [AllTheNotes sharedNotes].defaultNoteSize;
-    
     [AllTheNotes updateAppNotesFromNSDefaults];
-    [self setUpSomeDummyNotes];    
+//    [self setUpSomeDummyNotes];    
 
 //    NSUserDefaults *userDefaults = [AllTheNotes sharedNotes].userDefaults;
 //    NSMutableArray *defaultNotes = [[userDefaults objectForKey:@"notesArray"] mutableCopy];
@@ -66,6 +66,8 @@
     CGSize screenSize = [UIScreen mainScreen].bounds.size;
     self.screenHeight = MAX(screenSize.width, screenSize.height);
     self.screenWidth = MIN(screenSize.width, screenSize.height);
+    [AllTheNotes sharedNotes].screenHeight = self.screenHeight;
+    [AllTheNotes sharedNotes].screenWidth = self.screenWidth;
 }
 
 

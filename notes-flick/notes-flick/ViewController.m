@@ -27,7 +27,8 @@
 @property (nonatomic, strong) UITapGestureRecognizer *doubleTapGesture;
 @property (nonatomic, strong) UIPinchGestureRecognizer *pinchGesture;
 
-@property (nonatomic, assign) NSUInteger pageIndex;
+@property (nonatomic, assign) CGFloat screenHeight;
+@property (nonatomic, assign) CGFloat screenWidth;
 @property (nonatomic, assign) CGFloat transformScalar;
 @property (nonatomic, assign) CGFloat animationDuration;
 @property (nonatomic, assign) CGFloat spacing;
@@ -35,6 +36,7 @@
 @property (nonatomic, assign) CGFloat fontDivisor;
 @property (nonatomic, assign) CGFloat largeFontSize;
 @property (nonatomic, assign) BOOL alreadyLoaded;
+@property (nonatomic, assign) BOOL zoomedIn;
 
 
 @end
@@ -49,6 +51,7 @@
     self.noteSize = [AllTheNotes sharedNotes].defaultNoteSize;
     self.fontDivisor = 9;
     self.largeFontSize = [AllTheNotes sharedNotes].defaultNoteSize / self.fontDivisor;
+    self.zoomedIn = YES;
 }
 
 -(void)viewDidAppear:(BOOL)animated
@@ -66,6 +69,7 @@
 -(void)runOnFirstLoad
 {
     [AllTheNotes sharedNotes].navigationBarSize = self.topLayoutGuide.length;
+    [self setScreenHeightandWidth];
     [self setUpNavigationBar];
     [self setUpEntireScreen];
     [self checkIfUndoShouldInteract];
@@ -73,52 +77,6 @@
 }
 
 #pragma mark - screen setup
-
--(void)setUpEntireScreen
-{
-    self.swipeGestureUp = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeReceived:)];
-    self.swipeGestureUp.direction = UISwipeGestureRecognizerDirectionUp;
-    self.swipeGestureUp.delegate = self;
-    self.swipeGestureDown = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeReceived:)];
-    self.swipeGestureDown.direction = UISwipeGestureRecognizerDirectionDown;
-    self.swipeGestureDown.delegate = self;
-    self.pinchGesture = [[UIPinchGestureRecognizer alloc]  initWithTarget:self action:@selector(pinchReceived:)];
-    self.pinchGesture.delegate = self;
-    self.doubleTapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleTapReceived:)];
-    self.doubleTapGesture.numberOfTapsRequired = 2;
-    
-    
-    self.scrollView = [[UIScrollView alloc] init];
-    self.scrollView.minimumZoomScale = 0.0;
-    self.scrollView.maximumZoomScale = 5.0;
-    self.scrollView.delegate = self;
-    self.scrollView.userInteractionEnabled = YES;
-    self.scrollView.pagingEnabled = YES;
-    self.scrollView.clipsToBounds = NO;
-    self.scrollView.showsHorizontalScrollIndicator = NO;
-    self.scrollView.backgroundColor = [UIColor notesBrown];
-    
-    [self.scrollView addGestureRecognizer:self.swipeGestureUp];
-    [self.scrollView addGestureRecognizer:self.swipeGestureDown];
-    [self.scrollView addGestureRecognizer:self.pinchGesture];
-    [self.scrollView addGestureRecognizer:self.doubleTapGesture];
-    
-    
-    [self.view addSubview:self.scrollView];
-    [self.scrollView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(self.view);
-    }];
-    
-    [self populateStackview];
-    
-    self.topView = UIView.new;
-    [self.view addSubview:self.topView];
-    self.topView.userInteractionEnabled = NO;
-    [self.topView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(self.view);
-    }];
-    
-}
 
 -(void)setUpNavigationBar
 {
@@ -159,17 +117,53 @@
     
 }
 
-
--(void)checkIfUndoShouldInteract
+-(void)setUpEntireScreen
 {
-    if([AllTheNotes sharedNotes].deletedArray.count > 0)
-    {
-        self.undoBarButton.enabled = YES;
-    } else
-    {
-        self.undoBarButton.enabled = NO;
-    }
+    self.swipeGestureUp = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeReceived:)];
+    self.swipeGestureUp.direction = UISwipeGestureRecognizerDirectionUp;
+    self.swipeGestureUp.delegate = self;
+    self.swipeGestureDown = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeReceived:)];
+    self.swipeGestureDown.direction = UISwipeGestureRecognizerDirectionDown;
+    self.swipeGestureDown.delegate = self;
+    self.pinchGesture = [[UIPinchGestureRecognizer alloc]  initWithTarget:self action:@selector(pinchReceived:)];
+    self.pinchGesture.delegate = self;
+    self.doubleTapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleTapReceived:)];
+    self.doubleTapGesture.numberOfTapsRequired = 2;
+    
+    
+    self.scrollView = [[UIScrollView alloc] init];
+    self.scrollView.minimumZoomScale = 0.0;
+    self.scrollView.maximumZoomScale = 5.0;
+    self.scrollView.delegate = self;
+    self.scrollView.userInteractionEnabled = YES;
+    [self testForPaging];
+    self.scrollView.clipsToBounds = NO;
+    self.scrollView.showsHorizontalScrollIndicator = NO;
+    self.scrollView.backgroundColor = [UIColor notesBrown];
+    
+    [self.scrollView addGestureRecognizer:self.swipeGestureUp];
+    [self.scrollView addGestureRecognizer:self.swipeGestureDown];
+    [self.scrollView addGestureRecognizer:self.pinchGesture];
+    [self.scrollView addGestureRecognizer:self.doubleTapGesture];
+    
+    
+    [self.view addSubview:self.scrollView];
+    [self.scrollView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.bottom.and.left.and.right.equalTo(self.view);
+        make.top.equalTo(self.mas_topLayoutGuide);
+//        make.edges.equalTo(self.view);
+    }];
+    
+    [self populateStackview];
+    
+    self.topView = UIView.new;
+    [self.view addSubview:self.topView];
+    self.topView.userInteractionEnabled = NO;
+    [self.topView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(self.view);
+    }];
 }
+
 
 #pragma mark - WORKING WITH THE NOTES
 
@@ -311,7 +305,7 @@
     if (pinchGestureRecog.velocity > 0 && self.noteSize != [AllTheNotes sharedNotes].defaultNoteSize) //ZOOM IN
     {
         [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
-        
+        self.zoomedIn = YES;
         [UIView animateWithDuration:self.animationDuration
                               delay:0.0
                             options: UIViewAnimationOptionCurveEaseInOut
@@ -321,7 +315,7 @@
                                  eachNote.noteSizeValue = self.noteSize;
                                  eachNote.interiorTextBox.transform = CGAffineTransformScale(eachNote.interiorTextBox.transform, self.transformScalar, self.transformScalar);  //FOR ANIMATING FONT SIZE
                              }
-                             self.scrollView.pagingEnabled = YES;
+                             [self testForPaging];
                              //SCROLLING AFTER ZOOM
                              self.scrollView.contentOffset = CGPointMake(offsetFranction * (self.scrollView.contentSize.width - self.view.frame.size.width) * self.transformScalar + self.view.frame.size.width + (locationInView.x - self.view.frame.size.width/2) * self.transformScalar, 0); //REMOVE THE LAST PART IN ORDER TO STOP ZOOMING IN ON SPECIFIC NOTES AND JUST ZOOM IN GENERAL
                              [self.view layoutIfNeeded];
@@ -337,6 +331,7 @@
 
     } else if (pinchGestureRecog.velocity < 0 && self.noteSize == [AllTheNotes sharedNotes].defaultNoteSize) //ZOOM OUT
     {
+        self.zoomedIn = NO;
         for (NoteView *eachNote in self.stackView.arrangedSubviews) { //FOR ANIMATING FONT SIZE
             eachNote.interiorTextBox.transform = CGAffineTransformScale(eachNote.interiorTextBox.transform, self.transformScalar, self.transformScalar);
             eachNote.interiorTextBox.font = [UIFont fontWithName:fontName size:self.largeFontSize / self.transformScalar];
@@ -352,7 +347,7 @@
                                  //FOR ANIMATING FONT SIZE
                                  eachNote.interiorTextBox.transform = CGAffineTransformScale(eachNote.interiorTextBox.transform, 1.0/self.transformScalar, 1.0/self.transformScalar);
                              }
-                             self.scrollView.pagingEnabled = NO;
+                             [self testForPaging];
                              //SCROLLING TO CORRECT NOTE
                               self.scrollView.contentOffset = CGPointMake(offsetFranction * (self.scrollView.contentSize.width - self.view.frame.size.width) / self.transformScalar - self.view.frame.size.width / self.transformScalar , 0);
                              [self.view layoutIfNeeded];
@@ -423,19 +418,20 @@
     [self updateNoteOrderNumbers];
     NoteView *oldNoteView = self.stackView.arrangedSubviews[@(arrayIndexFract).integerValue *1];
     
-    CGPoint relativeToWindow = [oldNoteView convertPoint:oldNoteView.bounds.origin toView:[UIApplication sharedApplication].keyWindow.rootViewController.view];
+//    CGPoint relativeToWindow = [oldNoteView convertPoint:oldNoteView.bounds.origin toView:[UIApplication sharedApplication].keyWindow.rootViewController.view];
+    CGPoint relativeToWindow = [oldNoteView convertPoint:oldNoteView.bounds.origin toView:self.view];
     
     [UIView animateWithDuration:self.animationDuration
                           delay:0.0
                         options: UIViewAnimationOptionCurveEaseIn
                      animations:^{
                          oldNoteView.hidden = YES;
+                         [[AllTheNotes sharedNotes].deletedArray addObject:oldNoteView];
+                         [oldNoteView removeFromSuperview];
                          [self.view layoutIfNeeded];
                      }
                      completion:nil];
     
-    [[AllTheNotes sharedNotes].deletedArray addObject:oldNoteView];
-    [oldNoteView removeFromSuperview];
     
     NoteView *animatedNote = [[NoteView alloc] initWithNoteView:oldNoteView];
     
@@ -444,9 +440,6 @@
     [animatedNote mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.view).offset(relativeToWindow.x);
         make.top.equalTo(self.view).offset(relativeToWindow.y);
-    }];
-    [animatedNote.interiorTextBox mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(animatedNote);
     }];
     
     [self.view layoutIfNeeded];
@@ -576,6 +569,48 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+#pragma mark - helpers
+
+
+-(void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection
+{
+    [super traitCollectionDidChange:previousTraitCollection];
+    
+    [self testForPaging];
+}
+
+
+-(void)testForPaging
+{
+    UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
+    if ((orientation == UIDeviceOrientationPortrait || orientation == UIDeviceOrientationPortraitUpsideDown) && self.zoomedIn)
+    {
+        self.scrollView.pagingEnabled = YES;
+    } else
+    {
+        self.scrollView.pagingEnabled = NO;
+    }
+}
+
+
+-(void)checkIfUndoShouldInteract
+{
+    if([AllTheNotes sharedNotes].deletedArray.count > 0)
+    {
+        self.undoBarButton.enabled = YES;
+    } else
+    {
+        self.undoBarButton.enabled = NO;
+    }
+}
+
+-(void)setScreenHeightandWidth
+{
+    CGSize screenSize = [UIScreen mainScreen].bounds.size;
+    self.screenHeight = MAX(screenSize.width, screenSize.height);
+    self.screenWidth = MIN(screenSize.width, screenSize.height);
 }
 
 -(void)setNoteSize:(CGFloat)noteSize
