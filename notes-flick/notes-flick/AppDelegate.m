@@ -40,7 +40,7 @@
     NSUInteger i = 0;
     NSMutableArray *mutableNotes = [@[] mutableCopy];
     NSMutableArray *defaultNotes = [@[] mutableCopy];// [AllTheNotes sharedNotes].notesArray;
-    for (i = 0; i <25; i++)
+    for (i = 0; i <31; i++)
     {
         
         NSString *string = [NSString stringWithFormat:@"%@ text",@(i).stringValue];

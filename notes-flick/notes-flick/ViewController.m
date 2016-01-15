@@ -393,6 +393,9 @@
     CGFloat subviewFraction = point.x / self.stackView.bounds.size.width;
     CGFloat arrayIndexFract = subviewFraction * self.stackView.arrangedSubviews.count;
     NoteView *crossOutNoteView = self.stackView.arrangedSubviews[@(arrayIndexFract).integerValue *1];
+    [AllTheNotes updateDefaultsWithNotes];
+    
+    [self.view layoutIfNeeded];
     
     [UIView animateWithDuration:self.animationDuration
                           delay:0.0
@@ -468,6 +471,7 @@
 
 -(void)undoLastDeletion:(UIButton *)buttonPressed
 {
+    [self killScroll];
     if([AllTheNotes sharedNotes].deletedArray.lastObject)
     {
         NoteView *lastDeletion = [[NoteView alloc] initWithNoteView:[AllTheNotes sharedNotes].deletedArray.lastObject];
@@ -509,9 +513,9 @@
                          }
                          completion:^(BOOL finished) {
                              
-                             [UIView animateWithDuration:0.05
+                             [UIView animateWithDuration:0.1
                                                    delay:0.0
-                                                 options:UIViewAnimationOptionCurveLinear | UIViewAnimationOptionRepeat | UIViewAnimationOptionAutoreverse
+                                                 options:UIViewAnimationCurveEaseInOut | UIViewAnimationOptionRepeat | UIViewAnimationOptionAutoreverse
                                               animations:^{
                                                   [UIView setAnimationRepeatCount:3];
                                                   lastDeletion.backgroundColor = [UIColor notesMilk];
@@ -531,8 +535,7 @@
 #pragma mark - settings
 
 -(void)settingsButtonPressed:(UIButton *)buttonPressed
-{
-    
+{   
     NSLog(@"settings pressed");
 }
 
@@ -609,6 +612,12 @@
 
 #pragma mark - helpers
 
+
+- (void)killScroll
+{
+    CGPoint offset = self.scrollView.contentOffset;
+    [self.scrollView setContentOffset:offset animated:NO];
+}
 
 -(void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection
 {

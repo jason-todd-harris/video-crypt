@@ -96,23 +96,36 @@
 -(void)setCrossedOut:(BOOL)crossedOut
 {
     _crossedOut = crossedOut;
+
     if(crossedOut)
     {
-        self.alpha = 0.7;
-        NSAttributedString* attributedText = [[NSAttributedString alloc] initWithString:self.interiorTextBox.text
+        self.alpha = 1;
+        
+        
+        NSAttributedString* attributedText = [[NSAttributedString alloc] initWithString:_textValue
                                                                        attributes:  @{NSStrikethroughStyleAttributeName : @(NSUnderlineStyleThick),
-                                                                                      NSStrikethroughColorAttributeName : [UIColor redColor]
+                                                                                      NSStrikethroughColorAttributeName : [UIColor blackColor]
                                                                                       }];
         _interiorTextBox.attributedText = attributedText;
+        CATransition *transition = CATransition.new; //FADES IN THE TRANSITION
+        transition.delegate = self;
+        transition.startProgress = 0.0;
+        transition.type = kCATransitionPush;
+        transition.duration = 0.5;
+        [_interiorTextBox.layer addAnimation:transition forKey:@"transition"];
+        
         
     } else
     {
         self.alpha = 1;
         _interiorTextBox.text = _interiorTextBox.text;
+        CATransition *transition = CATransition.new; //FADES IN THE TRANSITION
+        transition.delegate = self;
+        transition.startProgress = 0.0;
+        transition.type = kCATransitionReveal;
+        transition.duration = 0.5;
+        [_interiorTextBox.layer addAnimation:transition forKey:@"transition"];
     }
-
-    
-    
 }
 
 
@@ -132,11 +145,13 @@
 
 -(void)setTextValue:(NSString *)textValue
 {
+    
     _textValue = textValue;
     _interiorTextBox.text = textValue;
     _interiorTextBox.textAlignment = NSTextAlignmentCenter;
     _interiorTextBox.numberOfLines = 0;
-    self.crossedOut = _crossedOut; 
+    
+    self.crossedOut = _crossedOut;
 }
 
 
