@@ -49,7 +49,7 @@
     self.transformScalar = 3;
     self.animationDuration = 0.5;
     self.noteSize = [AllTheNotes sharedNotes].defaultNoteSize;
-    self.fontDivisor = 9;
+    self.fontDivisor = 5;
     self.largeFontSize = [AllTheNotes sharedNotes].defaultNoteSize / self.fontDivisor;
     self.zoomedIn = YES;
 }
@@ -503,7 +503,7 @@
                              if((fractionalWidth > contentOffset) && (fractionalWidth < contentEnd - self.noteSize/2)) //SCROLLS TO THE OBJECT
                              {
                                  
-                             } else
+                             } else if (self.stackView.arrangedSubviews.count > 1) // WON'T RUN IF THE STACKVIEW WAS PREVIOUSLY EMPTY
                              {
                                  self.scrollView.contentOffset = CGPointMake(objectFraction*contentWidth, 0); //SCROLL TO CONTENT
                              }

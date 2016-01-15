@@ -95,17 +95,37 @@
 
 -(void)setCrossedOut:(BOOL)crossedOut
 {
-    _crossedOut = crossedOut;
+    _crossedOut = !_crossedOut;
 
-    if(crossedOut)
+    if(_crossedOut)
+    {
+        self.alpha = 1;
+        NSAttributedString* attributedText = [[NSAttributedString alloc] initWithString:_textValue
+                                                                       attributes:  @{NSStrikethroughStyleAttributeName : @(NSUnderlineStyleThick),
+                                                                                      NSStrikethroughColorAttributeName : [UIColor blackColor]
+                                                                                      }];
+        _interiorTextBox.attributedText = attributedText;
+        
+    } else
+    {
+        self.alpha = 1;
+        _interiorTextBox.text = _interiorTextBox.text;
+    }
+}
+
+-(void)toggleCrossedOut
+{
+    _crossedOut = !_crossedOut;
+    
+    if(_crossedOut)
     {
         self.alpha = 1;
         
         
         NSAttributedString* attributedText = [[NSAttributedString alloc] initWithString:_textValue
-                                                                       attributes:  @{NSStrikethroughStyleAttributeName : @(NSUnderlineStyleThick),
-                                                                                      NSStrikethroughColorAttributeName : [UIColor blackColor]
-                                                                                      }];
+                                                                             attributes:  @{NSStrikethroughStyleAttributeName : @(NSUnderlineStyleThick),
+                                                                                            NSStrikethroughColorAttributeName : [UIColor blackColor]
+                                                                                            }];
         _interiorTextBox.attributedText = attributedText;
         CATransition *transition = CATransition.new; //FADES IN THE TRANSITION
         transition.delegate = self;
@@ -127,6 +147,7 @@
         [_interiorTextBox.layer addAnimation:transition forKey:@"transition"];
     }
 }
+
 
 
 -(void)setNoteColor:(UIColor *)noteColor

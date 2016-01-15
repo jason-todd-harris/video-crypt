@@ -58,9 +58,9 @@
 
 -(void)createAndPlaceBarButtonItems
 {
+    self.navigationController.navigationBar.tintColor = [UIColor notesBrown];
     UIBarButtonItem *addNoteButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave target:self action:@selector(addNote:)];
     UIBarButtonItem *flexibleSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
-    
     self.colorToggle = [[UIBarButtonItem alloc] initWithTitle:[UIColor stringFromColor:self.noteTextView.backgroundColor]
                                                         style:UIBarButtonItemStylePlain
                                                        target:self
