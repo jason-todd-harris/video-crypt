@@ -90,19 +90,30 @@
 }
 
 
-+(void)updateDefaultsWithZoomIn
++(void)updateDefaultsWithSettings
 {
-        [[AllTheNotes sharedNotes].userDefaults setObject:@([AllTheNotes sharedNotes].zoomedIn)
-                                                   forKey:@"zoomedIn"];
+    [[AllTheNotes sharedNotes].userDefaults setObject:@([AllTheNotes sharedNotes].zoomedIn)
+                                               forKey:@"zoomedIn"];
+    [[AllTheNotes sharedNotes].userDefaults  setObject:@([AllTheNotes sharedNotes].fontDivisor)
+                                                forKey:@"fontDivisor"];
 }
 
-+(void)zoomInFromDefaults
++(void)settingsFromNSDefaults
 {
     if([[AllTheNotes sharedNotes].userDefaults objectForKey:@"zoomedIn"])
     {
         NSNumber *zoomedInNSNumber = [[AllTheNotes sharedNotes].userDefaults objectForKey:@"zoomedIn"];
         [AllTheNotes sharedNotes].zoomedIn =  zoomedInNSNumber.boolValue;
     }
+    
+    if([[AllTheNotes sharedNotes].userDefaults objectForKey:@"fontDivisor"])
+    {
+        NSNumber *divisorNSNumber = [[AllTheNotes sharedNotes].userDefaults objectForKey:@"fontDivisor"];
+        [AllTheNotes sharedNotes].fontDivisor = divisorNSNumber.floatValue;
+    }
+    
+    
+    
 }
 
 + (instancetype)sharedNotes {
@@ -116,6 +127,24 @@
 
 
 
++(void)sortNotesByValue:(NSUInteger )willBeChanged
+{
+    NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"crossedOut" ascending:YES];
+        
+    [AllTheNotes sharedNotes].notesArray = [[AllTheNotes sharedNotes].notesArray sortedArrayUsingDescriptors:@[sortDescriptor]].mutableCopy;
+    [AllTheNotes updateNoteOrderNumbers];
+    
+}
+
+
++(void)updateNoteOrderNumbers
+{
+    NSUInteger i = 0;
+    for (NoteView *eachNoteView in [AllTheNotes sharedNotes].notesArray) {
+        eachNoteView.orderNumber = i;
+        i++;
+    }
+}
 
 
 

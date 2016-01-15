@@ -11,6 +11,8 @@
 #import "NoteViewController.h"
 #import "NoteView.h"
 #import "NotesColor.h"
+#import "SettingsViewController.h"
+#import "SettingsTableViewController.h"
 
 @interface ViewController () <UIGestureRecognizerDelegate, UIScrollViewDelegate, NoteViewControllerDelegate>
 @property (nonatomic, strong) UIScrollView *scrollView;
@@ -20,7 +22,10 @@
 @property (nonatomic, strong) UIBarButtonItem *addNoteButton;
 @property (nonatomic, strong) UIBarButtonItem *undoBarButton;
 @property (nonatomic, strong) UIBarButtonItem *settingsBarButton;
+
 @property (nonatomic, strong) NoteViewController *veryNewNoteVC;
+@property (nonatomic, strong) SettingsViewController *settingsVC;
+@property (nonatomic, strong) SettingsTableViewController *settingsTableVC;
 
 @property (nonatomic, strong) UISwipeGestureRecognizer *swipeGestureUp;
 @property (nonatomic, strong) UISwipeGestureRecognizer *swipeGestureDown;
@@ -49,7 +54,7 @@
     self.transformScalar = 3;
     self.animationDuration = 0.5;
     self.noteSize = [AllTheNotes sharedNotes].defaultNoteSize;
-    self.fontDivisor = 9;
+    self.fontDivisor = [AllTheNotes sharedNotes].fontDivisor;
     self.largeFontSize = [AllTheNotes sharedNotes].defaultNoteSize / self.fontDivisor;
     self.zoomedIn = [AllTheNotes sharedNotes].zoomedIn;
     if(!self.zoomedIn)
@@ -62,12 +67,27 @@
 {
     [super viewDidAppear:animated];
     
-    
     if(!self.alreadyLoaded)
     {
         [self runOnFirstLoad];
     }
 }
+
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    BOOL fontChanged = [AllTheNotes sharedNotes].fontDivisor != self.fontDivisor;
+    self.fontDivisor = [AllTheNotes sharedNotes].fontDivisor;
+    if(fontChanged)
+    {
+        self.sortTheNotesOnce = YES;
+        [self setUpEntireScreen];
+    }
+    
+}
+
+
 
 
 -(void)runOnFirstLoad
@@ -88,7 +108,6 @@
     self.addNoteButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd
                                                                        target:self
                                                                        action:@selector(addNoteButtonWasPressed:)];
-    self.addNoteButton.tintColor = [UIColor notesBrown];
     
     //FLEXIBLE SPACE
     UIBarButtonItem *flexibleSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
@@ -101,7 +120,6 @@
                                                           style:UIBarButtonItemStylePlain
                                                          target:self
                                                          action:@selector(undoLastDeletion:)];
-    self.undoBarButton.tintColor = [UIColor notesBrown];
     
     //SETTINGS BUTTON
     UIImage *settingsImage = [UIImage imageNamed:@"gearButton"];
@@ -110,7 +128,7 @@
                                                           style:UIBarButtonItemStylePlain
                                                          target:self
                                                          action:@selector(settingsButtonPressed:)];
-    self.settingsBarButton.tintColor = [UIColor notesBrown];
+    self.navigationController.navigationBar.tintColor = [UIColor notesBrown];
     
 
     
@@ -200,11 +218,17 @@
 
 -(NSMutableArray *)returnSubviewsBasedOnDataStore
 {
+    
+    if(self.sortTheNotesOnce)
+    {
+        [AllTheNotes sortNotesByValue:1];
+        self.sortTheNotesOnce = NO;
+    }
+    
     NSMutableArray *mutableSubviews = [@[] mutableCopy];
     for (NoteView *eachNoteView in [AllTheNotes sharedNotes].notesArray) {
         eachNoteView.noteSizeValue = [AllTheNotes sharedNotes].currentNoteSize;
         NSString *fontName = eachNoteView.interiorTextBox.font.fontName;
-        
         CGFloat fontSize = self.largeFontSize;
         if(!self.zoomedIn)
         {
@@ -214,8 +238,6 @@
         eachNoteView.interiorTextBox.font = [UIFont fontWithName:fontName size:fontSize];
         [mutableSubviews addObject:eachNoteView];
     }
-    
-    
     return mutableSubviews;
 }
 
@@ -549,6 +571,14 @@
 -(void)settingsButtonPressed:(UIButton *)buttonPressed
 {   
     NSLog(@"settings pressed");
+//    self.settingsVC = [[SettingsViewController alloc] init];
+//    self.settingsVC.fontDivisor = self.fontDivisor;
+    
+//    [self showViewController:self.settingsVC sender:self];
+    
+    self.settingsTableVC = [[SettingsTableViewController alloc] init];
+    [self showViewController:self.settingsTableVC sender:self];
+    
 }
 
 
@@ -607,7 +637,6 @@
 -(void)updateNoteOrderNumbers
 {
     NSUInteger i = 0;
-    
     i = 0;
     
     for (NoteView *eachNoteView in self.stackView.arrangedSubviews) {
@@ -675,12 +704,18 @@
     _noteSize = noteSize;
     [AllTheNotes sharedNotes].currentNoteSize = noteSize;
 }
+-(void)setFontDivisor:(CGFloat)fontDivisor
+{
+    _fontDivisor = fontDivisor;
+    self.largeFontSize = [AllTheNotes sharedNotes].defaultNoteSize / self.fontDivisor;
+    
+}
 
 -(void)setZoomedIn:(BOOL)zoomedIn
 {
     _zoomedIn = zoomedIn;
     [AllTheNotes sharedNotes].zoomedIn = zoomedIn;
-    [AllTheNotes updateDefaultsWithZoomIn];
+    [AllTheNotes updateDefaultsWithSettings];
 }
 
 @end

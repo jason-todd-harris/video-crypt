@@ -50,7 +50,7 @@
         _interiorView.layer.cornerRadius = 15;
         self.layer.cornerRadius = _interiorView.layer.cornerRadius;
         [self addSubview:_interiorView];
-        CGFloat interiorSize = ([AllTheNotes sharedNotes].screenWidth - [AllTheNotes sharedNotes].navigationBarSize - 30);
+//        CGFloat interiorSize = ([AllTheNotes sharedNotes].screenWidth - [AllTheNotes sharedNotes].navigationBarSize - 30);
         [_interiorView mas_makeConstraints:^(MASConstraintMaker *make) {
 //            make.height.and.width.equalTo(@(interiorSize));
             make.edges.equalTo(self).insets(UIEdgeInsetsMake(10, 10, 10, 10));

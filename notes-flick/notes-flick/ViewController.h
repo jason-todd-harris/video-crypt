@@ -10,6 +10,7 @@
 #import "AllTheNotes.h"
 
 @interface ViewController : UIViewController
+@property (nonatomic, assign) bool sortTheNotesOnce;
 
 @end
 
