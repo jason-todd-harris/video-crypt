@@ -392,13 +392,13 @@
     CGPoint point = [swipeGestureRecognizer locationInView:self.stackView];
     CGFloat subviewFraction = point.x / self.stackView.bounds.size.width;
     CGFloat arrayIndexFract = subviewFraction * self.stackView.arrangedSubviews.count;
-    NoteView *oldNoteView = self.stackView.arrangedSubviews[@(arrayIndexFract).integerValue *1];
+    NoteView *crossOutNoteView = self.stackView.arrangedSubviews[@(arrayIndexFract).integerValue *1];
     
     [UIView animateWithDuration:self.animationDuration
                           delay:0.0
                         options: UIViewAnimationOptionCurveEaseIn
                      animations:^{
-                         oldNoteView.crossedOut = !oldNoteView.crossedOut;
+                         crossOutNoteView.crossedOut = !crossOutNoteView.crossedOut;
                          [AllTheNotes updateDefaultsWithNotes];
                          [self.view layoutIfNeeded];
                      }
@@ -513,7 +513,7 @@
                                                    delay:0.0
                                                  options:UIViewAnimationOptionCurveLinear | UIViewAnimationOptionRepeat | UIViewAnimationOptionAutoreverse
                                               animations:^{
-                                                  [UIView setAnimationRepeatCount:2];
+                                                  [UIView setAnimationRepeatCount:3];
                                                   lastDeletion.backgroundColor = [UIColor notesMilk];
                                                   [self.view layoutIfNeeded];
                                               } completion:^(BOOL finished) {

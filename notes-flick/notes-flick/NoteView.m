@@ -98,10 +98,17 @@
     _crossedOut = crossedOut;
     if(crossedOut)
     {
-        self.alpha = 0.5;
+        self.alpha = 0.7;
+        NSAttributedString* attributedText = [[NSAttributedString alloc] initWithString:self.interiorTextBox.text
+                                                                       attributes:  @{NSStrikethroughStyleAttributeName : @(NSUnderlineStyleThick),
+                                                                                      NSStrikethroughColorAttributeName : [UIColor redColor]
+                                                                                      }];
+        _interiorTextBox.attributedText = attributedText;
+        
     } else
     {
         self.alpha = 1;
+        _interiorTextBox.text = _interiorTextBox.text;
     }
 
     
@@ -129,6 +136,7 @@
     _interiorTextBox.text = textValue;
     _interiorTextBox.textAlignment = NSTextAlignmentCenter;
     _interiorTextBox.numberOfLines = 0;
+    self.crossedOut = _crossedOut; 
 }
 
 
