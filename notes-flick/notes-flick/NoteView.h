@@ -32,6 +32,8 @@
 
 - (instancetype)initWithNoteView:(NoteView *)noteView;
 
+-(void)toggleCrossedOut;
+
 -(void)removeFromSuperview;
 
 @end

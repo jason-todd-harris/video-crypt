@@ -401,7 +401,7 @@
                           delay:0.0
                         options: UIViewAnimationOptionCurveEaseIn
                      animations:^{
-                         crossOutNoteView.crossedOut = !crossOutNoteView.crossedOut;
+                         [crossOutNoteView toggleCrossedOut];
                          [AllTheNotes updateDefaultsWithNotes];
                          [self.view layoutIfNeeded];
                      }

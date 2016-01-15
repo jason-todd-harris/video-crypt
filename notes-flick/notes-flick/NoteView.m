@@ -95,7 +95,7 @@
 
 -(void)setCrossedOut:(BOOL)crossedOut
 {
-    _crossedOut = !_crossedOut;
+    _crossedOut = crossedOut;
 
     if(_crossedOut)
     {
