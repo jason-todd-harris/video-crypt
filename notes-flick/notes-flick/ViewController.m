@@ -49,9 +49,13 @@
     self.transformScalar = 3;
     self.animationDuration = 0.5;
     self.noteSize = [AllTheNotes sharedNotes].defaultNoteSize;
-    self.fontDivisor = 5;
+    self.fontDivisor = 9;
     self.largeFontSize = [AllTheNotes sharedNotes].defaultNoteSize / self.fontDivisor;
-    self.zoomedIn = YES;
+    self.zoomedIn = [AllTheNotes sharedNotes].zoomedIn;
+    if(!self.zoomedIn)
+    {
+        self.noteSize = [AllTheNotes sharedNotes].defaultNoteSize / self.transformScalar;
+    }
 }
 
 -(void)viewDidAppear:(BOOL)animated
@@ -200,7 +204,14 @@
     for (NoteView *eachNoteView in [AllTheNotes sharedNotes].notesArray) {
         eachNoteView.noteSizeValue = [AllTheNotes sharedNotes].currentNoteSize;
         NSString *fontName = eachNoteView.interiorTextBox.font.fontName;
-        eachNoteView.interiorTextBox.font = [UIFont fontWithName:fontName size:self.largeFontSize];
+        
+        CGFloat fontSize = self.largeFontSize;
+        if(!self.zoomedIn)
+        {
+            fontSize = self.largeFontSize / self.transformScalar;
+        }
+        
+        eachNoteView.interiorTextBox.font = [UIFont fontWithName:fontName size:fontSize];
         [mutableSubviews addObject:eachNoteView];
     }
     
@@ -284,6 +295,7 @@
 {
     [self.stackView insertArrangedSubview:newNoteView atIndex:orderNumber];
     [self updateNoteOrderNumbers];
+    
 }
 
 
@@ -300,7 +312,7 @@
         offsetFranction = 0;
     }
 //    NSLog(@".\n offset frac = %1.1f \n content offset: %@ \n scrollView Width: %1.1f",offsetFranction,NSStringFromCGPoint(self.scrollView.contentOffset),self.scrollView.contentSize.width);
-
+    
     
     if (pinchGestureRecog.velocity > 0 && self.noteSize != [AllTheNotes sharedNotes].defaultNoteSize) //ZOOM IN
     {
@@ -341,7 +353,7 @@
                               delay:0.0
                             options: UIViewAnimationOptionCurveEaseInOut
                          animations:^{
-                             self.noteSize = [AllTheNotes sharedNotes].defaultNoteSize / 3;
+                             self.noteSize = [AllTheNotes sharedNotes].defaultNoteSize / self.transformScalar;
                              for (NoteView *eachNote in self.stackView.arrangedSubviews) {
                                  eachNote.noteSizeValue = self.noteSize;
                                  //FOR ANIMATING FONT SIZE
@@ -664,5 +676,11 @@
     [AllTheNotes sharedNotes].currentNoteSize = noteSize;
 }
 
+-(void)setZoomedIn:(BOOL)zoomedIn
+{
+    _zoomedIn = zoomedIn;
+    [AllTheNotes sharedNotes].zoomedIn = zoomedIn;
+    [AllTheNotes updateDefaultsWithZoomIn];
+}
 
 @end

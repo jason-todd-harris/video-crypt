@@ -22,6 +22,7 @@
 @property (nonatomic, assign) CGFloat navigationBarSize;
 @property (nonatomic, assign) CGFloat screenHeight;
 @property (nonatomic, assign) CGFloat screenWidth;
+@property (nonatomic, assign) BOOL zoomedIn;
 
 
 //@property (nonatomic, strong) NSMutableArray *notesDictionariesArray;
@@ -31,5 +32,8 @@
 +(instancetype)sharedNotes;
 +(void)updateDefaultsWithNotes;
 +(void)updateAppNotesFromNSDefaults;
+
++(void)updateDefaultsWithZoomIn;
++(void)zoomInFromDefaults;
 
 @end

@@ -26,6 +26,7 @@
     [AllTheNotes sharedNotes].navigationBarSize = 64;
     [AllTheNotes sharedNotes].defaultNoteSize = self.screenWidth;
     [AllTheNotes sharedNotes].currentNoteSize = [AllTheNotes sharedNotes].defaultNoteSize;
+    [AllTheNotes zoomInFromDefaults];
     [AllTheNotes updateAppNotesFromNSDefaults];
 //    [self setUpSomeDummyNotes];    
 

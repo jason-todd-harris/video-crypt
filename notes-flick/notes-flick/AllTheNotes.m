@@ -87,9 +87,23 @@
     }
     
     [[AllTheNotes sharedNotes].userDefaults setObject:dictionaryArray forKey:@"notesArray"];
-    
 }
 
+
++(void)updateDefaultsWithZoomIn
+{
+        [[AllTheNotes sharedNotes].userDefaults setObject:@([AllTheNotes sharedNotes].zoomedIn)
+                                                   forKey:@"zoomedIn"];
+}
+
++(void)zoomInFromDefaults
+{
+    if([[AllTheNotes sharedNotes].userDefaults objectForKey:@"zoomedIn"])
+    {
+        NSNumber *zoomedInNSNumber = [[AllTheNotes sharedNotes].userDefaults objectForKey:@"zoomedIn"];
+        [AllTheNotes sharedNotes].zoomedIn =  zoomedInNSNumber.boolValue;
+    }
+}
 
 + (instancetype)sharedNotes {
     static AllTheNotes *_sharedNotes = nil;
@@ -99,6 +113,7 @@
     });
     return _sharedNotes;
 }
+
 
 
 
