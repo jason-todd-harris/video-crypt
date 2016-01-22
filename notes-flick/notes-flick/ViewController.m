@@ -14,7 +14,7 @@
 #import "SettingsViewController.h"
 #import "SettingsTableViewController.h"
 
-@interface ViewController () <UIGestureRecognizerDelegate, UIScrollViewDelegate, NoteViewControllerDelegate>
+@interface ViewController () <UIGestureRecognizerDelegate, UIScrollViewDelegate, NoteViewControllerDelegate, SettingsTableViewControllerDelegate>
 @property (nonatomic, strong) UIScrollView *scrollView;
 @property (nonatomic, strong) UIStackView *stackView;
 @property (nonatomic, strong) UIView *topView;
@@ -63,6 +63,12 @@
     }
 }
 
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+}
+
 -(void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
@@ -72,21 +78,6 @@
         [self runOnFirstLoad];
     }
 }
-
--(void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    
-    BOOL fontChanged = [AllTheNotes sharedNotes].fontDivisor != self.fontDivisor;
-    self.fontDivisor = [AllTheNotes sharedNotes].fontDivisor;
-    if(fontChanged)
-    {
-        self.sortTheNotesOnce = YES;
-        [self setUpEntireScreen];
-    }
-    
-}
-
 
 
 
@@ -577,7 +568,20 @@
 //    [self showViewController:self.settingsVC sender:self];
     
     self.settingsTableVC = [[SettingsTableViewController alloc] init];
+    self.settingsTableVC.delegate = self;
     [self showViewController:self.settingsTableVC sender:self];
+    
+}
+-(void)changeInSettings:(NSString *)theChange
+{
+    NSLog(@"ran change in settings delegate method");
+    if([AllTheNotes sharedNotes].fontDivisor != self.fontDivisor)
+    {
+        NSLog(@"font divisor changed and re-set up screen");
+        self.fontDivisor = [AllTheNotes sharedNotes].fontDivisor;
+        self.sortTheNotesOnce = YES;
+        [self setUpEntireScreen];
+    }
     
 }
 

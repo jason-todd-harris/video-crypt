@@ -10,6 +10,7 @@
 #import "NotesColor.h"
 #import "AllTheNotes.h"
 #import "SortOrderTableViewController.h"
+#import "FontViewController.h"
 #import <Masonry.h>
 
 @interface SettingsTableViewController () <UITableViewDelegate>
@@ -47,6 +48,9 @@
 -(void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
+    [self.delegate changeInSettings:@"temp"];
+    
+    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -89,12 +93,16 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSLog(@"%@",self.cellNameArray[indexPath.row]);
+    NSLog(@"%@ pressed",self.cellNameArray[indexPath.row]);
     
     if([self.cellNameArray[indexPath.row] isEqualToString:@"Sort Order"])
     {
         SortOrderTableViewController *sortOrderVC = [[SortOrderTableViewController alloc] init];
         [self showViewController:sortOrderVC sender:self];
+    } else if([self.cellNameArray[indexPath.row] isEqualToString:@"Font Size"])
+    {
+        FontViewController *fontVC = [[FontViewController alloc] init];
+        [self showViewController:fontVC sender:self];
     }
     
     

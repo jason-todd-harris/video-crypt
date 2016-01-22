@@ -66,7 +66,8 @@
     cell.backgroundColor = [UIColor notesBrown];
     cell.textLabel.text = self.sortOrderArray[indexPath.row];
     cell.selectionStyle = UITableViewCellSelectionStyleGray;
-    cell.detailTextLabel.text = @"detail text";
+    cell.detailTextLabel.text = @"drag to rearrange the order for sorting";
+    cell.detailTextLabel.textColor = [UIColor notesLightGray];
     cell.layoutMargins = UIEdgeInsetsZero;
     cell.preservesSuperviewLayoutMargins = NO;
     UIView *bgView = [[UIView alloc] initWithFrame:cell.bounds];
