@@ -356,6 +356,14 @@
     {
         self.zoomedIn = NO;
         for (NoteView *eachNote in self.stackView.arrangedSubviews) { //FOR ANIMATING FONT SIZE
+//            eachNote.interiorTextBox.backgroundColor = [UIColor greenColor]; WORKING HERE DEBUG
+// blah blah blah blah
+// blah blah blah blah
+// blah blah blah blah
+// blah blah blah blah
+// blah blah blah blah
+// blah blah blah blah
+// blah blah blah blah
             eachNote.interiorTextBox.transform = CGAffineTransformScale(eachNote.interiorTextBox.transform, self.transformScalar, self.transformScalar);
             eachNote.interiorTextBox.font = [UIFont fontWithName:eachNote.noteFontName size:self.largeFontSize / self.transformScalar];
         }
