@@ -114,7 +114,6 @@
     _noteFontName = noteFontName;
     CGFloat fontSize = self.noteTextView.font.pointSize;
     self.noteTextView.font = [UIFont fontWithName:noteFontName size:fontSize];
-    NSLog(@"font name comes thru: %@",noteFontName);
 }
 
 -(void)toggleColors:(UIBarButtonItem *)barButton

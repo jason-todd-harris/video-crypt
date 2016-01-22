@@ -266,7 +266,6 @@
 
 -(void)newNoteResult:(NSDictionary *)result updatedNoteView:(NoteView *)updatedNoteView
 {
-//    NSLog(@"result dict: %@",result);
     [self.navigationController popViewControllerAnimated:YES];
     NSNumber *orderNSNumber = result[@"noteOrder"];
     NSUInteger orderNumber = orderNSNumber.integerValue;
@@ -281,7 +280,6 @@
                                                      color:result[@"color"]
                                                 crossedOut:NO
                                                   fontName:result[@"fontName"]];
-    NSLog(@"%@",newNoteView.interiorTextBox.font.fontName);
     newNoteView.interiorTextBox.font = [UIFont fontWithName:newNoteView.noteFontName size:self.noteSize / self.fontDivisor];
     
     if(updatedNoteView)
