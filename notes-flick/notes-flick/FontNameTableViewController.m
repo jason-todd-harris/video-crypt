@@ -16,6 +16,7 @@
 
 @interface FontNameTableViewController ()
 @property (nonatomic, strong) NSMutableArray *fontNamesArray;
+@property (nonatomic, strong) NSIndexPath *fontIndexPath;
 
 @end
 
@@ -35,8 +36,17 @@
     self.tableView.contentInset = UIEdgeInsetsMake(10, 0, 0, 0);
     [self populateFontNames];
     
+    NSUInteger indexValue = [self.fontNamesArray indexOfObject:self.fontNamePassed];
+    self.fontIndexPath = [NSIndexPath indexPathForRow:indexValue inSection:0];
+    [self.tableView.delegate tableView:self.tableView didSelectRowAtIndexPath:self.fontIndexPath];
+    [self.tableView scrollToRowAtIndexPath:self.fontIndexPath atScrollPosition:UITableViewScrollPositionTop animated:NO];
 }
 
+-(void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    [self.tableView selectRowAtIndexPath:self.fontIndexPath animated:YES scrollPosition:UITableViewScrollPositionTop];
+}
 
 -(void)populateFontNames
 {

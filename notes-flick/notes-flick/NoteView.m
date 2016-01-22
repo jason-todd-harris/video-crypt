@@ -99,8 +99,8 @@
 {
     if(!theNoteFontName)
     {
-        NSString *tempFontName = self.interiorTextBox.font.fontName;
-        theNoteFontName = tempFontName;
+//        NSString *tempFontName = self.interiorTextBox.font.fontName;
+        theNoteFontName = @"Helvetica";
     }
     _noteFontName = theNoteFontName;
     CGFloat fontSize = self.interiorTextBox.font.pointSize;

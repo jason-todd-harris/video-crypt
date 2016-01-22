@@ -39,7 +39,7 @@
 {
     self.fontSlider = [[UISlider alloc] init];
     self.fontSlider.minimumValue = 0.0;
-    self.fontSlider.maximumValue = 8.0;
+    self.fontSlider.maximumValue = 8.25;
     self.fontSlider.value = 12 - self.fontDivisor;
     //    self.fontSlider.continuous = NO;
     self.fontSlider.minimumTrackTintColor = [UIColor notesMilk];

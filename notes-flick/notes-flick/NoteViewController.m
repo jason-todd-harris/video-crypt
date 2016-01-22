@@ -44,7 +44,7 @@
     self.noteTextView = [[UITextView alloc] init];
     self.noteTextView.layer.cornerRadius = 15;
     self.noteTextView.backgroundColor = [UIColor notesYellow];
-    self.noteTextView.font = [UIFont fontWithName:self.noteTextView.font.fontName size:self.fontSize];
+    self.noteTextView.font = [UIFont fontWithName:self.noteFontName size:self.fontSize];
     self.noteTextView.textAlignment = NSTextAlignmentCenter;
     
     [self.view addSubview:self.noteTextView];

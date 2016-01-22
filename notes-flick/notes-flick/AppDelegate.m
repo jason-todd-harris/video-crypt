@@ -29,11 +29,8 @@
     [AllTheNotes sharedNotes].fontDivisor = 6; //BEFORE I CHECK NSDEFAULTS FOR SETTINGS
     [AllTheNotes settingsFromNSDefaults];
     [AllTheNotes updateAppNotesFromNSDefaults];
-//    [self setUpSomeDummyNotes];    
-
-//    NSUserDefaults *userDefaults = [AllTheNotes sharedNotes].userDefaults;
-//    NSMutableArray *defaultNotes = [[userDefaults objectForKey:@"notesArray"] mutableCopy];
-//    NSLog(@"%@",defaultNotes);
+//    [self setUpSomeDummyNotes];
+    
     return YES;
 }
 
@@ -42,10 +39,10 @@
     NSUInteger i = 0;
     NSMutableArray *mutableNotes = [@[] mutableCopy];
     NSMutableArray *defaultNotes = [@[] mutableCopy];// [AllTheNotes sharedNotes].notesArray;
-    for (i = 0; i <31; i++)
+    for (i = 0; i <11; i++)
     {
         
-        NSString *string = [NSString stringWithFormat:@"%@ text",@(i).stringValue];
+        NSString *string = [NSString stringWithFormat:@"%@ text",@(i+1).stringValue];
         NoteView *dummyNote = [[NoteView alloc] initWithText:string
                                                     noteSize:0
                                                     withDate:nil
