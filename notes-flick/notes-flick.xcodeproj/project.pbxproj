@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		9637F7241C528DA000D9B2F2 /* FontViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9637F7231C528DA000D9B2F2 /* FontViewController.m */; };
+		9637F7281C529EAC00D9B2F2 /* FontNameTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9637F7271C529EAC00D9B2F2 /* FontNameTableViewController.m */; };
 		966E538D1C2AE834001F93CB /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 966E538C1C2AE834001F93CB /* main.m */; };
 		966E53901C2AE834001F93CB /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 966E538F1C2AE834001F93CB /* AppDelegate.m */; };
 		966E53931C2AE834001F93CB /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 966E53921C2AE834001F93CB /* ViewController.m */; };
@@ -50,6 +51,8 @@
 		8D6A79C846A32197A23DB526 /* Pods-notes-flick.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-notes-flick.release.xcconfig"; path = "Pods/Target Support Files/Pods-notes-flick/Pods-notes-flick.release.xcconfig"; sourceTree = "<group>"; };
 		9637F7221C528DA000D9B2F2 /* FontViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FontViewController.h; sourceTree = "<group>"; };
 		9637F7231C528DA000D9B2F2 /* FontViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FontViewController.m; sourceTree = "<group>"; };
+		9637F7261C529EAC00D9B2F2 /* FontNameTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FontNameTableViewController.h; sourceTree = "<group>"; };
+		9637F7271C529EAC00D9B2F2 /* FontNameTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FontNameTableViewController.m; sourceTree = "<group>"; };
 		966E53881C2AE834001F93CB /* notes-flick.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "notes-flick.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		966E538C1C2AE834001F93CB /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		966E538E1C2AE834001F93CB /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -122,6 +125,19 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		9637F7251C529E6E00D9B2F2 /* Settings View Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				96D34EE01C496212001FD1E8 /* SettingsTableViewController.h */,
+				96D34EE11C496212001FD1E8 /* SettingsTableViewController.m */,
+				96D34EE31C497153001FD1E8 /* SortOrderTableViewController.h */,
+				96D34EE41C497153001FD1E8 /* SortOrderTableViewController.m */,
+				9637F7221C528DA000D9B2F2 /* FontViewController.h */,
+				9637F7231C528DA000D9B2F2 /* FontViewController.m */,
+			);
+			name = "Settings View Controllers";
+			sourceTree = "<group>";
+		};
 		966E537F1C2AE834001F93CB = {
 			isa = PBXGroup;
 			children = (
@@ -158,18 +174,15 @@
 				966E539C1C2AE834001F93CB /* LaunchScreen.storyboard */,
 				966E53DC1C2F1EF9001F93CB /* NoteViewController.h */,
 				966E53DD1C2F1EF9001F93CB /* NoteViewController.m */,
+				9637F7261C529EAC00D9B2F2 /* FontNameTableViewController.h */,
+				9637F7271C529EAC00D9B2F2 /* FontNameTableViewController.m */,
+				966E539F1C2AE834001F93CB /* Info.plist */,
 				966E53CC1C2DBB95001F93CB /* AllTheNotes.h */,
 				966E53CD1C2DBB95001F93CB /* AllTheNotes.m */,
-				966E539F1C2AE834001F93CB /* Info.plist */,
+				966E53DF1C3D7CBB001F93CB /* Entitlements.plist */,
 				966E53D61C2DE497001F93CB /* NotesColor.h */,
 				966E53D71C2DE497001F93CB /* NotesColor.m */,
-				96D34EE01C496212001FD1E8 /* SettingsTableViewController.h */,
-				96D34EE11C496212001FD1E8 /* SettingsTableViewController.m */,
-				966E53DF1C3D7CBB001F93CB /* Entitlements.plist */,
-				96D34EE31C497153001FD1E8 /* SortOrderTableViewController.h */,
-				96D34EE41C497153001FD1E8 /* SortOrderTableViewController.m */,
-				9637F7221C528DA000D9B2F2 /* FontViewController.h */,
-				9637F7231C528DA000D9B2F2 /* FontViewController.m */,
+				9637F7251C529E6E00D9B2F2 /* Settings View Controllers */,
 				966E538B1C2AE834001F93CB /* Supporting Files */,
 			);
 			path = "notes-flick";
@@ -419,6 +432,7 @@
 				966E53DE1C2F1EF9001F93CB /* NoteViewController.m in Sources */,
 				96D34ED91C480801001FD1E8 /* NavigationController.m in Sources */,
 				966E53991C2AE834001F93CB /* notes_flick.xcdatamodeld in Sources */,
+				9637F7281C529EAC00D9B2F2 /* FontNameTableViewController.m in Sources */,
 				966E53901C2AE834001F93CB /* AppDelegate.m in Sources */,
 				966E53C61C2C763E001F93CB /* NoteView.m in Sources */,
 				96D34EDF1C494405001FD1E8 /* SettingsViewController.m in Sources */,

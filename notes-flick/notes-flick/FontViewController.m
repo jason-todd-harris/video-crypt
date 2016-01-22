@@ -17,6 +17,8 @@
 @interface FontViewController ()
 @property (nonatomic, assign) CGFloat fontDivisor;
 @property (nonatomic, assign) CGFloat offsetSpacing;
+@property (nonatomic, strong) UILabel *largeLabel;
+@property (nonatomic, strong) UILabel *smallLabel;
 
 @end
 
@@ -27,8 +29,9 @@
     self.navigationController.navigationBar.tintColor = [UIColor notesBrown];
     self.view.backgroundColor = [UIColor notesBrown];
     self.fontDivisor = [AllTheNotes sharedNotes].fontDivisor;
-    self.offsetSpacing = 10;
+    self.offsetSpacing = 15;
     [self addFontMenuItems];
+    [self addLabelBoxes];
 }
 
 
@@ -49,10 +52,47 @@
     [self.view addSubview:self.fontSlider];
     [self.fontSlider mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.mas_topLayoutGuideBottom).offset(self.offsetSpacing);
-        make.right.equalTo(self.view).offset(-self.offsetSpacing);
-        make.left.equalTo(self.view.mas_right).offset(-[AllTheNotes sharedNotes].screenWidth / 2);
+        make.centerX.equalTo(self.view);
+        make.width.equalTo(@([AllTheNotes sharedNotes].screenWidth / 2));
     }];
 }
+
+-(void)addLabelBoxes
+{
+    self.largeLabel = [[UILabel alloc] init];
+    self.largeLabel.textColor = [UIColor notesYellow];
+    self.largeLabel.text = @"Aa";
+    self.largeLabel.textAlignment = NSTextAlignmentCenter;
+    NSString *fontName = self.largeLabel.font.fontName;
+    CGFloat largeFontSize = [AllTheNotes sharedNotes].defaultNoteSize / self.fontDivisor;
+    self.largeLabel.font = [UIFont fontWithName:fontName size:largeFontSize];
+    
+    [self.view addSubview:self.largeLabel];
+    
+    [self.largeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.fontSlider.mas_bottom).offset(self.offsetSpacing);
+        make.right.equalTo(self.view.mas_centerX);
+        make.width.and.height.equalTo(@([AllTheNotes sharedNotes].screenWidth / 2));
+    }];
+    
+    self.smallLabel = [[UILabel alloc] init];
+    self.smallLabel.textColor = [UIColor notesYellow];
+    self.smallLabel.text = @"Aa";
+//    self.largeLabel.backgroundColor = [UIColor greenColor];
+//    self.smallLabel.backgroundColor = [UIColor greenColor];
+    self.smallLabel.textAlignment = NSTextAlignmentCenter;
+    CGFloat smallFontSize = largeFontSize / 3;
+    self.smallLabel.font = [UIFont fontWithName:fontName size:smallFontSize];
+    
+    [self.view addSubview:self.smallLabel];
+    
+    [self.smallLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.fontSlider.mas_bottom).offset(self.offsetSpacing);
+        make.left.equalTo(self.view.mas_centerX);
+        make.width.and.height.equalTo(@([AllTheNotes sharedNotes].screenWidth / 2));
+    }];
+}
+
 
 
 - (void)didReceiveMemoryWarning {
@@ -67,6 +107,13 @@
     self.fontDivisor = [AllTheNotes sharedNotes].fontDivisor;
     [AllTheNotes updateDefaultsWithSettings];
     
+    NSString *fontName = self.largeLabel.font.fontName;
+    //LARGE LABEL
+    CGFloat largeFontSize = [AllTheNotes sharedNotes].defaultNoteSize / self.fontDivisor;
+    self.largeLabel.font = [UIFont fontWithName:fontName size:largeFontSize];
+    //SMALL LABEL
+    CGFloat smallFontSize = largeFontSize / 3;
+    self.smallLabel.font = [UIFont fontWithName:fontName size:smallFontSize];
 }
 
 /*

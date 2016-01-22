@@ -20,7 +20,7 @@
 
 -(instancetype)init
 {
-    self = [self initWithText:@"init used" noteSize:50 withDate:nil orderNumber:0 priority:1 color:nil crossedOut:NO];
+    self = [self initWithText:@"init used" noteSize:50 withDate:nil orderNumber:0 priority:1 color:nil crossedOut:NO fontName:nil];
     return self;
 }
 
@@ -31,6 +31,7 @@
                     priority:(NSUInteger)notePriority
                        color:(UIColor *)noteColor
                   crossedOut:(BOOL)crossedOut
+                    fontName:(NSString *)fontName
 {
     self = [super init];
     if(self)
@@ -73,6 +74,7 @@
         [self setNoteColor:noteColor];
         [self setCrossedOut:crossedOut];
         [self setNoteSizeValue:noteSizeValue];
+        [self setNoteFontName:fontName];
         
     }
     
@@ -88,8 +90,21 @@
                   orderNumber:noteView.orderNumber
                      priority:noteView.notePriority
                         color:noteView.noteColor
-                   crossedOut:noteView.crossedOut];
+                   crossedOut:noteView.crossedOut
+                     fontName:noteView.noteFontName];
     return self;
+}
+
+-(void)setNoteFontName:(NSString *)theNoteFontName
+{
+    if(!theNoteFontName)
+    {
+        NSString *tempFontName = self.interiorTextBox.font.fontName;
+        theNoteFontName = tempFontName;
+    }
+    _noteFontName = theNoteFontName;
+    CGFloat fontSize = self.interiorTextBox.font.pointSize;
+    self.interiorTextBox.font = [UIFont fontWithName:theNoteFontName size:fontSize];
 }
 
 

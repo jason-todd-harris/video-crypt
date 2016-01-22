@@ -10,12 +10,19 @@
 #import <Masonry.h>
 #import "AllTheNotes.h"
 #import "NotesColor.h"
+#import "FontNameTableViewController.h"
 
-@interface NoteViewController ()
+@interface NoteViewController () <FontNameTableViewDelegate>
 @property (nonatomic, assign) CGFloat navBarHeight;
-@property (nonatomic, strong) UIBarButtonItem *colorToggle;
 @property (nonatomic, assign) CGFloat screenHeight;
 @property (nonatomic, assign) CGFloat screenWidth;
+
+@property (nonatomic, strong) NSString *noteFontName;
+
+@property (nonatomic, strong) UIBarButtonItem *colorToggle;
+@property (nonatomic, strong) UIBarButtonItem *fontNameButton;
+
+@property (nonatomic, strong) FontNameTableViewController *fontTableVC;
 
 
 @end
@@ -25,6 +32,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor notesBrown];
+    self.noteFontName = self.theNoteView.noteFontName;
     [self setScreenHeightandWidth];
     [self placeTextField];
     [self createAndPlaceBarButtonItems];
@@ -65,7 +73,12 @@
                                                         style:UIBarButtonItemStylePlain
                                                        target:self
                                                        action:@selector(toggleColors:)];
-    self.navigationItem.rightBarButtonItems = @[addNoteButton , flexibleSpace, self.colorToggle, flexibleSpace];
+    self.fontNameButton= [[UIBarButtonItem alloc] initWithTitle:@"Font"
+                                                          style:UIBarButtonItemStylePlain
+                                                         target:self
+                                                         action:@selector(changeTheFont:)];
+    
+    self.navigationItem.rightBarButtonItems = @[addNoteButton ,flexibleSpace,self.fontNameButton, flexibleSpace, self.colorToggle, flexibleSpace];
 }
 
 -(void)addNote:(UIBarButtonItem *)barButton
@@ -74,11 +87,34 @@
     NSDictionary *noteDictionary = @{@"color" : self.noteTextView.backgroundColor ,
                                      @"noteText" : self.noteTextView.text,
                                      @"noteOrder" : @(self.noteOrder),
-                                     @"priority": @(1)
+                                     @"priority": @(1),
+                                     @"fontName" : self.noteFontName
                                      };
     
     [self.delegate newNoteResult:noteDictionary updatedNoteView:self.theNoteView];
     
+}
+
+
+-(void)changeTheFont:(UIBarButtonItem *)barButton
+{
+    self.fontTableVC = [[FontNameTableViewController alloc] init];
+    self.fontTableVC.delegate = self;
+    self.fontTableVC.fontNamePassed = self.noteFontName;
+    [self showViewController:_fontTableVC sender:self];
+}
+
+-(void)newFontPicked:(NSString *)newFont
+{
+    self.noteFontName = newFont;
+}
+
+-(void)setNoteFontName:(NSString *)noteFontName
+{
+    _noteFontName = noteFontName;
+    CGFloat fontSize = self.noteTextView.font.pointSize;
+    self.noteTextView.font = [UIFont fontWithName:noteFontName size:fontSize];
+    NSLog(@"font name comes thru: %@",noteFontName);
 }
 
 -(void)toggleColors:(UIBarButtonItem *)barButton

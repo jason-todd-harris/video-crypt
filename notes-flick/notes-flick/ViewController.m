@@ -219,14 +219,13 @@
     NSMutableArray *mutableSubviews = [@[] mutableCopy];
     for (NoteView *eachNoteView in [AllTheNotes sharedNotes].notesArray) {
         eachNoteView.noteSizeValue = [AllTheNotes sharedNotes].currentNoteSize;
-        NSString *fontName = eachNoteView.interiorTextBox.font.fontName;
         CGFloat fontSize = self.largeFontSize;
         if(!self.zoomedIn)
         {
             fontSize = self.largeFontSize / self.transformScalar;
         }
         
-        eachNoteView.interiorTextBox.font = [UIFont fontWithName:fontName size:fontSize];
+        eachNoteView.interiorTextBox.font = [UIFont fontWithName:eachNoteView.noteFontName size:fontSize];
         [mutableSubviews addObject:eachNoteView];
     }
     return mutableSubviews;
@@ -280,14 +279,17 @@
                                                orderNumber:orderNumber
                                                   priority:priority
                                                      color:result[@"color"]
-                                                crossedOut:NO];
-    newNoteView.interiorTextBox.font = [UIFont fontWithName:newNoteView.interiorTextBox.font.fontName size:self.noteSize / self.fontDivisor];
+                                                crossedOut:NO
+                                                  fontName:result[@"fontName"]];
+    NSLog(@"%@",newNoteView.interiorTextBox.font.fontName);
+    newNoteView.interiorTextBox.font = [UIFont fontWithName:newNoteView.noteFontName size:self.noteSize / self.fontDivisor];
     
     if(updatedNoteView)
     {
         updatedNoteView.noteColor = result[@"color"];
         updatedNoteView.textValue = result[@"noteText"];
         updatedNoteView.notePriority = priority;
+        updatedNoteView.noteFontName = result[@"fontName"];
         
     } else //IF WE'RE ADDING A NEW NOTE DO THIS
     {
@@ -317,8 +319,6 @@
 -(void)pinchReceived:(UIPinchGestureRecognizer *)pinchGestureRecog
 {
     CGPoint locationInView = [pinchGestureRecog locationInView:self.view];
-    NoteView *note = [AllTheNotes sharedNotes].notesArray[0];
-    NSString *fontName = note.interiorTextBox.font.fontName;
     CGFloat offsetFranction = self.scrollView.contentOffset.x / (self.scrollView.contentSize.width - self.view.frame.size.width);
     if(isnan(offsetFranction))
     {
@@ -348,7 +348,7 @@
                          completion:^(BOOL finished) {
                              for (NoteView *eachNote in self.stackView.arrangedSubviews) {
                                  eachNote.interiorTextBox.transform = CGAffineTransformScale(eachNote.interiorTextBox.transform, 1/self.transformScalar, 1/self.transformScalar);  //FOR ANIMATING FONT SIZE
-                                 eachNote.interiorTextBox.font = [UIFont fontWithName:fontName size:self.largeFontSize];
+                                 eachNote.interiorTextBox.font = [UIFont fontWithName:eachNote.noteFontName size:self.largeFontSize];
                                  [self.view layoutIfNeeded];
                              }
                              [[UIApplication sharedApplication] endIgnoringInteractionEvents];
@@ -359,7 +359,7 @@
         self.zoomedIn = NO;
         for (NoteView *eachNote in self.stackView.arrangedSubviews) { //FOR ANIMATING FONT SIZE
             eachNote.interiorTextBox.transform = CGAffineTransformScale(eachNote.interiorTextBox.transform, self.transformScalar, self.transformScalar);
-            eachNote.interiorTextBox.font = [UIFont fontWithName:fontName size:self.largeFontSize / self.transformScalar];
+            eachNote.interiorTextBox.font = [UIFont fontWithName:eachNote.noteFontName size:self.largeFontSize / self.transformScalar];
         }
         [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
         [UIView animateWithDuration:self.animationDuration
@@ -379,7 +379,7 @@
                          }
                          completion:^(BOOL finished) {
                              for (NoteView *eachNote in self.stackView.arrangedSubviews) { //FOR SETTING CORRECT FONT SIZE AFTER ANIMATION
-                                 eachNote.interiorTextBox.font = [UIFont fontWithName:fontName size:self.largeFontSize / self.transformScalar];
+                                 eachNote.interiorTextBox.font = [UIFont fontWithName:eachNote.noteFontName size:self.largeFontSize / self.transformScalar];
                              }
                              [[UIApplication sharedApplication] endIgnoringInteractionEvents];
                          }];
@@ -472,8 +472,7 @@
     
     [self.view layoutIfNeeded];
     animatedNote.interiorTextBox.transform = CGAffineTransformScale(animatedNote.interiorTextBox.transform, 2, 2);
-    UIFont *font = animatedNote.interiorTextBox.font;
-    animatedNote.interiorTextBox.font = [UIFont fontWithName:font.fontName size:self.noteSize / self.fontDivisor / 2];
+    animatedNote.interiorTextBox.font = [UIFont fontWithName:animatedNote.noteFontName size:self.noteSize / self.fontDivisor / 2];
     [UIView animateWithDuration:self.animationDuration
                           delay:0.0
                         options: UIViewAnimationOptionCurveEaseIn
@@ -513,9 +512,7 @@
 //        NSLog(@"end: %1.1f",contentEnd);
 //        NSLog(@"width: %1.1f",contentWidth);
         
-        
-        NSString *fontName = lastDeletion.interiorTextBox.font.fontName;
-        lastDeletion.interiorTextBox.font = [UIFont fontWithName:fontName size:self.noteSize / self.fontDivisor];
+        lastDeletion.interiorTextBox.font = [UIFont fontWithName:lastDeletion.noteFontName size:self.noteSize / self.fontDivisor];
         lastDeletion.noteSizeValue = self.noteSize;
         [[AllTheNotes sharedNotes].deletedArray removeObject:[AllTheNotes sharedNotes].deletedArray.lastObject];
         

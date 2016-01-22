@@ -1,58 +1,62 @@
 //
-//  SettingsTableViewController.m
+//  FontNameTableViewController.m
 //  notes-flick
 //
-//  Created by JASON HARRIS on 1/15/16.
+//  Created by JASON HARRIS on 1/22/16.
 //  Copyright © 2016 jason harris. All rights reserved.
 //
 
-#import "SettingsTableViewController.h"
+
+#import "FontNameTableViewController.h"
 #import "NotesColor.h"
 #import "AllTheNotes.h"
 #import "SortOrderTableViewController.h"
 #import "FontViewController.h"
 #import <Masonry.h>
 
-@interface SettingsTableViewController () <UITableViewDelegate>
-@property (nonatomic, strong) NSArray *cellNameArray;
+@interface FontNameTableViewController ()
+@property (nonatomic, strong) NSMutableArray *fontNamesArray;
 
 @end
 
-@implementation SettingsTableViewController
+@implementation FontNameTableViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
-    
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
-    
     self.navigationController.navigationBar.tintColor = [UIColor notesBrown];
     self.view.backgroundColor = [UIColor notesBrown];
-//    self.tableView.contentMode = UIViewContentModeScaleToFill;
+        self.tableView.contentMode = UIViewContentModeScaleToFill;
     self.tableView.separatorColor = [UIColor whiteColor];
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
-    self.tableView.scrollEnabled = NO;
-//    self.tableView.rowHeight = 64;
-//    self.tableView.alwaysBounceHorizontal = NO;
-//    self.tableView.alwaysBounceVertical = NO;
-    self.tableView.tableFooterView = [UIView new];
+//    self.tableView.tableFooterView = [UIView new];
     self.tableView.delegate = self;
     self.tableView.separatorInset = UIEdgeInsetsMake(0, 10, 0, 10);
     self.tableView.contentInset = UIEdgeInsetsMake(10, 0, 0, 0);
-    
-    self.cellNameArray = @[@"Font Size", @"Sort Order", @"Clear Notes (History and Current)"];
+    [self populateFontNames];
     
 }
--(void)viewDidAppear:(BOOL)animated
+
+
+-(void)populateFontNames
 {
-    [super viewDidAppear:animated];
-    [self.delegate changeInSettings:@"temp"];
-    
-    
+    self.fontNamesArray = NSMutableArray.new;
+    NSArray *familyNameArray = [[NSArray alloc] initWithArray:[UIFont familyNames]];
+    NSArray *fontNames;
+    NSInteger indFamily, indFont;
+    for (indFamily=0; indFamily < familyNameArray.count; ++indFamily)
+    {
+        fontNames = [[NSArray alloc] initWithArray:
+                     [UIFont fontNamesForFamilyName:
+                      [familyNameArray objectAtIndex:indFamily]]];
+        for (indFont=0; indFont<fontNames.count; ++indFont)
+        {
+            [self.fontNamesArray addObject:[fontNames objectAtIndex:indFont]];
+        }
+    }
+    [self.fontNamesArray sortUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
 }
+
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -66,56 +70,40 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    
-    
-    return self.cellNameArray.count;
+    return self.fontNamesArray.count;
 }
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    
     UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@""];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell.backgroundColor = [UIColor notesBrown];
-    cell.textLabel.text = self.cellNameArray[indexPath.row];
     cell.selectionStyle = UITableViewCellSelectionStyleGray;
-//    cell.detailTextLabel.text = @"detail text";
     cell.layoutMargins = UIEdgeInsetsZero;
     cell.preservesSuperviewLayoutMargins = NO;
-    
     UIView *bgView = [[UIView alloc] initWithFrame:cell.bounds];
     bgView.backgroundColor = [UIColor grayColor];
     cell.selectedBackgroundView = bgView;
     cell.textLabel.textColor = [UIColor notesLightGray];
-    
-    
+    cell.textLabel.text = self.fontNamesArray[indexPath.row];
+    CGFloat fontSize = cell.textLabel.font.pointSize;
+    cell.textLabel.font = [UIFont fontWithName:self.fontNamesArray[indexPath.row] size:fontSize];
     return cell;
 }
 
-
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSLog(@"%@ pressed",self.cellNameArray[indexPath.row]);
-    
-    if([self.cellNameArray[indexPath.row] isEqualToString:@"Sort Order"])
-    {
-        SortOrderTableViewController *sortOrderVC = [[SortOrderTableViewController alloc] init];
-        [self showViewController:sortOrderVC sender:self];
-    } else if([self.cellNameArray[indexPath.row] isEqualToString:@"Font Size"])
-    {
-        FontViewController *fontVC = [[FontViewController alloc] init];
-        [self showViewController:fontVC sender:self];
-    }
-    
-    
-    
+    NSString *newFontPicked = self.fontNamesArray[indexPath.row];
+    [self.delegate newFontPicked:newFontPicked];
 }
 
+/*
 // Override to support conditional editing of the table view.
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
     // Return NO if you do not want the specified item to be editable.
     return YES;
 }
+*/
 
 /*
 // Override to support editing the table view.

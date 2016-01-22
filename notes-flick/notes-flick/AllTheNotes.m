@@ -53,6 +53,7 @@
         NSString *colorString = eachNote[@"color"];
         UIColor *noteColor = [UIColor colorWithString:colorString];
         NSNumber *crossedOut = eachNote[@"crossedOut"];
+        NSString *fontName = eachNote[@"fontName"];
         
         NoteView *aNoteView = [[NoteView alloc] initWithText:eachNote[@"text"]
                                                     noteSize:[AllTheNotes sharedNotes].currentNoteSize
@@ -60,7 +61,8 @@
                                                  orderNumber:orderNumber.integerValue
                                                     priority:notePriority.integerValue
                                                        color:noteColor
-                                                  crossedOut:crossedOut.integerValue];
+                                                  crossedOut:crossedOut.integerValue
+                                                    fontName:fontName];
         
         [aNoteArray addObject:aNoteView];
     }
@@ -81,7 +83,8 @@
                                          @"order":@(eachNote.orderNumber),
                                          @"priority":@(eachNote.notePriority),
                                          @"color" : colorString,
-                                         @"crossedOut":@(eachNote.crossedOut)
+                                         @"crossedOut":@(eachNote.crossedOut),
+                                         @"fontName":eachNote.noteFontName
                                          };
         [dictionaryArray addObject:noteDictionary];
     }

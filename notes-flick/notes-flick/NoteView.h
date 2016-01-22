@@ -14,6 +14,8 @@
 @property (nonatomic, strong) UIView *interiorView;
 
 @property (nonatomic, strong) NSString *textValue;
+@property (nonatomic, strong) NSString *noteFontName;
+
 @property (nonatomic, assign) CGFloat noteSizeValue;
 @property (nonatomic, strong) UIColor *noteColor;
 @property (nonatomic, assign) BOOL crossedOut;
@@ -22,13 +24,16 @@
 @property (nonatomic, assign) NSUInteger notePriority;
 
 
+
+
 - (instancetype)initWithText:(NSString *)textValue
                     noteSize:(CGFloat)noteSizeValue
                     withDate:(NSDate *)date
                  orderNumber:(NSUInteger)orderNumber
                     priority:(NSUInteger)notePriority
                        color:(UIColor *)noteColor
-                  crossedOut:(BOOL)crossedOut;
+                  crossedOut:(BOOL)crossedOut
+                    fontName:(NSString *)fontName;
 
 - (instancetype)initWithNoteView:(NoteView *)noteView;
 

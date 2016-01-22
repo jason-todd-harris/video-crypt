@@ -29,7 +29,7 @@
     [AllTheNotes sharedNotes].fontDivisor = 6; //BEFORE I CHECK NSDEFAULTS FOR SETTINGS
     [AllTheNotes settingsFromNSDefaults];
     [AllTheNotes updateAppNotesFromNSDefaults];
-    [self setUpSomeDummyNotes];    
+//    [self setUpSomeDummyNotes];    
 
 //    NSUserDefaults *userDefaults = [AllTheNotes sharedNotes].userDefaults;
 //    NSMutableArray *defaultNotes = [[userDefaults objectForKey:@"notesArray"] mutableCopy];
@@ -52,7 +52,8 @@
                                                  orderNumber:i
                                                     priority:1
                                                        color:[AllTheNotes sharedNotes].colorArray[i%5]
-                                                  crossedOut:NO];
+                                                  crossedOut:NO
+                                                    fontName:nil];
         [mutableNotes addObject:dummyNote];
     }
     
