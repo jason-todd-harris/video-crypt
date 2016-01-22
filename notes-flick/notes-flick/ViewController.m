@@ -447,7 +447,7 @@
 //    CGPoint relativeToWindow = [oldNoteView convertPoint:oldNoteView.bounds.origin toView:[UIApplication sharedApplication].keyWindow.rootViewController.view];
     CGPoint relativeToWindow = [oldNoteView convertPoint:oldNoteView.bounds.origin toView:self.view];
     
-    [UIView animateWithDuration:self.animationDuration
+    [UIView animateWithDuration:self.animationDuration * 2 / 3
                           delay:0.0
                         options: UIViewAnimationOptionCurveEaseIn
                      animations:^{
@@ -471,7 +471,7 @@
     [self.view layoutIfNeeded];
     animatedNote.interiorTextBox.transform = CGAffineTransformScale(animatedNote.interiorTextBox.transform, 2, 2);
     animatedNote.interiorTextBox.font = [UIFont fontWithName:animatedNote.noteFontName size:self.noteSize / self.fontDivisor / 2];
-    [UIView animateWithDuration:self.animationDuration
+    [UIView animateWithDuration:self.animationDuration * 2 / 3
                           delay:0.0
                         options: UIViewAnimationOptionCurveEaseIn
                      animations:^{

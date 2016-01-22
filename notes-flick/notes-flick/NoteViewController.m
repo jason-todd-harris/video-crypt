@@ -32,7 +32,11 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor notesBrown];
-    self.noteFontName = self.theNoteView.noteFontName;
+    self.noteFontName = @"Helvetica";
+    if(self.theNoteView.noteFontName)
+    {
+        self.noteFontName = self.theNoteView.noteFontName;
+    }
     [self setScreenHeightandWidth];
     [self placeTextField];
     [self createAndPlaceBarButtonItems];
