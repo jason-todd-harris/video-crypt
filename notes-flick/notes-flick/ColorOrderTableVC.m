@@ -1,57 +1,44 @@
 //
-//  SettingsTableViewController.m
+//  ColorOrderTableVC.m
 //  notes-flick
 //
-//  Created by JASON HARRIS on 1/15/16.
+//  Created by JASON HARRIS on 1/25/16.
 //  Copyright © 2016 jason harris. All rights reserved.
 //
 
-#import "SettingsTableViewController.h"
+#import "ColorOrderTableVC.h"
 #import "NotesColor.h"
 #import "AllTheNotes.h"
-#import "SortOrderTableViewController.h"
-#import "FontViewController.h"
 #import <Masonry.h>
 
-@interface SettingsTableViewController () <UITableViewDelegate>
-@property (nonatomic, strong) NSArray *cellNameArray;
+@interface ColorOrderTableVC ()
+@property (nonatomic, strong) NSMutableArray *colorOrder;
 
 @end
 
-@implementation SettingsTableViewController
+@implementation ColorOrderTableVC
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
-    
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
-    
     self.navigationController.navigationBar.tintColor = [UIColor notesBrown];
     self.view.backgroundColor = [UIColor notesBrown];
-//    self.tableView.contentMode = UIViewContentModeScaleToFill;
-    self.tableView.separatorColor = [UIColor whiteColor];
-    self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.scrollEnabled = NO;
-//    self.tableView.rowHeight = 64;
-//    self.tableView.alwaysBounceHorizontal = NO;
-//    self.tableView.alwaysBounceVertical = NO;
+    self.tableView.alwaysBounceHorizontal = NO;
+    self.tableView.alwaysBounceVertical = NO;
+    self.tableView.editing = YES;
     self.tableView.tableFooterView = [UIView new];
     self.tableView.delegate = self;
+    self.tableView.rowHeight = 75;
     self.tableView.separatorInset = UIEdgeInsetsMake(0, 10, 0, 10);
-    self.tableView.contentInset = UIEdgeInsetsMake(10, 0, 0, 0);
+    self.tableView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
     
-    self.cellNameArray = @[@"Font Size", @"Sort Order", @"Clear Notes (History and Current)"];
-    
-}
--(void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:animated];
-    [self.delegate changeInSettings:@"temp"];
+    self.navigationItem.title = @"Rearrange Color Order";
     
     
+    self.colorOrder = [AllTheNotes sharedNotes].colorArray;
+
 }
 
 - (void)didReceiveMemoryWarning {
@@ -66,54 +53,51 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    
-    
-    return self.cellNameArray.count;
+    return [AllTheNotes sharedNotes].colorArray.count;
 }
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@""];
     
-    UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@""];
-    cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    cell.backgroundColor = [UIColor notesBrown];
-    cell.textLabel.text = self.cellNameArray[indexPath.row];
-    cell.selectionStyle = UITableViewCellSelectionStyleGray;
-//    cell.detailTextLabel.text = @"detail text";
-    cell.layoutMargins = UIEdgeInsetsZero;
-    cell.preservesSuperviewLayoutMargins = NO;
-    
-    UIView *bgView = [[UIView alloc] initWithFrame:cell.bounds];
-    bgView.backgroundColor = [UIColor grayColor];
-    cell.selectedBackgroundView = bgView;
-    cell.textLabel.textColor = [UIColor notesLightGray];
-    
+    cell.backgroundColor = [AllTheNotes sharedNotes].colorArray[indexPath.row];
+    cell.textLabel.text = [UIColor stringFromColor:[AllTheNotes sharedNotes].colorArray[indexPath.row]];
     
     return cell;
 }
 
 
--(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{   
-    if([self.cellNameArray[indexPath.row] isEqualToString:@"Sort Order"])
-    {
-        SortOrderTableViewController *sortOrderVC = [[SortOrderTableViewController alloc] init];
-        [self showViewController:sortOrderVC sender:self];  
-    } else if([self.cellNameArray[indexPath.row] isEqualToString:@"Font Size"])
-    {
-        FontViewController *fontVC = [[FontViewController alloc] init];
-        [self showViewController:fontVC sender:self];
-    }
+
+// Override to support rearranging the table view.
+- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
+{
+    UIColor *colorToMove = [self.colorOrder objectAtIndex:fromIndexPath.row];
+    [self.colorOrder removeObjectAtIndex:fromIndexPath.row];
+    [self.colorOrder insertObject:colorToMove atIndex:toIndexPath.row];
     
-    
-    
+    [AllTheNotes updateDefaultsWithSettings];
 }
+
 
 // Override to support conditional editing of the table view.
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
     // Return NO if you do not want the specified item to be editable.
+    
+    
     return YES;
 }
+
+
+// Turns off the Red delete button circle thing
+- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return UITableViewCellEditingStyleNone;
+}
+// turns off indent after removing the red circle for deleting cells
+- (BOOL)tableView:(UITableView *)tableView shouldIndentWhileEditingRowAtIndexPath:(NSIndexPath *)indexPath {
+    return NO;
+}
+
 
 /*
 // Override to support editing the table view.

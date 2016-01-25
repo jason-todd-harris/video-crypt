@@ -209,13 +209,6 @@
 
 -(NSMutableArray *)returnSubviewsBasedOnDataStore
 {
-    
-    if(self.sortTheNotesOnce)
-    {
-        [AllTheNotes sortNotesByValue:1];
-        self.sortTheNotesOnce = NO;
-    }
-    
     NSMutableArray *mutableSubviews = [@[] mutableCopy];
     for (NoteView *eachNoteView in [AllTheNotes sharedNotes].notesArray) {
         eachNoteView.noteSizeValue = [AllTheNotes sharedNotes].currentNoteSize;
@@ -322,13 +315,16 @@
     {
         offsetFranction = 0;
     }
-//    NSLog(@".\n offset frac = %1.1f \n content offset: %@ \n scrollView Width: %1.1f",offsetFranction,NSStringFromCGPoint(self.scrollView.contentOffset),self.scrollView.contentSize.width);
-    
-    
     if (pinchGestureRecog.velocity > 0 && self.noteSize != [AllTheNotes sharedNotes].defaultNoteSize) //ZOOM IN
     {
         [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
         self.zoomedIn = YES;
+        
+        for (NoteView *eachNote in self.stackView.arrangedSubviews) { //FOR ANIMATING FONT SIZE
+            eachNote.interiorTextBox.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1/self.transformScalar, 1/self.transformScalar);
+            eachNote.interiorTextBox.font = [UIFont fontWithName:eachNote.noteFontName size:self.largeFontSize];
+        }
+        
         [UIView animateWithDuration:self.animationDuration
                               delay:0.0
                             options: UIViewAnimationOptionCurveEaseInOut
@@ -345,7 +341,7 @@
                          }
                          completion:^(BOOL finished) {
                              for (NoteView *eachNote in self.stackView.arrangedSubviews) {
-                                 eachNote.interiorTextBox.transform = CGAffineTransformScale(eachNote.interiorTextBox.transform, 1/self.transformScalar, 1/self.transformScalar);  //FOR ANIMATING FONT SIZE
+//                                 eachNote.interiorTextBox.transform = CGAffineTransformScale(eachNote.interiorTextBox.transform, 1/self.transformScalar, 1/self.transformScalar);  //FOR ANIMATING FONT SIZE
                                  eachNote.interiorTextBox.font = [UIFont fontWithName:eachNote.noteFontName size:self.largeFontSize];
                                  [self.view layoutIfNeeded];
                              }
@@ -354,20 +350,14 @@
 
     } else if (pinchGestureRecog.velocity < 0 && self.noteSize == [AllTheNotes sharedNotes].defaultNoteSize) //ZOOM OUT
     {
+        [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
         self.zoomedIn = NO;
         for (NoteView *eachNote in self.stackView.arrangedSubviews) { //FOR ANIMATING FONT SIZE
-//            eachNote.interiorTextBox.backgroundColor = [UIColor greenColor]; WORKING HERE DEBUG
-// blah blah blah blah
-// blah blah blah blah
-// blah blah blah blah
-// blah blah blah blah
-// blah blah blah blah
-// blah blah blah blah
-// blah blah blah blah
-            eachNote.interiorTextBox.transform = CGAffineTransformScale(eachNote.interiorTextBox.transform, self.transformScalar, self.transformScalar);
+            eachNote.interiorTextBox.transform = CGAffineTransformScale(CGAffineTransformIdentity, self.transformScalar, self.transformScalar);
             eachNote.interiorTextBox.font = [UIFont fontWithName:eachNote.noteFontName size:self.largeFontSize / self.transformScalar];
         }
-        [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
+        
+        [self.view layoutIfNeeded];
         [UIView animateWithDuration:self.animationDuration
                               delay:0.0
                             options: UIViewAnimationOptionCurveEaseInOut
@@ -391,8 +381,6 @@
                          }];
 
     }
-    
-//    NSLog(@"velocity: %1.1f scale: %1.1f", pinchGestureRecog.velocity, pinchGestureRecog.scale);
 }
 
 
@@ -582,9 +570,15 @@
     {
         NSLog(@"font divisor changed and re-set up screen");
         self.fontDivisor = [AllTheNotes sharedNotes].fontDivisor;
-        self.sortTheNotesOnce = YES;
         [self setUpEntireScreen];
     }
+    
+    if(YES)
+    {
+        [AllTheNotes sortNotesByValue:@[]];
+        [self setUpEntireScreen];
+    }
+    
     
 }
 

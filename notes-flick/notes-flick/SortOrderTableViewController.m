@@ -9,10 +9,11 @@
 #import "SortOrderTableViewController.h"
 #import "NotesColor.h"
 #import "AllTheNotes.h"
+#import "ColorOrderTableVC.h"
 #import <Masonry.h>
 
 @interface SortOrderTableViewController ()
-@property (nonatomic, strong) NSArray *sortOrderArray;
+@property (nonatomic, strong) NSMutableArray *sortOrderArray;
 
 @end
 
@@ -20,33 +21,26 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
-    
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
     self.navigationController.navigationBar.tintColor = [UIColor notesBrown];
     self.view.backgroundColor = [UIColor notesBrown];
-    //    self.tableView.contentMode = UIViewContentModeScaleToFill;
     self.tableView.separatorColor = [UIColor whiteColor];
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
-    //    self.tableView.scrollEnabled = NO;
-    //    self.tableView.alwaysBounceHorizontal = NO;
-    //    self.tableView.alwaysBounceVertical = NO;
+    self.tableView.scrollEnabled = NO;
+    self.tableView.alwaysBounceHorizontal = NO;
+    self.tableView.alwaysBounceVertical = NO;
     self.tableView.editing = YES;
     self.tableView.tableFooterView = [UIView new];
     self.tableView.delegate = self;
     self.tableView.separatorInset = UIEdgeInsetsMake(0, 10, 0, 10);
     self.tableView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
+    self.tableView.allowsSelectionDuringEditing = YES;
     
-    self.sortOrderArray = @[@"Date Created", @"Colors", @"Completed"];
+    self.navigationItem.title = @"Rearrange Sort Order";
+    
+    
+    self.sortOrderArray = [AllTheNotes sharedNotes].sortOrderArray;
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
 
 #pragma mark - Table view data source
 
@@ -62,11 +56,9 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@""];
-    cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell.backgroundColor = [UIColor notesBrown];
     cell.textLabel.text = self.sortOrderArray[indexPath.row];
     cell.selectionStyle = UITableViewCellSelectionStyleGray;
-    cell.detailTextLabel.text = @"drag to rearrange the order for sorting";
     cell.detailTextLabel.textColor = [UIColor notesLightGray];
     cell.layoutMargins = UIEdgeInsetsZero;
     cell.preservesSuperviewLayoutMargins = NO;
@@ -76,18 +68,23 @@
     cell.textLabel.textColor = [UIColor notesLightGray];
     
     
+    if([cell.textLabel.text isEqualToString:@"Colors"])
+    {
+        cell.detailTextLabel.text = @"Select to arrange color sort order";
+    }
+    
     return cell;
 }
 
 // Override to support rearranging the table view.
 - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
 {
+    NSString *stringToMove = [self.sortOrderArray objectAtIndex:fromIndexPath.row];
+    [self.sortOrderArray removeObjectAtIndex:fromIndexPath.row];
+    [self.sortOrderArray insertObject:stringToMove atIndex:toIndexPath.row];
     
+    [AllTheNotes updateDefaultsWithSettings];
 }
-
-
-
-
 
 
 // Override to support conditional editing of the table view.
@@ -108,6 +105,25 @@
 - (BOOL)tableView:(UITableView *)tableView shouldIndentWhileEditingRowAtIndexPath:(NSIndexPath *)indexPath {
     return NO;
 }
+
+
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if([self.sortOrderArray[indexPath.row] isEqualToString:@"Colors"])
+    {
+        ColorOrderTableVC *colorOrderVC = [[ColorOrderTableVC alloc] init];
+        [self showViewController:colorOrderVC sender:self];
+    }
+    
+}
+
+
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
 
 // Override to support conditional rearranging of the table view.
 //- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {

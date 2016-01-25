@@ -7,6 +7,7 @@
 //
 
 #import "NotesColor.h"
+#import "AllTheNotes.h"
 
 @implementation UIColor (notesflick)
 
@@ -57,6 +58,22 @@
     }
     
     return @"Yellow";
+}
+
+- (NSComparisonResult)compare:(UIColor *)otherObject {
+    
+    NSUInteger selfIndexNumber = [[AllTheNotes sharedNotes].colorArray indexOfObject:self];
+    NSUInteger otherIndexNumber = [[AllTheNotes sharedNotes].colorArray indexOfObject:otherObject];
+    
+    if(selfIndexNumber < otherIndexNumber)
+    {
+        return NSOrderedAscending;
+    } else if(selfIndexNumber > otherIndexNumber)
+    {
+        return NSOrderedDescending;
+    }
+    
+    return NSOrderedSame;
 }
 
 

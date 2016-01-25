@@ -51,23 +51,17 @@
         _interiorView.layer.cornerRadius = 15;
         self.layer.cornerRadius = _interiorView.layer.cornerRadius;
         [self addSubview:_interiorView];
-//        CGFloat interiorSize = ([AllTheNotes sharedNotes].screenWidth - [AllTheNotes sharedNotes].navigationBarSize - 30);
         [_interiorView mas_makeConstraints:^(MASConstraintMaker *make) {
-//            make.height.and.width.equalTo(@(interiorSize));
             make.edges.equalTo(self).insets(UIEdgeInsetsMake(10, 10, 10, 10));
             make.center.equalTo(self);
         }];
         //TEXT BOX
         _interiorTextBox = [[UILabel alloc] init];
         _interiorTextBox.contentMode = UIViewContentModeCenter;
-//        _interiorView.alpha = 0.9;
-//        self.backgroundColor = [UIColor blueColor];
-//        _interiorTextBox.backgroundColor = [UIColor greenColor];
-//        _interiorTextBox.alpha = 0.5;
         [self setTextValue:textValue];
         [_interiorView addSubview:_interiorTextBox];
         [_interiorTextBox mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.edges.equalTo(self.interiorView).insets(UIEdgeInsetsMake(5, 5, 5, 5));
+            make.edges.equalTo(self.interiorView).insets(UIEdgeInsetsMake(7, 7, 7, 7));
             make.center.equalTo(self.interiorView);
         }];
         //SETTERS
@@ -218,7 +212,6 @@
         }];
         [_interiorView mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.edges.equalTo(self).insets(UIEdgeInsetsMake(10, 10, 10, 10));
-//            make.center.equalTo(self);
         }];
     }
     

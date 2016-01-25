@@ -7,13 +7,15 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "NoteView.h"
+#import "NotesColor.h"
 
 
 @interface AllTheNotes : NSObject
 @property (nonatomic, strong) NSUserDefaults *userDefaults;
-@property (nonatomic, strong) NSMutableArray *notesArray;
-@property (nonatomic, strong) NSMutableArray *deletedArray;
-@property (nonatomic, strong) NSArray *colorArray;
+@property (nonatomic, strong) NSMutableArray<NoteView *> *notesArray;
+@property (nonatomic, strong) NSMutableArray<NoteView *> *deletedArray;
+@property (nonatomic, strong) NSMutableArray<UIColor *> *colorArray;
 
 @property (nonatomic, assign) CGFloat defaultNoteSize;
 @property (nonatomic, assign) CGFloat currentNoteSize;
@@ -25,7 +27,10 @@
 //settings
 @property (nonatomic, assign) CGFloat fontDivisor;
 @property (nonatomic, assign) BOOL zoomedIn;
-@property (nonatomic, strong) NSArray *sortOrderArray;
+
+//SORT SETTINGS
+@property (nonatomic, strong) NSMutableArray<NSString *> *sortOrderArray;
+
 
 
 //@property (nonatomic, strong) NSMutableArray *notesDictionariesArray;
@@ -41,6 +46,6 @@
 +(void)settingsFromNSDefaults;
 
 
-+(void)sortNotesByValue:(NSUInteger )willBeChanged;
++(void)sortNotesByValue:(NSArray *)sortArray;
 
 @end

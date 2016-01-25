@@ -7,8 +7,6 @@
 //
 
 #import "AllTheNotes.h"
-#import "NotesColor.h"
-#import "NoteView.h"
 
 @implementation AllTheNotes
 
@@ -28,7 +26,8 @@
     _notesArray = NSMutableArray.new;
     _deletedArray = NSMutableArray.new;
     _userDefaults = [NSUserDefaults standardUserDefaults];
-    _colorArray = @[ [UIColor notesYellow], [UIColor notesOrange], [UIColor notesRed], [UIColor notesBlue], [UIColor notesGreen] ];
+    _colorArray = [@[[UIColor notesYellow], [UIColor notesOrange], [UIColor notesRed], [UIColor notesBlue], [UIColor notesGreen]] mutableCopy];
+    _sortOrderArray = [@[@"Date Created", @"Colors", @"Completed Status"] mutableCopy];
     
 }
 
@@ -84,7 +83,7 @@
                                          @"priority":@(eachNote.notePriority),
                                          @"color" : colorString,
                                          @"crossedOut":@(eachNote.crossedOut),
-                                         @"fontName":eachNote.noteFontName
+                                         @"fontName":eachNote.noteFontName,
                                          };
         [dictionaryArray addObject:noteDictionary];
     }
@@ -97,8 +96,20 @@
 {
     [[AllTheNotes sharedNotes].userDefaults setObject:@([AllTheNotes sharedNotes].zoomedIn)
                                                forKey:@"zoomedIn"];
-    [[AllTheNotes sharedNotes].userDefaults  setObject:@([AllTheNotes sharedNotes].fontDivisor)
-                                                forKey:@"fontDivisor"];
+    
+    [[AllTheNotes sharedNotes].userDefaults setObject:@([AllTheNotes sharedNotes].fontDivisor)
+                                               forKey:@"fontDivisor"];
+
+    [[AllTheNotes sharedNotes].userDefaults setObject:[AllTheNotes sharedNotes].sortOrderArray
+                                               forKey:@"sortOrder"];
+    
+    //COLORS
+    NSMutableArray *colorStringArray = [NSMutableArray new];
+    for (UIColor *eachColor in [AllTheNotes sharedNotes].colorArray) {
+        [colorStringArray addObject:[UIColor stringFromColor:eachColor]];
+    }
+    [[AllTheNotes sharedNotes].userDefaults setObject:colorStringArray
+                                               forKey:@"colorStrings"];
 }
 
 +(void)settingsFromNSDefaults
@@ -115,7 +126,20 @@
         [AllTheNotes sharedNotes].fontDivisor = divisorNSNumber.floatValue;
     }
     
+    if([[AllTheNotes sharedNotes].userDefaults objectForKey:@"sortOrder"])
+    {
+        [AllTheNotes sharedNotes].sortOrderArray = [[[AllTheNotes sharedNotes].userDefaults objectForKey:@"sortOrder"] mutableCopy];
+    }
     
+    if([[AllTheNotes sharedNotes].userDefaults objectForKey:@"colorStrings"])
+    {
+        NSMutableArray *colorStrings = [[[AllTheNotes sharedNotes].userDefaults objectForKey:@"colorStrings"] mutableCopy];
+        NSMutableArray *localColorArray = [@[] mutableCopy];
+        for (NSString *eachString in colorStrings) {
+            [localColorArray addObject:[UIColor colorWithString:eachString]];
+        }
+        [AllTheNotes sharedNotes].colorArray = localColorArray;
+    }
     
 }
 
@@ -130,12 +154,28 @@
 
 
 
-+(void)sortNotesByValue:(NSUInteger )willBeChanged
++(void)sortNotesByValue:(NSArray *)sortArray
 {
-    NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"crossedOut" ascending:YES];
+    NSMutableArray *sortDescriptorArray = [NSMutableArray new];
+    
+    for (NSString *eachString in [AllTheNotes sharedNotes].sortOrderArray) {
         
-    [AllTheNotes sharedNotes].notesArray = [[AllTheNotes sharedNotes].notesArray sortedArrayUsingDescriptors:@[sortDescriptor]].mutableCopy;
+        if([eachString isEqualToString:@"Colors"])
+        {
+            [sortDescriptorArray addObject:[NSSortDescriptor sortDescriptorWithKey:@"noteColor" ascending:YES]];
+        } else if([eachString isEqualToString:@"Date Created"])
+        {
+            [sortDescriptorArray addObject:[NSSortDescriptor sortDescriptorWithKey:@"noteDate" ascending:YES]];
+        } else if([eachString isEqualToString:@"Completed Status"])
+        {
+            [sortDescriptorArray addObject:[NSSortDescriptor sortDescriptorWithKey:@"crossedOut" ascending:YES]];
+        }
+    }
+    
+    
+    [AllTheNotes sharedNotes].notesArray = [[AllTheNotes sharedNotes].notesArray sortedArrayUsingDescriptors:sortDescriptorArray].mutableCopy;
     [AllTheNotes updateNoteOrderNumbers];
+    [AllTheNotes updateDefaultsWithNotes];
     
 }
 

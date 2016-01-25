@@ -23,6 +23,7 @@
 		966E53D81C2DE497001F93CB /* NotesColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 966E53D71C2DE497001F93CB /* NotesColor.m */; };
 		966E53DE1C2F1EF9001F93CB /* NoteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 966E53DD1C2F1EF9001F93CB /* NoteViewController.m */; };
 		966E53E01C3D7CBB001F93CB /* Entitlements.plist in Resources */ = {isa = PBXBuildFile; fileRef = 966E53DF1C3D7CBB001F93CB /* Entitlements.plist */; };
+		968AC02B1C56C18A00739BD9 /* ColorOrderTableVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 968AC02A1C56C18A00739BD9 /* ColorOrderTableVC.m */; };
 		96D34ED91C480801001FD1E8 /* NavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96D34ED81C480801001FD1E8 /* NavigationController.m */; };
 		96D34EDF1C494405001FD1E8 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96D34EDE1C494405001FD1E8 /* SettingsViewController.m */; };
 		96D34EE21C496212001FD1E8 /* SettingsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96D34EE11C496212001FD1E8 /* SettingsTableViewController.m */; };
@@ -79,6 +80,8 @@
 		966E53DC1C2F1EF9001F93CB /* NoteViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NoteViewController.h; sourceTree = "<group>"; };
 		966E53DD1C2F1EF9001F93CB /* NoteViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NoteViewController.m; sourceTree = "<group>"; };
 		966E53DF1C3D7CBB001F93CB /* Entitlements.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Entitlements.plist; sourceTree = "<group>"; };
+		968AC0291C56C18A00739BD9 /* ColorOrderTableVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ColorOrderTableVC.h; sourceTree = "<group>"; };
+		968AC02A1C56C18A00739BD9 /* ColorOrderTableVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ColorOrderTableVC.m; sourceTree = "<group>"; };
 		96D34ED71C480801001FD1E8 /* NavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NavigationController.h; sourceTree = "<group>"; };
 		96D34ED81C480801001FD1E8 /* NavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NavigationController.m; sourceTree = "<group>"; };
 		96D34EDD1C494405001FD1E8 /* SettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
@@ -132,6 +135,8 @@
 				96D34EE11C496212001FD1E8 /* SettingsTableViewController.m */,
 				96D34EE31C497153001FD1E8 /* SortOrderTableViewController.h */,
 				96D34EE41C497153001FD1E8 /* SortOrderTableViewController.m */,
+				968AC0291C56C18A00739BD9 /* ColorOrderTableVC.h */,
+				968AC02A1C56C18A00739BD9 /* ColorOrderTableVC.m */,
 				9637F7221C528DA000D9B2F2 /* FontViewController.h */,
 				9637F7231C528DA000D9B2F2 /* FontViewController.m */,
 			);
@@ -432,6 +437,7 @@
 				966E53DE1C2F1EF9001F93CB /* NoteViewController.m in Sources */,
 				96D34ED91C480801001FD1E8 /* NavigationController.m in Sources */,
 				966E53991C2AE834001F93CB /* notes_flick.xcdatamodeld in Sources */,
+				968AC02B1C56C18A00739BD9 /* ColorOrderTableVC.m in Sources */,
 				9637F7281C529EAC00D9B2F2 /* FontNameTableViewController.m in Sources */,
 				966E53901C2AE834001F93CB /* AppDelegate.m in Sources */,
 				966E53C61C2C763E001F93CB /* NoteView.m in Sources */,
