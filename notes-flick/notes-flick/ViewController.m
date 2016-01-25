@@ -43,6 +43,9 @@
 @property (nonatomic, assign) BOOL alreadyLoaded;
 @property (nonatomic, assign) BOOL zoomedIn;
 
+@property (nonatomic, copy) NSMutableArray<NSString *> *priorSortOrder;
+@property (nonatomic, copy) NSMutableArray<UIColor *> *priorColorOrder;
+
 
 @end
 
@@ -57,6 +60,8 @@
     self.fontDivisor = [AllTheNotes sharedNotes].fontDivisor;
     self.largeFontSize = [AllTheNotes sharedNotes].defaultNoteSize / self.fontDivisor;
     self.zoomedIn = [AllTheNotes sharedNotes].zoomedIn;
+    self.priorSortOrder = [AllTheNotes sharedNotes].sortOrderArray;
+    self.priorColorOrder = [AllTheNotes sharedNotes].colorArray;
     if(!self.zoomedIn)
     {
         self.noteSize = [AllTheNotes sharedNotes].defaultNoteSize / self.transformScalar;
@@ -573,10 +578,14 @@
         [self setUpEntireScreen];
     }
     
-    if(YES)
+    BOOL newSort = ![self.priorSortOrder isEqualToArray:[AllTheNotes sharedNotes].sortOrderArray];
+    BOOL newColorOrder = ![self.priorColorOrder isEqualToArray:[AllTheNotes sharedNotes].colorArray];
+    if(newSort | newColorOrder)
     {
         [AllTheNotes sortNotesByValue:@[]];
         [self setUpEntireScreen];
+        self.priorSortOrder = [AllTheNotes sharedNotes].sortOrderArray;
+        self.priorColorOrder = [AllTheNotes sharedNotes].colorArray;
     }
     
     

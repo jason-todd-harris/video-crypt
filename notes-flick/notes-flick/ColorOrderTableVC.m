@@ -30,7 +30,7 @@
     self.tableView.editing = YES;
     self.tableView.tableFooterView = [UIView new];
     self.tableView.delegate = self;
-    self.tableView.rowHeight = 75;
+    self.tableView.rowHeight = 70;
     self.tableView.separatorInset = UIEdgeInsetsMake(0, 10, 0, 10);
     self.tableView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
     

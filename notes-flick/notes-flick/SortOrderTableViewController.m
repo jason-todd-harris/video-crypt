@@ -113,6 +113,9 @@
     {
         ColorOrderTableVC *colorOrderVC = [[ColorOrderTableVC alloc] init];
         [self showViewController:colorOrderVC sender:self];
+    } else
+    {
+        [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
     }
     
 }
