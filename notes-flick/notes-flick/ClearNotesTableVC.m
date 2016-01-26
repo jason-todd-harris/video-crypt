@@ -1,60 +1,43 @@
 //
-//  SettingsTableViewController.m
+//  ClearNotesTableVC.m
 //  notes-flick
 //
-//  Created by JASON HARRIS on 1/15/16.
+//  Created by JASON HARRIS on 1/26/16.
 //  Copyright © 2016 jason harris. All rights reserved.
 //
 
-#import "SettingsTableViewController.h"
-#import "NotesColor.h"
-#import "AllTheNotes.h"
-#import "SortOrderTableViewController.h"
-#import "FontViewController.h"
 #import "ClearNotesTableVC.h"
-#import <Masonry.h>
+#import "NotesColor.h"
+#import "NoteView.h"
+#import "AllTheNotes.h"
 
-@interface SettingsTableViewController () <UITableViewDelegate>
+
+@interface ClearNotesTableVC ()
 @property (nonatomic, strong) NSArray *cellNameArray;
 
 @end
 
-@implementation SettingsTableViewController
+@implementation ClearNotesTableVC
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
-    
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
-    
     self.navigationController.navigationBar.tintColor = [UIColor notesBrown];
     self.view.backgroundColor = [UIColor notesBrown];
-//    self.tableView.contentMode = UIViewContentModeScaleToFill;
     self.tableView.separatorColor = [UIColor whiteColor];
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
     self.tableView.scrollEnabled = NO;
-//    self.tableView.rowHeight = 64;
-//    self.tableView.alwaysBounceHorizontal = NO;
-//    self.tableView.alwaysBounceVertical = NO;
     self.tableView.tableFooterView = [UIView new];
     self.tableView.delegate = self;
     self.tableView.separatorInset = UIEdgeInsetsMake(0, 10, 0, 10);
     self.tableView.contentInset = UIEdgeInsetsMake(10, 0, 0, 0);
     
-    self.cellNameArray = @[@"Font", @"Sort Order", @"Clear Notes"];
-    
-}
--(void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:animated];
-    [self.delegate changeInSettings:@"temp"];
+    self.cellNameArray = @[@"Delete Notes", @"Clear Deleted Notes"];
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
 }
 
 #pragma mark - Table view data source
@@ -64,20 +47,17 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    
-    
     return self.cellNameArray.count;
 }
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    
     UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@""];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell.backgroundColor = [UIColor notesBrown];
     cell.textLabel.text = self.cellNameArray[indexPath.row];
     cell.selectionStyle = UITableViewCellSelectionStyleGray;
-//    cell.detailTextLabel.text = @"detail text";
+    //    cell.detailTextLabel.text = @"detail text";
     cell.layoutMargins = UIEdgeInsetsZero;
     cell.preservesSuperviewLayoutMargins = NO;
     
@@ -85,35 +65,79 @@
     bgView.backgroundColor = [UIColor grayColor];
     cell.selectedBackgroundView = bgView;
     cell.textLabel.textColor = [UIColor notesLightGray];
+    cell.detailTextLabel.textColor = [UIColor notesLightGray];
     
+    if([cell.textLabel.text isEqualToString:@"Clear Deleted Notes"])
+    {
+        cell.detailTextLabel.text = @"Cannot be undone";
+    }
     
     return cell;
 }
 
-
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{   
-    if([self.cellNameArray[indexPath.row] isEqualToString:@"Sort Order"])
+{
+    if([self.cellNameArray[indexPath.row] isEqualToString:@"Delete Notes"])
     {
-        SortOrderTableViewController *sortOrderVC = [[SortOrderTableViewController alloc] init];
-        [self showViewController:sortOrderVC sender:self];  
-    } else if([self.cellNameArray[indexPath.row] isEqualToString:@"Font"])
+        [self displayAlertViewController:@"Delete all notes" message:@"Can be undone" completion:^(bool alertResult) {
+            if(alertResult)
+            {
+                NSUInteger i;
+                NSUInteger notesCount = [AllTheNotes sharedNotes].notesArray.count;
+                for (i = 1; i < notesCount+1; i++)
+                {
+                    [[AllTheNotes sharedNotes].deletedArray addObject:[AllTheNotes sharedNotes].notesArray[notesCount -i]];
+                    [[AllTheNotes sharedNotes].notesArray[notesCount -i] removeFromSuperview];
+                }
+            }
+        }];
+    } else if([self.cellNameArray[indexPath.row] isEqualToString:@"Clear Deleted Notes"])
     {
-        FontViewController *fontVC = [[FontViewController alloc] init];
-        [self showViewController:fontVC sender:self];
-    } else if([self.cellNameArray[indexPath.row] isEqualToString:@"Clear Notes"])
-    {
-        ClearNotesTableVC *clearNotesVC = [[ClearNotesTableVC alloc] init];
-        [self showViewController:clearNotesVC sender:self];
+        [self displayAlertViewController:@"Clear all deleted notes" message:@"CANNOT BE UNDONE" completion:^(bool alertResult) {
+            if(alertResult)
+            {
+                [AllTheNotes sharedNotes].deletedArray = @[].mutableCopy;
+            }
+        }];
     }
+}
+
+
+-(void)displayAlertViewController:(NSString *)title
+                          message:(NSString *)message
+                       completion:(void (^)(bool alertResult))completionBlock
+{
+    UIAlertController *alert = [UIAlertController
+                                alertControllerWithTitle:title
+                                message:message
+                                preferredStyle:UIAlertControllerStyleAlert];
+    
+    UIAlertAction *yesButton = [UIAlertAction
+                                actionWithTitle:@"Yes"
+                                style:UIAlertActionStyleDestructive
+                                handler:^(UIAlertAction * action)
+                                {
+                                    completionBlock(YES);
+                                }];
+    UIAlertAction *noButton = [UIAlertAction
+                               actionWithTitle:@"No"
+                               style:UIAlertActionStyleDefault
+                               handler:nil];
+    [alert addAction:yesButton];
+    [alert addAction:noButton];
+    
+    [self presentViewController:alert animated:YES completion:nil];
     
 }
 
+
+/*
 // Override to support conditional editing of the table view.
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
     // Return NO if you do not want the specified item to be editable.
     return YES;
 }
+*/
 
 /*
 // Override to support editing the table view.

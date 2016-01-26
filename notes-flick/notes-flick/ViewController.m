@@ -73,6 +73,7 @@
 -(void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
+    [self checkIfUndoShouldInteract];
     
     if(!self.alreadyLoaded)
     {
@@ -593,6 +594,7 @@
     
     [AllTheNotes sortNotesByValue:@[]];
     [self setUpEntireScreen];
+    [self checkIfUndoShouldInteract];
     
 }
 
