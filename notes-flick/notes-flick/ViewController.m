@@ -67,13 +67,12 @@
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
+    [self checkIfUndoShouldInteract];
 }
 
 -(void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    [self checkIfUndoShouldInteract];
     
     if(!self.alreadyLoaded)
     {
@@ -314,7 +313,7 @@
         self.scrollView.contentOffset = CGPointMake(contentOffset, 0); //SCROLL TO CONTENT
     } else if (self.stackView.arrangedSubviews.count > 1) // WON'T RUN IF THE STACKVIEW WAS PREVIOUSLY EMPTY
     {
-        CGFloat notPastEnd = MIN(objectFraction*contentWidth*contentWidth, self.scrollView.contentSize.width - self.view.frame.size.width);
+        CGFloat notPastEnd = MIN(objectFraction*contentWidth, self.scrollView.contentSize.width - self.view.frame.size.width);
         self.scrollView.contentOffset = CGPointMake(notPastEnd, 0); //SCROLL TO CONTENT
     }
     
