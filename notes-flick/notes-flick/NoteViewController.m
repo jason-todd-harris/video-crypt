@@ -32,7 +32,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor notesBrown];
-    self.noteFontName = @"Helvetica";
+    self.noteFontName = [AllTheNotes sharedNotes].defaultFont;
     if(self.theNoteView.noteFontName)
     {
         self.noteFontName = self.theNoteView.noteFontName;

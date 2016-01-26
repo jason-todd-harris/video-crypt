@@ -27,6 +27,7 @@
 //settings
 @property (nonatomic, assign) CGFloat fontDivisor;
 @property (nonatomic, assign) BOOL zoomedIn;
+@property (nonatomic, strong) NSString *defaultFont;
 
 //SORT SETTINGS
 @property (nonatomic, strong) NSMutableArray<NSString *> *sortOrderArray;

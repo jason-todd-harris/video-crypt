@@ -28,6 +28,8 @@
     _userDefaults = [NSUserDefaults standardUserDefaults];
     _colorArray = [@[[UIColor notesYellow], [UIColor notesOrange], [UIColor notesRed], [UIColor notesBlue], [UIColor notesGreen]] mutableCopy];
     _sortOrderArray = [@[@"Date Created", @"Colors", @"Completed Status"] mutableCopy];
+    _fontDivisor = 6;
+    _defaultFont = @"Helvetica";
     
 }
 
@@ -103,6 +105,9 @@
     [[AllTheNotes sharedNotes].userDefaults setObject:[AllTheNotes sharedNotes].sortOrderArray
                                                forKey:@"sortOrder"];
     
+    [[AllTheNotes sharedNotes].userDefaults setObject:[AllTheNotes sharedNotes].defaultFont
+                                               forKey:@"defaultFont"];
+    
     //COLORS
     NSMutableArray *colorStringArray = [NSMutableArray new];
     for (UIColor *eachColor in [AllTheNotes sharedNotes].colorArray) {
@@ -129,6 +134,11 @@
     if([[AllTheNotes sharedNotes].userDefaults objectForKey:@"sortOrder"])
     {
         [AllTheNotes sharedNotes].sortOrderArray = [[[AllTheNotes sharedNotes].userDefaults objectForKey:@"sortOrder"] mutableCopy];
+    }
+    
+    if([[AllTheNotes sharedNotes].userDefaults objectForKey:@"defaultFont"])
+    {
+        [AllTheNotes sharedNotes].defaultFont = [[[AllTheNotes sharedNotes].userDefaults objectForKey:@"defaultFont"] mutableCopy];
     }
     
     if([[AllTheNotes sharedNotes].userDefaults objectForKey:@"colorStrings"])

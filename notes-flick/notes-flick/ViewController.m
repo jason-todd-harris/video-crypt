@@ -43,8 +43,6 @@
 @property (nonatomic, assign) BOOL alreadyLoaded;
 @property (nonatomic, assign) BOOL zoomedIn;
 
-@property (nonatomic, copy) NSMutableArray<NSString *> *priorSortOrder;
-@property (nonatomic, copy) NSMutableArray<UIColor *> *priorColorOrder;
 
 
 @end
@@ -60,8 +58,6 @@
     self.fontDivisor = [AllTheNotes sharedNotes].fontDivisor;
     self.largeFontSize = [AllTheNotes sharedNotes].defaultNoteSize / self.fontDivisor;
     self.zoomedIn = [AllTheNotes sharedNotes].zoomedIn;
-    self.priorSortOrder = [AllTheNotes sharedNotes].sortOrderArray;
-    self.priorColorOrder = [AllTheNotes sharedNotes].colorArray;
     if(!self.zoomedIn)
     {
         self.noteSize = [AllTheNotes sharedNotes].defaultNoteSize / self.transformScalar;
@@ -294,10 +290,34 @@
         
         //ADD NOTE TO STACKVIEW
         [self addNoteToView:[AllTheNotes sharedNotes].notesArray[orderNumber] afterNumber:orderNumber];
-        self.scrollView.contentOffset = CGPointMake(self.scrollView.contentSize.width, 0);
-        }
+        updatedNoteView = [AllTheNotes sharedNotes].notesArray[orderNumber];
+    }
     
+    //REMEMBER OFFSET TO DETERMINE WHETHER OR NOT TO SCROLL
+    CGFloat contentOffset = self.scrollView.contentOffset.x;
+    [AllTheNotes sortNotesByValue:@[]];
     [self updateNoteOrderNumbers];
+    [self setUpEntireScreen];
+    [self.view layoutIfNeeded];
+    
+    //SCROLL HERE TO PROPER NOTE
+    CGFloat contentEnd = contentOffset + self.view.frame.size.width;
+    CGFloat contentWidth = self.scrollView.contentSize.width;
+    CGFloat objectFraction = @([self.stackView.arrangedSubviews indexOfObject:updatedNoteView]).floatValue / ([AllTheNotes sharedNotes].notesArray.count);
+    CGFloat fractionalWidth = objectFraction * contentWidth;
+    
+    if((fractionalWidth > contentOffset) && (fractionalWidth < contentEnd - self.noteSize/3*2)) //NO NEED TO SCROLL TO OBJECT
+    {
+        //THE SCREEN IS ALREADY CENTERED AROUND WHERE PREVIOUS NOTE SHOULD BE
+        NSLog(@"note is already on screen no scroll necessary");
+        self.scrollView.contentOffset = CGPointMake(contentOffset, 0); //SCROLL TO CONTENT
+    } else if (self.stackView.arrangedSubviews.count > 1) // WON'T RUN IF THE STACKVIEW WAS PREVIOUSLY EMPTY
+    {
+        CGFloat notPastEnd = MIN(objectFraction*contentWidth*contentWidth, self.scrollView.contentSize.width - self.view.frame.size.width);
+        self.scrollView.contentOffset = CGPointMake(notPastEnd, 0); //SCROLL TO CONTENT
+    }
+    
+    [self.view layoutIfNeeded];
     [AllTheNotes updateDefaultsWithNotes];
 }
 
@@ -523,7 +543,7 @@
                              [[AllTheNotes sharedNotes].notesArray insertObject:lastDeletion atIndex:lastDeletion.orderNumber];
                              if((fractionalWidth > contentOffset) && (fractionalWidth < contentEnd - self.noteSize/2)) //SCROLLS TO THE OBJECT
                              {
-                                 
+                                 //THE SCREEN IS ALREADY CENTERED AROUND WHERE PREVIOUS NOTE SHOULD BE
                              } else if (self.stackView.arrangedSubviews.count > 1) // WON'T RUN IF THE STACKVIEW WAS PREVIOUSLY EMPTY
                              {
                                  self.scrollView.contentOffset = CGPointMake(objectFraction*contentWidth, 0); //SCROLL TO CONTENT
@@ -556,13 +576,7 @@
 #pragma mark - settings
 
 -(void)settingsButtonPressed:(UIButton *)buttonPressed
-{   
-    NSLog(@"settings pressed");
-//    self.settingsVC = [[SettingsViewController alloc] init];
-//    self.settingsVC.fontDivisor = self.fontDivisor;
-    
-//    [self showViewController:self.settingsVC sender:self];
-    
+{
     self.settingsTableVC = [[SettingsTableViewController alloc] init];
     self.settingsTableVC.delegate = self;
     [self showViewController:self.settingsTableVC sender:self];
@@ -575,19 +589,10 @@
     {
         NSLog(@"font divisor changed and re-set up screen");
         self.fontDivisor = [AllTheNotes sharedNotes].fontDivisor;
-        [self setUpEntireScreen];
     }
     
-    BOOL newSort = ![self.priorSortOrder isEqualToArray:[AllTheNotes sharedNotes].sortOrderArray];
-    BOOL newColorOrder = ![self.priorColorOrder isEqualToArray:[AllTheNotes sharedNotes].colorArray];
-    if(newSort | newColorOrder)
-    {
-        [AllTheNotes sortNotesByValue:@[]];
-        [self setUpEntireScreen];
-        self.priorSortOrder = [AllTheNotes sharedNotes].sortOrderArray;
-        self.priorColorOrder = [AllTheNotes sharedNotes].colorArray;
-    }
-    
+    [AllTheNotes sortNotesByValue:@[]];
+    [self setUpEntireScreen];
     
 }
 

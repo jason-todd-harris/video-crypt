@@ -26,7 +26,6 @@
     [AllTheNotes sharedNotes].navigationBarSize = 64;
     [AllTheNotes sharedNotes].defaultNoteSize = self.screenWidth;
     [AllTheNotes sharedNotes].currentNoteSize = [AllTheNotes sharedNotes].defaultNoteSize;
-    [AllTheNotes sharedNotes].fontDivisor = 6; //BEFORE I CHECK NSDEFAULTS FOR SETTINGS
     [AllTheNotes settingsFromNSDefaults];
     [AllTheNotes updateAppNotesFromNSDefaults];
 //    [self setUpSomeDummyNotes];
@@ -39,16 +38,33 @@
     NSUInteger i = 0;
     NSMutableArray *mutableNotes = [@[] mutableCopy];
     NSMutableArray *defaultNotes = [@[] mutableCopy];// [AllTheNotes sharedNotes].notesArray;
-    for (i = 0; i <11; i++)
+    for (i = 0; i <13; i++)
     {
         
         NSString *string = [NSString stringWithFormat:@"%@ text",@(i+1).stringValue];
+//        string = [UIColor stringFromColor:[AllTheNotes sharedNotes].colorArray[i%5]];
+        UIColor *color;
+        if(i<3)
+        {
+            color = [AllTheNotes sharedNotes].colorArray[0];
+        } else if (i < 6)
+        {
+            color = [AllTheNotes sharedNotes].colorArray[1];
+        } else if (i < 9)
+        {
+            color = [AllTheNotes sharedNotes].colorArray[2];
+        } else if (i < 13)
+        {
+            color = [AllTheNotes sharedNotes].colorArray[3];
+        }
+        
+        
         NoteView *dummyNote = [[NoteView alloc] initWithText:string
                                                     noteSize:0
                                                     withDate:nil
                                                  orderNumber:i
                                                     priority:1
-                                                       color:[AllTheNotes sharedNotes].colorArray[i%5]
+                                                       color:color
                                                   crossedOut:NO
                                                     fontName:nil];
         [mutableNotes addObject:dummyNote];

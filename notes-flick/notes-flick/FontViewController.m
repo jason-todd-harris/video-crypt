@@ -12,6 +12,7 @@
 #import "AllTheNotes.h"
 #import "SortOrderTableViewController.h"
 #import <Masonry.h>
+#import "FontNameTableViewController.h"
 
 
 @interface FontViewController ()
@@ -19,6 +20,8 @@
 @property (nonatomic, assign) CGFloat offsetSpacing;
 @property (nonatomic, strong) UILabel *largeLabel;
 @property (nonatomic, strong) UILabel *smallLabel;
+@property (nonatomic, strong) UIBarButtonItem *defaultFontName;
+@property (nonatomic, strong) FontNameTableViewController *fontTableVC;
 
 @end
 
@@ -30,10 +33,24 @@
     self.view.backgroundColor = [UIColor notesBrown];
     self.fontDivisor = [AllTheNotes sharedNotes].fontDivisor;
     self.offsetSpacing = 15;
+    
+    self.defaultFontName = [[UIBarButtonItem alloc] initWithTitle:@"Default Font"
+                                                            style:UIBarButtonItemStylePlain
+                                                           target:self
+                                                           action:@selector(changeTheDefaultFont)];
+    self.navigationItem.rightBarButtonItem = self.defaultFontName;
     [self addFontMenuItems];
     [self addLabelBoxes];
 }
 
+
+-(void)changeTheDefaultFont
+{
+    self.fontTableVC = [[FontNameTableViewController alloc] init];
+    self.fontTableVC.usedForDefault = YES;
+    self.fontTableVC.fontNamePassed = [AllTheNotes sharedNotes].defaultFont;
+    [self showViewController:_fontTableVC sender:self];
+}
 
 -(void)addFontMenuItems
 {
@@ -63,7 +80,7 @@
     self.largeLabel.textColor = [UIColor notesYellow];
     self.largeLabel.text = @"Aa";
     self.largeLabel.textAlignment = NSTextAlignmentCenter;
-    NSString *fontName = self.largeLabel.font.fontName;
+    NSString *fontName = [AllTheNotes sharedNotes].defaultFont;
     CGFloat largeFontSize = [AllTheNotes sharedNotes].defaultNoteSize / self.fontDivisor;
     self.largeLabel.font = [UIFont fontWithName:fontName size:largeFontSize];
     

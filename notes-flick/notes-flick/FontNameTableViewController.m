@@ -30,7 +30,6 @@
         self.tableView.contentMode = UIViewContentModeScaleToFill;
     self.tableView.separatorColor = [UIColor whiteColor];
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
-//    self.tableView.tableFooterView = [UIView new];
     self.tableView.delegate = self;
     self.tableView.separatorInset = UIEdgeInsetsMake(0, 10, 0, 10);
     self.tableView.contentInset = UIEdgeInsetsMake(10, 0, 0, 0);
@@ -103,8 +102,16 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSString *newFontPicked = self.fontNamesArray[indexPath.row];
-    [self.delegate newFontPicked:newFontPicked];
+    if(self.usedForDefault)
+    {
+        NSString *newFontPicked = self.fontNamesArray[indexPath.row];
+        [AllTheNotes sharedNotes].defaultFont = newFontPicked;
+        [AllTheNotes updateDefaultsWithSettings];
+    } else
+    {
+        NSString *newFontPicked = self.fontNamesArray[indexPath.row];
+        [self.delegate newFontPicked:newFontPicked];
+    }
 }
 
 /*

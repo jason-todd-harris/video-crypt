@@ -43,7 +43,7 @@
     self.tableView.separatorInset = UIEdgeInsetsMake(0, 10, 0, 10);
     self.tableView.contentInset = UIEdgeInsetsMake(10, 0, 0, 0);
     
-    self.cellNameArray = @[@"Font Size", @"Sort Order", @"Clear Notes (History and Current)"];
+    self.cellNameArray = @[@"Font", @"Sort Order", @"Clear Notes (History and Current)"];
     
 }
 -(void)viewDidAppear:(BOOL)animated
@@ -99,7 +99,7 @@
     {
         SortOrderTableViewController *sortOrderVC = [[SortOrderTableViewController alloc] init];
         [self showViewController:sortOrderVC sender:self];  
-    } else if([self.cellNameArray[indexPath.row] isEqualToString:@"Font Size"])
+    } else if([self.cellNameArray[indexPath.row] isEqualToString:@"Font"])
     {
         FontViewController *fontVC = [[FontViewController alloc] init];
         [self showViewController:fontVC sender:self];

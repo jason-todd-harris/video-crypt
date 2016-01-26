@@ -20,6 +20,7 @@
 @property (nonatomic, weak) id<FontNameTableViewDelegate> delegate;
 
 @property (nonatomic, strong) NSString *fontNamePassed;
+@property (nonatomic, assign) BOOL usedForDefault;
 
 
 @end
