@@ -64,8 +64,8 @@
                                                     priority:notePriority.integerValue
                                                        color:noteColor
                                                   crossedOut:crossedOut.integerValue
-                                                    fontName:fontName];
-        aNoteView.notificationDate = notificationDate;
+                                                    fontName:fontName
+                                            notificationDate:notificationDate];
         
         [aNoteArray addObject:aNoteView];
     }

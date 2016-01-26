@@ -66,7 +66,8 @@
                                                     priority:1
                                                        color:color
                                                   crossedOut:NO
-                                                    fontName:nil];
+                                                    fontName:nil
+                                            notificationDate:nil];
         [mutableNotes addObject:dummyNote];
     }
     

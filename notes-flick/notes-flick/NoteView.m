@@ -20,7 +20,7 @@
 
 -(instancetype)init
 {
-    self = [self initWithText:@"init used" noteSize:50 withDate:nil orderNumber:0 priority:1 color:nil crossedOut:NO fontName:nil];
+    self = [self initWithText:@"init used" noteSize:50 withDate:nil orderNumber:0 priority:1 color:nil crossedOut:NO fontName:nil notificationDate:nil];
     return self;
 }
 
@@ -32,6 +32,7 @@
                        color:(UIColor *)noteColor
                   crossedOut:(BOOL)crossedOut
                     fontName:(NSString *)fontName
+            notificationDate:(NSDate *)notificationDate
 {
     self = [super init];
     if(self)
@@ -64,6 +65,7 @@
             make.edges.equalTo(self.interiorView).insets(UIEdgeInsetsMake(7, 7, 7, 7));
             make.center.equalTo(self.interiorView);
         }];
+        _notificationDate = notificationDate;
         //SETTERS
         [self setNoteColor:noteColor];
         [self setCrossedOut:crossedOut];
@@ -85,7 +87,8 @@
                      priority:noteView.notePriority
                         color:noteView.noteColor
                    crossedOut:noteView.crossedOut
-                     fontName:noteView.noteFontName];
+                     fontName:noteView.noteFontName
+             notificationDate:noteView.notificationDate];
     return self;
 }
 

@@ -35,7 +35,8 @@
                     priority:(NSUInteger)notePriority
                        color:(UIColor *)noteColor
                   crossedOut:(BOOL)crossedOut
-                    fontName:(NSString *)fontName;
+                    fontName:(NSString *)fontName
+            notificationDate:(NSDate *)notificationDate;
 
 - (instancetype)initWithNoteView:(NoteView *)noteView;
 

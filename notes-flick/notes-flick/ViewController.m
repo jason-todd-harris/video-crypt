@@ -273,7 +273,8 @@
                                                   priority:priority
                                                      color:result[@"color"]
                                                 crossedOut:NO
-                                                  fontName:result[@"fontName"]];
+                                                  fontName:result[@"fontName"]
+                                          notificationDate:result[@"notificationDate"]];
     newNoteView.interiorTextBox.font = [UIFont fontWithName:newNoteView.noteFontName size:self.noteSize / self.fontDivisor];
     
     if(updatedNoteView)
