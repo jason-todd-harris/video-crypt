@@ -11,6 +11,7 @@
 #import "AllTheNotes.h"
 #import "NotesColor.h"
 #import "FontNameTableViewController.h"
+#import "DatePickerVC.h"
 
 @interface NoteViewController () <FontNameTableViewDelegate>
 @property (nonatomic, assign) CGFloat navBarHeight;
@@ -23,6 +24,9 @@
 @property (nonatomic, strong) UIBarButtonItem *fontNameButton;
 
 @property (nonatomic, strong) FontNameTableViewController *fontTableVC;
+
+@property (nonatomic, strong) DatePickerVC *datePickerVC;
+@property (nonatomic, strong) UIDatePicker *datePicker;
 
 
 @end
@@ -77,12 +81,64 @@
                                                         style:UIBarButtonItemStylePlain
                                                        target:self
                                                        action:@selector(toggleColors:)];
+    
+    //LETS BUTTON KNOW POSSIBLE TITLES TO MAKE SURE WIDTH IS CORRECT
+    NSMutableArray *colorStrings = [NSMutableArray new];
+    for (UIColor *eacahColor in [AllTheNotes sharedNotes].colorArray)
+    {
+        [colorStrings addObject:[UIColor stringFromColor:eacahColor]];
+    }
+    self.colorToggle.possibleTitles = [NSSet setWithArray:colorStrings];
+    
     self.fontNameButton= [[UIBarButtonItem alloc] initWithTitle:@"Font"
                                                           style:UIBarButtonItemStylePlain
                                                          target:self
                                                          action:@selector(changeTheFont:)];
     
-    self.navigationItem.rightBarButtonItems = @[addNoteButton ,flexibleSpace,self.fontNameButton, flexibleSpace, self.colorToggle, flexibleSpace];
+    UIImage *alarmClockImage = [UIImage imageNamed:@"alarm clock"];
+    alarmClockImage = [UIImage imageWithCGImage:alarmClockImage.CGImage scale:5 orientation:alarmClockImage.imageOrientation];
+    UIBarButtonItem *alarmClockButton = [[UIBarButtonItem alloc] initWithImage:alarmClockImage
+                                                              style:UIBarButtonItemStylePlain
+                                                             target:self
+                                                             action:@selector(alarmClockPressed)];
+    
+    self.navigationItem.rightBarButtonItems = @[addNoteButton , flexibleSpace,self.fontNameButton, flexibleSpace, self.colorToggle, flexibleSpace,alarmClockButton, flexibleSpace];
+}
+
+-(void)alarmClockPressed
+{
+    self.datePickerVC = [[DatePickerVC alloc] init];
+    self.datePickerVC.notificationDate = self.theNoteView.notificationDate;
+    [self.datePickerVC setModalPresentationStyle:UIModalPresentationOverFullScreen];
+    [self presentViewController:self.datePickerVC animated:NO completion:nil];
+}
+
+- (void)setupLocalNotifications
+{
+    if ([UIApplication instancesRespondToSelector:@selector(registerUserNotificationSettings:)])
+    {
+        
+        [[UIApplication sharedApplication]
+         registerUserNotificationSettings:[UIUserNotificationSettings
+                                           settingsForTypes:UIUserNotificationTypeAlert | UIUserNotificationTypeBadge | UIUserNotificationTypeSound
+                                           categories:nil]];
+    }
+    
+    UILocalNotification *localNotification = [[UILocalNotification alloc] init];
+    
+    // current time plus 10 secs
+    NSDate *now = [NSDate date];
+    NSDate *dateToFire = [now dateByAddingTimeInterval:10];
+    
+    localNotification.fireDate = dateToFire;
+    localNotification.alertBody = @"Time to get up!";
+    localNotification.soundName = UILocalNotificationDefaultSoundName;
+    localNotification.applicationIconBadgeNumber = 1; // increment
+    
+    NSDictionary *infoDict = [NSDictionary dictionaryWithObjectsAndKeys:@"Object 1", @"Key 1", @"Object 2", @"Key 2", nil];
+    localNotification.userInfo = infoDict;
+    
+    [[UIApplication sharedApplication] scheduleLocalNotification:localNotification];
 }
 
 -(void)addNote:(UIBarButtonItem *)barButton
@@ -129,6 +185,7 @@
     indexNumber = indexNumber % [AllTheNotes sharedNotes].colorArray.count;
     self.noteTextView.backgroundColor = [AllTheNotes sharedNotes].colorArray[indexNumber];
     self.colorToggle.title = [UIColor stringFromColor:self.noteTextView.backgroundColor];
+    
 }
 
 - (void)didReceiveMemoryWarning {

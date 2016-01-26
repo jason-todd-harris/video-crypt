@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		9637F7241C528DA000D9B2F2 /* FontViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9637F7231C528DA000D9B2F2 /* FontViewController.m */; };
 		9637F7281C529EAC00D9B2F2 /* FontNameTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9637F7271C529EAC00D9B2F2 /* FontNameTableViewController.m */; };
+		9650330E1C57FAB000914CDB /* DatePickerVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 9650330D1C57FAB000914CDB /* DatePickerVC.m */; };
 		966E538D1C2AE834001F93CB /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 966E538C1C2AE834001F93CB /* main.m */; };
 		966E53901C2AE834001F93CB /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 966E538F1C2AE834001F93CB /* AppDelegate.m */; };
 		966E53931C2AE834001F93CB /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 966E53921C2AE834001F93CB /* ViewController.m */; };
@@ -55,6 +56,8 @@
 		9637F7231C528DA000D9B2F2 /* FontViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FontViewController.m; sourceTree = "<group>"; };
 		9637F7261C529EAC00D9B2F2 /* FontNameTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FontNameTableViewController.h; sourceTree = "<group>"; };
 		9637F7271C529EAC00D9B2F2 /* FontNameTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FontNameTableViewController.m; sourceTree = "<group>"; };
+		9650330C1C57FAB000914CDB /* DatePickerVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DatePickerVC.h; sourceTree = "<group>"; };
+		9650330D1C57FAB000914CDB /* DatePickerVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DatePickerVC.m; sourceTree = "<group>"; };
 		966E53881C2AE834001F93CB /* notes-flick.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "notes-flick.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		966E538C1C2AE834001F93CB /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		966E538E1C2AE834001F93CB /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -144,6 +147,8 @@
 				968AC02A1C56C18A00739BD9 /* ColorOrderTableVC.m */,
 				9637F7221C528DA000D9B2F2 /* FontViewController.h */,
 				9637F7231C528DA000D9B2F2 /* FontViewController.m */,
+				9637F7261C529EAC00D9B2F2 /* FontNameTableViewController.h */,
+				9637F7271C529EAC00D9B2F2 /* FontNameTableViewController.m */,
 			);
 			name = "Settings View Controllers";
 			sourceTree = "<group>";
@@ -184,8 +189,8 @@
 				966E539C1C2AE834001F93CB /* LaunchScreen.storyboard */,
 				966E53DC1C2F1EF9001F93CB /* NoteViewController.h */,
 				966E53DD1C2F1EF9001F93CB /* NoteViewController.m */,
-				9637F7261C529EAC00D9B2F2 /* FontNameTableViewController.h */,
-				9637F7271C529EAC00D9B2F2 /* FontNameTableViewController.m */,
+				9650330C1C57FAB000914CDB /* DatePickerVC.h */,
+				9650330D1C57FAB000914CDB /* DatePickerVC.m */,
 				966E539F1C2AE834001F93CB /* Info.plist */,
 				966E53CC1C2DBB95001F93CB /* AllTheNotes.h */,
 				966E53CD1C2DBB95001F93CB /* AllTheNotes.m */,
@@ -435,6 +440,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9650330E1C57FAB000914CDB /* DatePickerVC.m in Sources */,
 				96D34EE51C497153001FD1E8 /* SortOrderTableViewController.m in Sources */,
 				9637F7241C528DA000D9B2F2 /* FontViewController.m in Sources */,
 				966E53931C2AE834001F93CB /* ViewController.m in Sources */,

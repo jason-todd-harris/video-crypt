@@ -55,6 +55,7 @@
         UIColor *noteColor = [UIColor colorWithString:colorString];
         NSNumber *crossedOut = eachNote[@"crossedOut"];
         NSString *fontName = eachNote[@"fontName"];
+        NSDate *notificationDate = eachNote[@"notificationDate"];
         
         NoteView *aNoteView = [[NoteView alloc] initWithText:eachNote[@"text"]
                                                     noteSize:[AllTheNotes sharedNotes].currentNoteSize
@@ -64,6 +65,7 @@
                                                        color:noteColor
                                                   crossedOut:crossedOut.integerValue
                                                     fontName:fontName];
+        aNoteView.notificationDate = notificationDate;
         
         [aNoteArray addObject:aNoteView];
     }
@@ -85,8 +87,21 @@
                                          @"priority":@(eachNote.notePriority),
                                          @"color" : colorString,
                                          @"crossedOut":@(eachNote.crossedOut),
-                                         @"fontName":eachNote.noteFontName,
+                                         @"fontName":eachNote.noteFontName
                                          };
+        if(eachNote.notificationDate)
+        {
+            noteDictionary = @{@"date":dateString,
+                               @"text":eachNote.textValue,
+                               @"order":@(eachNote.orderNumber),
+                               @"priority":@(eachNote.notePriority),
+                               @"color" : colorString,
+                               @"crossedOut":@(eachNote.crossedOut),
+                               @"fontName":eachNote.noteFontName,
+                               @"notificationDate":eachNote.notificationDate
+                               };
+        }
+        
         [dictionaryArray addObject:noteDictionary];
     }
     

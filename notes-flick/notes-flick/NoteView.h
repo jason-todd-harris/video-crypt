@@ -20,6 +20,8 @@
 @property (nonatomic, strong) UIColor *noteColor;
 @property (nonatomic, assign) BOOL crossedOut;
 @property (nonatomic, strong) NSDate *noteDate;
+@property (nonatomic, strong) NSDate *notificationDate;
+
 @property (nonatomic, assign) NSUInteger orderNumber;
 @property (nonatomic, assign) NSUInteger notePriority;
 
