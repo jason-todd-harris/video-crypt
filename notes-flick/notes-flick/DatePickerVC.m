@@ -46,6 +46,11 @@
     
     [self.datePicker setValue:[UIColor blackColor] forKeyPath:@"textColor"];
     
+    if(self.notificationDate)
+    {
+        self.datePicker.date = self.notificationDate;
+    }
+    
 }
 
 -(void)setUpCancelAndSaveButtons
@@ -94,13 +99,12 @@
 
 -(void)savePressed
 {
-    
-    NSLog(@"save");
+    [self.delegate datePickerFinished:self.datePicker.date];
 }
 
 -(void)cancelPressed
 {
-    NSLog(@"cancel");
+    [self.delegate datePickerFinished:nil];
 }
 
 -(void)vibrancyEffects

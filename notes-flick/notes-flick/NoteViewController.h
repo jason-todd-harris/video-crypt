@@ -13,7 +13,7 @@
 
 @required
 
--(void)newNoteResult:(NSDictionary *)result updatedNoteView:(NoteView *)updatedNoteView;
+-(void)newNoteResult:(NSDictionary *)result updatedNoteView:(NoteView *)updatedNoteView notificationDate:(NSDate *)notificationDate UUID:(NSString *)UUID;
 
 @end
 
@@ -22,6 +22,7 @@
 
 @property (nonatomic, strong) UITextView *noteTextView;
 @property (nonatomic, strong) NoteView *theNoteView;
+@property (nonatomic, strong) NSDate *notificationDate;
 
 @property (nonatomic, assign) NSUInteger noteOrder;
 @property (nonatomic, assign) BOOL areWeEditing;

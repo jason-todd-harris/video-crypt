@@ -228,6 +228,7 @@
 -(void)newNoteViewControllerEditing:(BOOL)areWeEditing noteViewToEdit:(NoteView *)noteViewToEdit
 {
     self.veryNewNoteVC = [[NoteViewController alloc] init];
+    self.veryNewNoteVC.notificationDate = noteViewToEdit.notificationDate;
     self.veryNewNoteVC.delegate = self;
     self.veryNewNoteVC.layoutGuideSize = [AllTheNotes sharedNotes].navigationBarSize;
     self.veryNewNoteVC.fontSize = self.largeFontSize;
@@ -258,7 +259,7 @@
 }
 
 
--(void)newNoteResult:(NSDictionary *)result updatedNoteView:(NoteView *)updatedNoteView
+-(void)newNoteResult:(NSDictionary *)result updatedNoteView:(NoteView *)updatedNoteView notificationDate:(NSDate *)notificationDate UUID:(NSString *)UUID
 {
     [self.navigationController popViewControllerAnimated:YES];
     NSNumber *orderNSNumber = result[@"noteOrder"];
@@ -274,7 +275,8 @@
                                                      color:result[@"color"]
                                                 crossedOut:NO
                                                   fontName:result[@"fontName"]
-                                          notificationDate:result[@"notificationDate"]];
+                                          notificationDate:notificationDate
+                                                      UUID:UUID];
     newNoteView.interiorTextBox.font = [UIFont fontWithName:newNoteView.noteFontName size:self.noteSize / self.fontDivisor];
     
     if(updatedNoteView)
@@ -283,6 +285,7 @@
         updatedNoteView.textValue = result[@"noteText"];
         updatedNoteView.notePriority = priority;
         updatedNoteView.noteFontName = result[@"fontName"];
+        updatedNoteView.notificationDate = notificationDate;
         
     } else //IF WE'RE ADDING A NEW NOTE DO THIS
     {
@@ -310,7 +313,6 @@
     if((fractionalWidth > contentOffset) && (fractionalWidth < contentEnd - self.noteSize/3*2)) //NO NEED TO SCROLL TO OBJECT
     {
         //THE SCREEN IS ALREADY CENTERED AROUND WHERE PREVIOUS NOTE SHOULD BE
-        NSLog(@"note is already on screen no scroll necessary");
         self.scrollView.contentOffset = CGPointMake(contentOffset, 0); //SCROLL TO CONTENT
     } else if (self.stackView.arrangedSubviews.count > 1) // WON'T RUN IF THE STACKVIEW WAS PREVIOUSLY EMPTY
     {

@@ -8,7 +8,17 @@
 
 #import <UIKit/UIKit.h>
 
+@protocol DatePickerVCDelegate
+
+@required
+
+-(void)datePickerFinished:(NSDate *)theDate;
+
+@end
+
+
 @interface DatePickerVC : UIViewController
+@property (nonatomic, weak) id<DatePickerVCDelegate> delegate;
 
 @property (nonatomic, strong) NSDate *notificationDate;
 

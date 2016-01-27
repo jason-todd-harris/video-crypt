@@ -13,7 +13,7 @@
 #import "FontNameTableViewController.h"
 #import "DatePickerVC.h"
 
-@interface NoteViewController () <FontNameTableViewDelegate>
+@interface NoteViewController () <FontNameTableViewDelegate, DatePickerVCDelegate>
 @property (nonatomic, assign) CGFloat navBarHeight;
 @property (nonatomic, assign) CGFloat screenHeight;
 @property (nonatomic, assign) CGFloat screenWidth;
@@ -22,11 +22,11 @@
 
 @property (nonatomic, strong) UIBarButtonItem *colorToggle;
 @property (nonatomic, strong) UIBarButtonItem *fontNameButton;
+@property (nonatomic, strong) UIBarButtonItem *alarmClockButton;
 
 @property (nonatomic, strong) FontNameTableViewController *fontTableVC;
 
 @property (nonatomic, strong) DatePickerVC *datePickerVC;
-@property (nonatomic, strong) UIDatePicker *datePicker;
 
 
 @end
@@ -46,6 +46,7 @@
     [self createAndPlaceBarButtonItems];
     
 }
+
 
 -(void)placeTextField
 {
@@ -97,61 +98,45 @@
     
     UIImage *alarmClockImage = [UIImage imageNamed:@"alarm clock"];
     alarmClockImage = [UIImage imageWithCGImage:alarmClockImage.CGImage scale:5 orientation:alarmClockImage.imageOrientation];
-    UIBarButtonItem *alarmClockButton = [[UIBarButtonItem alloc] initWithImage:alarmClockImage
+    self.alarmClockButton = [[UIBarButtonItem alloc] initWithImage:alarmClockImage
                                                               style:UIBarButtonItemStylePlain
                                                              target:self
                                                              action:@selector(alarmClockPressed)];
+    [self alarmClockButtonHighlighted];
     
-    self.navigationItem.rightBarButtonItems = @[addNoteButton , flexibleSpace,self.fontNameButton, flexibleSpace, self.colorToggle, flexibleSpace,alarmClockButton, flexibleSpace];
+    self.navigationItem.rightBarButtonItems = @[addNoteButton,flexibleSpace,self.fontNameButton, flexibleSpace, self.colorToggle, flexibleSpace,self.alarmClockButton, flexibleSpace];
 }
+
 
 -(void)alarmClockPressed
 {
     self.datePickerVC = [[DatePickerVC alloc] init];
-    self.datePickerVC.notificationDate = self.theNoteView.notificationDate;
+    self.datePickerVC.delegate = self;
+    self.datePickerVC.notificationDate = self.notificationDate;
     [self.datePickerVC setModalPresentationStyle:UIModalPresentationOverFullScreen];
     [self presentViewController:self.datePickerVC animated:NO completion:nil];
 }
 
-- (void)setupLocalNotifications
+
+-(void)datePickerFinished:(NSDate *)theDate
 {
-    if ([UIApplication instancesRespondToSelector:@selector(registerUserNotificationSettings:)])
-    {
-        
-        [[UIApplication sharedApplication]
-         registerUserNotificationSettings:[UIUserNotificationSettings
-                                           settingsForTypes:UIUserNotificationTypeAlert | UIUserNotificationTypeBadge | UIUserNotificationTypeSound
-                                           categories:nil]];
-    }
-    
-    UILocalNotification *localNotification = [[UILocalNotification alloc] init];
-    
-    // current time plus 10 secs
-    NSDate *now = [NSDate date];
-    NSDate *dateToFire = [now dateByAddingTimeInterval:10];
-    
-    localNotification.fireDate = dateToFire;
-    localNotification.alertBody = @"Time to get up!";
-    localNotification.soundName = UILocalNotificationDefaultSoundName;
-    localNotification.applicationIconBadgeNumber = 1; // increment
-    
-    NSDictionary *infoDict = [NSDictionary dictionaryWithObjectsAndKeys:@"Object 1", @"Key 1", @"Object 2", @"Key 2", nil];
-    localNotification.userInfo = infoDict;
-    
-    [[UIApplication sharedApplication] scheduleLocalNotification:localNotification];
+    self.notificationDate = theDate;
+    [self alarmClockButtonHighlighted];
+    [self.datePickerVC dismissViewControllerAnimated:YES completion:nil];
 }
+
 
 -(void)addNote:(UIBarButtonItem *)barButton
 {
     
-    NSDictionary *noteDictionary = @{@"color" : self.noteTextView.backgroundColor ,
+    NSDictionary *noteDictionary = @{@"color" : self.noteTextView.backgroundColor,
                                      @"noteText" : self.noteTextView.text,
                                      @"noteOrder" : @(self.noteOrder),
                                      @"priority": @(1),
                                      @"fontName" : self.noteFontName
                                      };
     
-    [self.delegate newNoteResult:noteDictionary updatedNoteView:self.theNoteView];
+    [self.delegate newNoteResult:noteDictionary updatedNoteView:self.theNoteView notificationDate:self.notificationDate UUID:self.theNoteView.UUID];
     
 }
 
@@ -193,6 +178,16 @@
     // Dispose of any resources that can be recreated.
 }
 
+-(void)alarmClockButtonHighlighted
+{
+    if(self.notificationDate)
+    {
+        self.alarmClockButton.tintColor = [UIColor notesRed];
+    } else
+    {
+        self.alarmClockButton.tintColor = [UIColor notesBrown];
+    }
+}
 
 -(void)setScreenHeightandWidth
 {

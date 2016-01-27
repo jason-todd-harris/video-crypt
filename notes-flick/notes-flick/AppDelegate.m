@@ -22,6 +22,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+    [UIApplication sharedApplication].applicationIconBadgeNumber = 0;
     [self setScreenHeightandWidth];
     [AllTheNotes sharedNotes].navigationBarSize = 64;
     [AllTheNotes sharedNotes].defaultNoteSize = self.screenWidth;
@@ -67,14 +68,15 @@
                                                        color:color
                                                   crossedOut:NO
                                                     fontName:nil
-                                            notificationDate:nil];
+                                            notificationDate:nil
+                                                        UUID:nil];
         [mutableNotes addObject:dummyNote];
     }
     
     [defaultNotes addObjectsFromArray:mutableNotes];
     [AllTheNotes sharedNotes].notesArray = defaultNotes;
     [AllTheNotes updateDefaultsWithNotes];
-    
+    [[UIApplication sharedApplication] cancelAllLocalNotifications];
     
 }
 

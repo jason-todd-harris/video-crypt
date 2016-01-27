@@ -20,7 +20,7 @@
 
 -(instancetype)init
 {
-    self = [self initWithText:@"init used" noteSize:50 withDate:nil orderNumber:0 priority:1 color:nil crossedOut:NO fontName:nil notificationDate:nil];
+    self = [self initWithText:@"init used" noteSize:50 withDate:nil orderNumber:0 priority:1 color:nil crossedOut:NO fontName:nil notificationDate:nil UUID:nil];
     return self;
 }
 
@@ -33,6 +33,7 @@
                   crossedOut:(BOOL)crossedOut
                     fontName:(NSString *)fontName
             notificationDate:(NSDate *)notificationDate
+                        UUID:(NSString *)UUID
 {
     self = [super init];
     if(self)
@@ -66,6 +67,14 @@
             make.center.equalTo(self.interiorView);
         }];
         _notificationDate = notificationDate;
+        
+        if(UUID)
+        {
+            _UUID = UUID;
+        } else
+        {
+            _UUID = [[NSUUID UUID] UUIDString];
+        }
         //SETTERS
         [self setNoteColor:noteColor];
         [self setCrossedOut:crossedOut];
@@ -88,9 +97,11 @@
                         color:noteView.noteColor
                    crossedOut:noteView.crossedOut
                      fontName:noteView.noteFontName
-             notificationDate:noteView.notificationDate];
+             notificationDate:noteView.notificationDate
+                         UUID:noteView.UUID];
     return self;
 }
+
 
 -(void)setNoteFontName:(NSString *)theNoteFontName
 {
@@ -228,11 +239,55 @@
     [super removeFromSuperview];
 }
 
+-(void)setNotificationDate:(NSDate *)notificationDate
+{
+    _notificationDate = notificationDate;
+    [self setLocalNotification];
+}
+
+- (void)setLocalNotification
+{
+    NSArray<UILocalNotification*> *allNotifications = [[UIApplication sharedApplication] scheduledLocalNotifications];
+    for (UILocalNotification *eachNotification in allNotifications)
+    {
+        NSString *UUID = [eachNotification.userInfo valueForKey:@"UUID KEY"];
+        if([UUID isEqualToString:_UUID])
+        {
+            [[UIApplication sharedApplication] cancelLocalNotification:eachNotification];
+        }
+    }
+    
+    if(_notificationDate)
+    {
+        [self checkForNotificationPermission];
+        UILocalNotification *localNotification = [[UILocalNotification alloc] init];
+        
+        localNotification.fireDate = _notificationDate;
+        localNotification.alertBody = _textValue;
+        localNotification.soundName = UILocalNotificationDefaultSoundName;
+        localNotification.applicationIconBadgeNumber = 1; // increment
+        
+        NSDictionary *infoDict = @{@"UUID KEY":_UUID
+                                   };
+        localNotification.userInfo = infoDict;
+        
+        [[UIApplication sharedApplication] scheduleLocalNotification:localNotification];
+        
+    }
+}
 
 
 
-
-
+-(void)checkForNotificationPermission
+{
+    if ([UIApplication instancesRespondToSelector:@selector(registerUserNotificationSettings:)])
+    {
+        [[UIApplication sharedApplication]
+         registerUserNotificationSettings:[UIUserNotificationSettings
+                                           settingsForTypes:UIUserNotificationTypeAlert | UIUserNotificationTypeBadge | UIUserNotificationTypeSound
+                                           categories:nil]];
+    }
+}
 
 
 @end
