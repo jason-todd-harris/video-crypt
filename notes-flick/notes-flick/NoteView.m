@@ -66,7 +66,6 @@
             make.edges.equalTo(self.interiorView).insets(UIEdgeInsetsMake(7, 7, 7, 7));
             make.center.equalTo(self.interiorView);
         }];
-        _notificationDate = notificationDate;
         
         if(UUID)
         {
@@ -76,6 +75,7 @@
             _UUID = [[NSUUID UUID] UUIDString];
         }
         //SETTERS
+        [self setNotificationDate:notificationDate];
         [self setNoteColor:noteColor];
         [self setCrossedOut:crossedOut];
         [self setNoteSizeValue:noteSizeValue];
@@ -257,7 +257,7 @@
         }
     }
     
-    if(_notificationDate)
+    if(self.notificationDate)
     {
         [self checkForNotificationPermission];
         UILocalNotification *localNotification = [[UILocalNotification alloc] init];
@@ -274,6 +274,8 @@
         [[UIApplication sharedApplication] scheduleLocalNotification:localNotification];
         
     }
+
+    NSLog(@"%@",[[UIApplication sharedApplication] scheduledLocalNotifications]);
 }
 
 
