@@ -24,6 +24,8 @@
 @property (nonatomic, assign) CGFloat screenHeight;
 @property (nonatomic, assign) CGFloat screenWidth;
 
+@property (nonatomic, strong) UILocalNotification *launchNotification;
+
 //settings
 @property (nonatomic, assign) CGFloat fontDivisor;
 @property (nonatomic, assign) BOOL zoomedIn;

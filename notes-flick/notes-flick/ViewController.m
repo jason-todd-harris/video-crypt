@@ -85,15 +85,61 @@
 }
 
 
-
 -(void)runOnFirstLoad
 {
     [AllTheNotes sharedNotes].navigationBarSize = self.topLayoutGuide.length;
     [self setScreenHeightandWidth];
     [self setUpNavigationBar];
     [self setUpEntireScreen];
-    [self checkIfUndoShouldInteract];
+    [self loadFocusedOnNotification];
     self.alreadyLoaded = YES;
+    
+}
+
+
+-(void)loadFocusedOnNotification
+{
+    NSString *theUUID;
+    [self.view layoutIfNeeded];
+    if([AllTheNotes sharedNotes].launchNotification)
+    {
+        theUUID = [AllTheNotes sharedNotes].launchNotification.userInfo[@"UUID KEY"];
+        
+        for (NoteView *eachNote in self.stackView.arrangedSubviews) {
+            if([eachNote.UUID isEqualToString:theUUID])
+            {
+                CGFloat contentWidth = self.scrollView.contentSize.width;
+                CGFloat objectFraction = @(eachNote.orderNumber).floatValue / ([AllTheNotes sharedNotes].notesArray.count);
+                [UIView animateWithDuration:self.animationDuration
+                                      delay:0.0
+                                    options: UIViewAnimationOptionCurveEaseIn
+                                 animations:^{
+                                     if (self.stackView.arrangedSubviews.count > 1)
+                                     {
+                                         self.scrollView.contentOffset = CGPointMake(objectFraction*contentWidth, 0); //SCROLL TO CONTENT
+                                         [self.view layoutIfNeeded];
+                                     }
+                                 }
+                                 completion:nil];
+                UIAlertController *alert = [UIAlertController
+                                            alertControllerWithTitle:eachNote.UUID
+                                            message:eachNote.textValue
+                                            preferredStyle:UIAlertControllerStyleAlert];
+                UIAlertAction *yesButton = [UIAlertAction
+                                            actionWithTitle:[NSString stringWithFormat:@"fraction %1.1f \n width %1.1f",objectFraction,contentWidth]
+                                            style:UIAlertActionStyleDestructive
+                                            handler:nil];
+                [alert addAction:yesButton];
+                
+                
+                [self presentViewController:alert animated:YES completion:nil];
+                
+            }
+        }
+        
+        [AllTheNotes sharedNotes].launchNotification = nil;
+    }
+    
 }
 
 #pragma mark - screen setup
@@ -169,7 +215,6 @@
     [self.scrollView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.bottom.and.left.and.right.equalTo(self.view);
         make.top.equalTo(self.mas_topLayoutGuide);
-//        make.edges.equalTo(self.view);
     }];
     
     [self populateStackview];
@@ -187,7 +232,6 @@
 
 -(void)populateStackview
 {
-    
     self.stackView = [[UIStackView alloc] initWithArrangedSubviews:[self returnSubviewsBasedOnDataStore]];
     
     [self.scrollView addSubview:self.stackView];
@@ -215,14 +259,14 @@
 -(NSMutableArray *)returnSubviewsBasedOnDataStore
 {
     NSMutableArray *mutableSubviews = [@[] mutableCopy];
-    for (NoteView *eachNoteView in [AllTheNotes sharedNotes].notesArray) {
+    for (NoteView *eachNoteView in [AllTheNotes sharedNotes].notesArray)
+    {
         eachNoteView.noteSizeValue = [AllTheNotes sharedNotes].currentNoteSize;
         CGFloat fontSize = self.largeFontSize;
         if(!self.zoomedIn)
         {
             fontSize = self.largeFontSize / self.transformScalar;
         }
-        
         eachNoteView.interiorTextBox.font = [UIFont fontWithName:eachNoteView.noteFontName size:fontSize];
         [mutableSubviews addObject:eachNoteView];
     }
@@ -525,7 +569,7 @@
     if([AllTheNotes sharedNotes].deletedArray.lastObject)
     {
         NoteView *lastDeletion = [[NoteView alloc] initWithNoteView:[AllTheNotes sharedNotes].deletedArray.lastObject];
-        
+        lastDeletion.notificationDate = lastDeletion.notificationDate;
         CGFloat contentOffset = self.scrollView.contentOffset.x;
         CGFloat contentEnd = self.scrollView.contentOffset.x + self.view.frame.size.width;
         CGFloat contentWidth = self.scrollView.contentSize.width;

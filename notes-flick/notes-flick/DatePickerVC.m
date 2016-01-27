@@ -70,7 +70,7 @@
     [self.cancelButton addTarget:self
                         action:@selector(cancelPressed)
               forControlEvents:UIControlEventTouchUpInside];
-    [self.cancelButton setTitle:@"Cancel" forState:UIControlStateNormal];
+    [self.cancelButton setTitle:@"Cancel/Delete" forState:UIControlStateNormal];
     [self.cancelButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     self.cancelButton.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:0.35];
     self.cancelButton.layer.borderWidth = 3;
@@ -99,7 +99,9 @@
 
 -(void)savePressed
 {
-    [self.delegate datePickerFinished:self.datePicker.date];
+//    [self.delegate datePickerFinished:self.datePicker.date];
+    //DEBUG
+    [self.delegate datePickerFinished:[NSDate dateWithTimeIntervalSinceNow:15]];
 }
 
 -(void)cancelPressed

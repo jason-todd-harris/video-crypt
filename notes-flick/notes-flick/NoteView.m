@@ -235,15 +235,52 @@
 {
     [[AllTheNotes sharedNotes].notesArray removeObject:self];
     [self removeConstraints:self.constraints];
+    [self removeLocalNotification];
     [super removeFromSuperview];
 }
 
 -(void)setNotificationDate:(NSDate *)notificationDate
 {
     _notificationDate = notificationDate;
+    [self removeLocalNotification];
     [self setLocalNotification];
     [self iconForNotification];
 }
+
+-(void)removeLocalNotification
+{
+    NSArray<UILocalNotification*> *allNotifications = [[UIApplication sharedApplication] scheduledLocalNotifications];
+    for (UILocalNotification *eachNotification in allNotifications)
+    {
+        NSString *UUID = [eachNotification.userInfo valueForKey:@"UUID KEY"];
+        if([UUID isEqualToString:_UUID])
+        {
+            [[UIApplication sharedApplication] cancelLocalNotification:eachNotification];
+        }
+    }
+}
+
+- (void)setLocalNotification
+{
+    if(self.notificationDate)
+    {
+        UILocalNotification *localNotification = [[UILocalNotification alloc] init];
+        
+        localNotification.fireDate = _notificationDate;
+        localNotification.alertBody = _textValue;
+        localNotification.soundName = UILocalNotificationDefaultSoundName;
+        localNotification.applicationIconBadgeNumber = 1; // increment
+        
+        NSDictionary *infoDict = @{@"UUID KEY":_UUID,
+                                   @"NOTE":self.textValue
+                                   };
+        localNotification.userInfo = infoDict;
+        
+        [[UIApplication sharedApplication] scheduleLocalNotification:localNotification];
+        
+    }
+}
+
 
 -(void)iconForNotification
 {
@@ -266,36 +303,6 @@
         {
             alarmClockImageView.backgroundColor = [UIColor notesRed];
         }
-    }
-}
-
-- (void)setLocalNotification
-{
-    NSArray<UILocalNotification*> *allNotifications = [[UIApplication sharedApplication] scheduledLocalNotifications];
-    for (UILocalNotification *eachNotification in allNotifications)
-    {
-        NSString *UUID = [eachNotification.userInfo valueForKey:@"UUID KEY"];
-        if([UUID isEqualToString:_UUID])
-        {
-            [[UIApplication sharedApplication] cancelLocalNotification:eachNotification];
-        }
-    }
-    
-    if(self.notificationDate)
-    {
-        UILocalNotification *localNotification = [[UILocalNotification alloc] init];
-        
-        localNotification.fireDate = _notificationDate;
-        localNotification.alertBody = _textValue;
-        localNotification.soundName = UILocalNotificationDefaultSoundName;
-        localNotification.applicationIconBadgeNumber = 1; // increment
-        
-        NSDictionary *infoDict = @{@"UUID KEY":_UUID
-                                   };
-        localNotification.userInfo = infoDict;
-        
-        [[UIApplication sharedApplication] scheduleLocalNotification:localNotification];
-        
     }
 }
 

@@ -22,7 +22,6 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
-    NSLog(@"application launch optione \n%@",launchOptions);
     NSLog(@"%@",[[UIApplication sharedApplication] scheduledLocalNotifications]);
     [self checkForNotificationPermission];
     [UIApplication sharedApplication].applicationIconBadgeNumber = 0;
@@ -34,7 +33,40 @@
     [AllTheNotes updateAppNotesFromNSDefaults];
 //    [self setUpSomeDummyNotes];
     
+    [self launchOptionsHandler:launchOptions];
     return YES;
+}
+
+-(void)launchOptionsHandler:(NSDictionary *)launchOptions
+{
+    if(launchOptions[UIApplicationLaunchOptionsLocalNotificationKey])
+    {
+        [AllTheNotes sharedNotes].launchNotification = launchOptions[UIApplicationLaunchOptionsLocalNotificationKey];
+        [AllTheNotes sharedNotes].zoomedIn = YES;
+    }
+}
+
+
+-(void)displayAlertViewController:(NSString *)title
+                          message:(NSString *)message
+                       completion:(void (^)(bool alertResult))completionBlock
+{
+    UIAlertController *alert = [UIAlertController
+                                alertControllerWithTitle:title
+                                message:message
+                                preferredStyle:UIAlertControllerStyleAlert];
+    
+    UIAlertAction *yesButton = [UIAlertAction
+                                actionWithTitle:@"OK"
+                                style:UIAlertActionStyleDestructive
+                                handler:nil];
+    [alert addAction:yesButton];
+    
+//    [self.window addSubview:self.window.inputViewController.view];
+//    [self.window makeKeyAndVisible];
+    
+    [self.window.rootViewController presentViewController:alert animated:YES completion:nil];
+    
 }
 
 -(void)setUpSomeDummyNotes
@@ -107,26 +139,11 @@
 -(void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification
 {
     application.applicationIconBadgeNumber = 0;
-    //self.textView.text = [userInfo description];
-    // We can determine whether an application is launched as a result of the user tapping the action
-    // button or whether the notification was delivered to the already-running application by examining
-    // the application state.
-
-    NSLog(@"received notification %lu",application.applicationState);
-/*
-    UIApplicationStateActive,
-    UIApplicationStateInactive,
-    UIApplicationStateBackground
-*/
- 
- 
-//    if (application.applicationState == UIApplicationStateActive)
-//    {
-//        // Nothing to do if applicationState is Inactive, the iOS already displayed an alert view.
-//        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Did receive a Remote Notification" message:[NSString stringWithFormat:@"Your App name received this notification while it was running:\n%@",[[userInfo objectForKey:@"aps"] objectForKey:@"alert"]]delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
-//        
-//        [alertView show];
-//    }    
+    //SET UP NSNOTIFICATIONS AND RE-RUN THE CHECK TO SEE IF SHOULD BE NOTIFICATIONS
+    [NSNotificationCenter defaultCenter];
+    NSLog(@"received notification %@",notification);
+//    [self displayAlertViewController:@"Alarm" message:[NSString stringWithFormat:@"%@",notification.userInfo[@"NOTE"]] completion:nil];
+    
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application
