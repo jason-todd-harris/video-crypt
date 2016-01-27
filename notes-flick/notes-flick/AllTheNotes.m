@@ -29,7 +29,7 @@
     _colorArray = [@[[UIColor notesYellow], [UIColor notesOrange], [UIColor notesRed], [UIColor notesBlue], [UIColor notesGreen]] mutableCopy];
     _sortOrderArray = [@[@"Date Created", @"Colors", @"Completed Status"] mutableCopy];
     _fontDivisor = 6;
-    _defaultFont = @"Helvetica";
+    _defaultFont = @"Noteworthy-Light";
     
 }
 
