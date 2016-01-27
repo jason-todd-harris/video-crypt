@@ -258,8 +258,7 @@
             make.centerX.equalTo(self.interiorView.mas_right);
             make.centerY.equalTo(self.interiorView.mas_top);
         }];
-        NSLog(@"time interval since %f",[_notificationDate timeIntervalSinceNow]);
-        NSLog(@".\n notification date: %@ \n current date     : %@",_notificationDate,[NSDate date]);
+        NSLog(@".\n  \n current date     : %@ \n notification date: %@ \n time interval since %f",[NSDate date],_notificationDate, [_notificationDate timeIntervalSinceNow]);
         if([_notificationDate timeIntervalSinceNow] > 0)
         {
             alarmClockImageView.backgroundColor = [UIColor notesLightGray];
