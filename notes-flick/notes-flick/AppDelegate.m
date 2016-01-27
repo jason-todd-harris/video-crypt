@@ -22,6 +22,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+    NSLog(@"application launch optione \n%@",launchOptions);
     NSLog(@"%@",[[UIApplication sharedApplication] scheduledLocalNotifications]);
     [self checkForNotificationPermission];
     [UIApplication sharedApplication].applicationIconBadgeNumber = 0;

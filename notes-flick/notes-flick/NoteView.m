@@ -107,7 +107,6 @@
 {
     if(!theNoteFontName)
     {
-//        NSString *tempFontName = self.interiorTextBox.font.fontName;
         theNoteFontName = [AllTheNotes sharedNotes].defaultFont;
     }
     _noteFontName = theNoteFontName;
@@ -243,6 +242,32 @@
 {
     _notificationDate = notificationDate;
     [self setLocalNotification];
+    [self iconForNotification];
+}
+
+-(void)iconForNotification
+{
+    if(_notificationDate)
+    {
+        UIImage *alarmClockImage = [UIImage imageNamed:@"alarm clock"];
+        alarmClockImage = [UIImage imageWithCGImage:alarmClockImage.CGImage scale:4 orientation:alarmClockImage.imageOrientation];
+        UIImageView *alarmClockImageView = [[UIImageView alloc] initWithImage:alarmClockImage];
+        alarmClockImageView.layer.cornerRadius = 20;
+        [self addSubview:alarmClockImageView];
+        [alarmClockImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.centerX.equalTo(self.interiorView.mas_right);
+            make.centerY.equalTo(self.interiorView.mas_top);
+        }];
+        NSLog(@"time interval since %f",[_notificationDate timeIntervalSinceNow]);
+        NSLog(@".\n notification date: %@ \n current date     : %@",_notificationDate,[NSDate date]);
+        if([_notificationDate timeIntervalSinceNow] > 0)
+        {
+            alarmClockImageView.backgroundColor = [UIColor notesLightGray];
+        } else
+        {
+            alarmClockImageView.backgroundColor = [UIColor notesRed];
+        }
+    }
 }
 
 - (void)setLocalNotification

@@ -69,6 +69,9 @@
 {
     [super viewWillAppear:animated];
     [self checkIfUndoShouldInteract];
+    for (NoteView *eachNote in self.stackView.arrangedSubviews) {
+        [eachNote iconForNotification];
+    }
 }
 
 -(void)viewDidAppear:(BOOL)animated

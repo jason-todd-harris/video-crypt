@@ -40,6 +40,8 @@
 
 - (instancetype)initWithNoteView:(NoteView *)noteView;
 
+-(void)iconForNotification;
+
 -(void)toggleCrossedOut;
 
 -(void)removeFromSuperview;
