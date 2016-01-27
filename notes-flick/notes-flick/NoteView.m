@@ -82,7 +82,6 @@
         [self setNoteFontName:fontName];
         
     }
-    
     return self;
 }
 
@@ -264,12 +263,14 @@
 {
     if(self.notificationDate)
     {
+//        NSLog(@"%@ \n current date     : %@ \n notification date: %@ \n time interval since %f",self.textValue,[NSDate date],_notificationDate, [_notificationDate timeIntervalSinceNow]);
         UILocalNotification *localNotification = [[UILocalNotification alloc] init];
         
         localNotification.fireDate = _notificationDate;
         localNotification.alertBody = _textValue;
         localNotification.soundName = UILocalNotificationDefaultSoundName;
-        localNotification.applicationIconBadgeNumber = 1; // increment
+        NSUInteger nextBadgeNumber = [UIApplication sharedApplication].scheduledLocalNotifications.count + 1;
+        localNotification.applicationIconBadgeNumber = nextBadgeNumber;
         
         NSDictionary *infoDict = @{@"UUID KEY":_UUID,
                                    @"NOTE":self.textValue
@@ -295,7 +296,6 @@
             make.centerX.equalTo(self.interiorView.mas_right);
             make.centerY.equalTo(self.interiorView.mas_top);
         }];
-        NSLog(@".\n  \n current date     : %@ \n notification date: %@ \n time interval since %f",[NSDate date],_notificationDate, [_notificationDate timeIntervalSinceNow]);
         if([_notificationDate timeIntervalSinceNow] > 0)
         {
             alarmClockImageView.backgroundColor = [UIColor notesLightGray];

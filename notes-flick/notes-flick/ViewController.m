@@ -63,16 +63,19 @@
     {
         self.noteSize = [AllTheNotes sharedNotes].defaultNoteSize / self.transformScalar;
     }
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(notificationReceived:)
+                                                 name:@"ALARM ALERT"
+                                               object:nil];
 }
 
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
     [self checkIfUndoShouldInteract];
-    for (NoteView *eachNote in self.stackView.arrangedSubviews) {
-        [eachNote iconForNotification];
-    }
+    [self checkIfAlarmsHavePassed];
 }
+
 
 -(void)viewDidAppear:(BOOL)animated
 {
@@ -96,51 +99,13 @@
     
 }
 
-
--(void)loadFocusedOnNotification
+-(void)notificationReceived:(NSNotification *)notification
 {
-    NSString *theUUID;
-    [self.view layoutIfNeeded];
-    if([AllTheNotes sharedNotes].launchNotification)
-    {
-        theUUID = [AllTheNotes sharedNotes].launchNotification.userInfo[@"UUID KEY"];
-        
-        for (NoteView *eachNote in self.stackView.arrangedSubviews) {
-            if([eachNote.UUID isEqualToString:theUUID])
-            {
-                CGFloat contentWidth = self.scrollView.contentSize.width;
-                CGFloat objectFraction = @(eachNote.orderNumber).floatValue / ([AllTheNotes sharedNotes].notesArray.count);
-                [UIView animateWithDuration:self.animationDuration
-                                      delay:0.0
-                                    options: UIViewAnimationOptionCurveEaseIn
-                                 animations:^{
-                                     if (self.stackView.arrangedSubviews.count > 1)
-                                     {
-                                         self.scrollView.contentOffset = CGPointMake(objectFraction*contentWidth, 0); //SCROLL TO CONTENT
-                                         [self.view layoutIfNeeded];
-                                     }
-                                 }
-                                 completion:nil];
-                UIAlertController *alert = [UIAlertController
-                                            alertControllerWithTitle:eachNote.UUID
-                                            message:eachNote.textValue
-                                            preferredStyle:UIAlertControllerStyleAlert];
-                UIAlertAction *yesButton = [UIAlertAction
-                                            actionWithTitle:[NSString stringWithFormat:@"fraction %1.1f \n width %1.1f",objectFraction,contentWidth]
-                                            style:UIAlertActionStyleDestructive
-                                            handler:nil];
-                [alert addAction:yesButton];
-                
-                
-                [self presentViewController:alert animated:YES completion:nil];
-                
-            }
-        }
-        
-        [AllTheNotes sharedNotes].launchNotification = nil;
-    }
-    
+    UILocalNotification *alarmNotification = notification.object;
+    [self checkIfAlarmsHavePassed];
+    [self displayAlertViewController:@"ALARM" message:alarmNotification.userInfo[@"NOTE"] completion:nil];
 }
+
 
 #pragma mark - screen setup
 
@@ -227,6 +192,39 @@
     }];
 }
 
+
+-(void)loadFocusedOnNotification
+{
+    NSString *theUUID;
+    [self.view layoutIfNeeded];
+    if([AllTheNotes sharedNotes].launchNotification)
+    {
+        theUUID = [AllTheNotes sharedNotes].launchNotification.userInfo[@"UUID KEY"];
+        
+        for (NoteView *eachNote in self.stackView.arrangedSubviews) {
+            if([eachNote.UUID isEqualToString:theUUID])
+            {
+                CGFloat contentWidth = self.scrollView.contentSize.width;
+                CGFloat objectFraction = @(eachNote.orderNumber).floatValue / ([AllTheNotes sharedNotes].notesArray.count);
+                [UIView animateWithDuration:self.animationDuration
+                                      delay:0.0
+                                    options: UIViewAnimationOptionCurveEaseIn
+                                 animations:^{
+                                     if (self.stackView.arrangedSubviews.count > 1)
+                                     {
+                                         self.scrollView.contentOffset = CGPointMake(objectFraction*contentWidth, 0); //SCROLL TO CONTENT
+                                         [self.view layoutIfNeeded];
+                                     }
+                                 }
+                                 completion:nil];
+                
+            }
+        }
+        
+        [AllTheNotes sharedNotes].launchNotification = nil;
+    }
+    
+}
 
 #pragma mark - WORKING WITH THE NOTES
 
@@ -315,18 +313,6 @@
     NSNumber *nsNumberPriority = result[@"priority"];
     NSUInteger priority = nsNumberPriority.integerValue;
     
-    NoteView *newNoteView = [[NoteView alloc] initWithText:result[@"noteText"]
-                                                  noteSize:self.noteSize
-                                                  withDate:nil
-                                               orderNumber:orderNumber
-                                                  priority:priority
-                                                     color:result[@"color"]
-                                                crossedOut:NO
-                                                  fontName:result[@"fontName"]
-                                          notificationDate:notificationDate
-                                                      UUID:UUID];
-    newNoteView.interiorTextBox.font = [UIFont fontWithName:newNoteView.noteFontName size:self.noteSize / self.fontDivisor];
-    
     if(updatedNoteView)
     {
         updatedNoteView.noteColor = result[@"color"];
@@ -337,6 +323,18 @@
         
     } else //IF WE'RE ADDING A NEW NOTE DO THIS
     {
+        NoteView *newNoteView = [[NoteView alloc] initWithText:result[@"noteText"]
+                                                      noteSize:self.noteSize
+                                                      withDate:nil
+                                                   orderNumber:orderNumber
+                                                      priority:priority
+                                                         color:result[@"color"]
+                                                    crossedOut:NO
+                                                      fontName:result[@"fontName"]
+                                              notificationDate:notificationDate
+                                                          UUID:UUID];
+        newNoteView.interiorTextBox.font = [UIFont fontWithName:newNoteView.noteFontName size:self.noteSize / self.fontDivisor];
+
         //ADD THE NOTE TO DATA STORE
         [[AllTheNotes sharedNotes].notesArray insertObject:newNoteView atIndex:orderNumber];
         
@@ -561,6 +559,7 @@
                      }];
     [self checkIfUndoShouldInteract];
     [self updateNoteOrderNumbers];
+    [AllTheNotes renumberBadgesOfPendingNotifications];
 }
 
 -(void)undoLastDeletion:(UIButton *)buttonPressed
@@ -661,16 +660,6 @@
 }
 
 
-//-(void)scrollViewWillBeginZooming:(UIScrollView *)scrollView withView:(UIView *)view
-//{
-//    NSLog(@"SCROLL IS ZOOMED TO: %1.1f", self.scrollView.zoomScale);
-//}
-
-//-(UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView
-//{
-//    return self.stackView;
-//}
-
 
 
 //-(BOOL)scrollViewShouldScrollToTop:(UIScrollView *)scrollView
@@ -699,6 +688,34 @@
 //    NSLog(@"%lu %d", self.pageIndex, (int)targetContentOffset->x);
 //}
 
+#pragma mark - alert view controller
+-(void)displayAlertViewController:(NSString *)title
+                          message:(NSString *)message
+                       completion:(void (^)(bool alertResult))completionBlock
+{
+    UIAlertController *alert = [UIAlertController
+                                alertControllerWithTitle:title
+                                message:message
+                                preferredStyle:UIAlertControllerStyleAlert];
+    
+    UIAlertAction *yesButton = [UIAlertAction
+                                actionWithTitle:@"OK"
+                                style:UIAlertActionStyleDestructive
+                                handler:^(UIAlertAction * action)
+                                {
+//                                    completionBlock(YES);
+                                }];
+        [alert addAction:yesButton];
+//    UIAlertAction *noButton = [UIAlertAction
+//                               actionWithTitle:@"No"
+//                               style:UIAlertActionStyleDefault
+//                               handler:nil];
+//    [alert addAction:noButton];
+    
+    [self presentViewController:alert animated:YES completion:nil];
+    
+}
+
 
 #pragma mark - update order
 -(void)updateNoteOrderNumbers
@@ -710,6 +727,7 @@
         eachNoteView.orderNumber = i;
         i++;
     }
+    [AllTheNotes renumberBadgesOfPendingNotifications];
 }
 
 
@@ -734,6 +752,12 @@
     [self testForPaging];
 }
 
+-(void)checkIfAlarmsHavePassed
+{
+    for (NoteView *eachNote in self.stackView.arrangedSubviews) {
+        [eachNote iconForNotification];
+    }
+}
 
 -(void)testForPaging
 {
@@ -784,5 +808,6 @@
     [AllTheNotes sharedNotes].zoomedIn = zoomedIn;
     [AllTheNotes updateDefaultsWithSettings];
 }
+
 
 @end

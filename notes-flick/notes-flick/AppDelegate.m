@@ -22,8 +22,8 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
-    NSLog(@"%@",[[UIApplication sharedApplication] scheduledLocalNotifications]);
     [self checkForNotificationPermission];
+    NSLog(@"%@",[[UIApplication sharedApplication] scheduledLocalNotifications]);
     [UIApplication sharedApplication].applicationIconBadgeNumber = 0;
     [self setScreenHeightandWidth];
     [AllTheNotes sharedNotes].navigationBarSize = 64;
@@ -46,28 +46,6 @@
     }
 }
 
-
--(void)displayAlertViewController:(NSString *)title
-                          message:(NSString *)message
-                       completion:(void (^)(bool alertResult))completionBlock
-{
-    UIAlertController *alert = [UIAlertController
-                                alertControllerWithTitle:title
-                                message:message
-                                preferredStyle:UIAlertControllerStyleAlert];
-    
-    UIAlertAction *yesButton = [UIAlertAction
-                                actionWithTitle:@"OK"
-                                style:UIAlertActionStyleDestructive
-                                handler:nil];
-    [alert addAction:yesButton];
-    
-//    [self.window addSubview:self.window.inputViewController.view];
-//    [self.window makeKeyAndVisible];
-    
-    [self.window.rootViewController presentViewController:alert animated:YES completion:nil];
-    
-}
 
 -(void)setUpSomeDummyNotes
 {
@@ -139,10 +117,14 @@
 -(void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification
 {
     application.applicationIconBadgeNumber = 0;
-    //SET UP NSNOTIFICATIONS AND RE-RUN THE CHECK TO SEE IF SHOULD BE NOTIFICATIONS
-    [NSNotificationCenter defaultCenter];
-    NSLog(@"received notification %@",notification);
-//    [self displayAlertViewController:@"Alarm" message:[NSString stringWithFormat:@"%@",notification.userInfo[@"NOTE"]] completion:nil];
+    [[UIApplication sharedApplication] cancelLocalNotification:notification];
+    //MAKES SURE OLD NOTES AREN'T FIRED AND GIVEN NOTIFICATIONS
+    if( ([notification.fireDate timeIntervalSinceNow] < 0) && ([notification.fireDate timeIntervalSinceNow] > -0.1)  )
+    {
+        NSLog(@"%@\n time interval since %f",notification.userInfo[@"NOTE"],[notification.fireDate timeIntervalSinceNow]);
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"ALARM ALERT" object:notification];
+    }
+    [AllTheNotes renumberBadgesOfPendingNotifications];
     
 }
 
@@ -155,6 +137,7 @@
 - (void)applicationDidEnterBackground:(UIApplication *)application {
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+    [UIApplication sharedApplication].applicationIconBadgeNumber = 0;
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
@@ -165,6 +148,7 @@
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+    [UIApplication sharedApplication].applicationIconBadgeNumber = 0;
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application {
@@ -172,6 +156,30 @@
     // Saves changes in the application's managed object context before the application terminates.
     [self saveContext];
 }
+
+#pragma mark - trouble shooting notifications
+-(void)displayAlertViewController:(NSString *)title
+                          message:(NSString *)message
+                       completion:(void (^)(bool alertResult))completionBlock
+{
+    UIAlertController *alert = [UIAlertController
+                                alertControllerWithTitle:title
+                                message:message
+                                preferredStyle:UIAlertControllerStyleAlert];
+    
+    UIAlertAction *yesButton = [UIAlertAction
+                                actionWithTitle:@"OK"
+                                style:UIAlertActionStyleDestructive
+                                handler:nil];
+    [alert addAction:yesButton];
+    
+    //    [self.window addSubview:self.window.inputViewController.view];
+    //    [self.window makeKeyAndVisible];
+    
+    [self.window.rootViewController presentViewController:alert animated:YES completion:nil];
+    
+}
+
 
 #pragma mark - Core Data stack
 
@@ -252,5 +260,6 @@
         }
     }
 }
+
 
 @end

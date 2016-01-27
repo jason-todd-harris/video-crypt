@@ -110,6 +110,7 @@
     }
     
     [[AllTheNotes sharedNotes].userDefaults setObject:dictionaryArray forKey:@"notesArray"];
+    [AllTheNotes renumberBadgesOfPendingNotifications];
 }
 
 
@@ -219,6 +220,33 @@
 }
 
 
-
++ (void)renumberBadgesOfPendingNotifications
+{
+    // clear the badge on the icon
+    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
+    
+    // first get a copy of all pending notifications (unfortunately you cannot 'modify' a pending notification)
+    NSArray *pendingNotifications = [[UIApplication sharedApplication] scheduledLocalNotifications];
+    
+    // if there are any pending notifications -> adjust their badge number
+    if (pendingNotifications.count != 0)
+    {
+        // clear all pending notifications
+        [[UIApplication sharedApplication] cancelAllLocalNotifications];
+        
+        // the for loop will 'restore' the pending notifications, but with corrected badge numbers
+        // note : a more advanced method could 'sort' the notifications first !!!
+        NSUInteger badgeNbr = 1;
+        
+        for (UILocalNotification *notification in pendingNotifications)
+        {
+            // modify the badgeNumber
+            notification.applicationIconBadgeNumber = badgeNbr++;
+            
+            // schedule 'again'
+            [[UIApplication sharedApplication] scheduleLocalNotification:notification];
+        }
+    }
+}
 
 @end

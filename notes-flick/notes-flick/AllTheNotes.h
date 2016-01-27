@@ -51,4 +51,6 @@
 
 +(void)sortNotesByValue:(NSArray *)sortArray;
 
++ (void)renumberBadgesOfPendingNotifications;
+
 @end

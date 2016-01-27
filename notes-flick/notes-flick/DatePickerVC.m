@@ -99,9 +99,10 @@
 
 -(void)savePressed
 {
-//    [self.delegate datePickerFinished:self.datePicker.date];
+    [self.delegate datePickerFinished:self.datePicker.date];
+    
     //DEBUG
-    [self.delegate datePickerFinished:[NSDate dateWithTimeIntervalSinceNow:15]];
+//    [self.delegate datePickerFinished:[NSDate dateWithTimeIntervalSinceNow:10]];
 }
 
 -(void)cancelPressed
