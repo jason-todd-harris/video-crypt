@@ -23,7 +23,8 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     NSLog(@"%@",[[UIApplication sharedApplication] scheduledLocalNotifications]);
-    [UIApplication sharedApplication].applicationIconBadgeNumber = -1;
+    [self checkForNotificationPermission];
+    [UIApplication sharedApplication].applicationIconBadgeNumber = 0;
     [self setScreenHeightandWidth];
     [AllTheNotes sharedNotes].navigationBarSize = 64;
     [AllTheNotes sharedNotes].defaultNoteSize = self.screenWidth;
@@ -82,6 +83,17 @@
     
 }
 
+-(void)checkForNotificationPermission
+{
+    if ([UIApplication instancesRespondToSelector:@selector(registerUserNotificationSettings:)])
+    {
+        [[UIApplication sharedApplication]
+         registerUserNotificationSettings:[UIUserNotificationSettings
+                                           settingsForTypes:UIUserNotificationTypeAlert | UIUserNotificationTypeBadge | UIUserNotificationTypeSound
+                                           categories:nil]];
+    }
+}
+
 -(void)setScreenHeightandWidth
 {
     CGSize screenSize = [UIScreen mainScreen].bounds.size;
@@ -106,7 +118,7 @@
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
-    [UIApplication sharedApplication].applicationIconBadgeNumber = -1;
+    [UIApplication sharedApplication].applicationIconBadgeNumber = 0;
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {

@@ -259,7 +259,6 @@
     
     if(self.notificationDate)
     {
-        [self checkForNotificationPermission];
         UILocalNotification *localNotification = [[UILocalNotification alloc] init];
         
         localNotification.fireDate = _notificationDate;
@@ -277,17 +276,6 @@
 }
 
 
-
--(void)checkForNotificationPermission
-{
-    if ([UIApplication instancesRespondToSelector:@selector(registerUserNotificationSettings:)])
-    {
-        [[UIApplication sharedApplication]
-         registerUserNotificationSettings:[UIUserNotificationSettings
-                                           settingsForTypes:UIUserNotificationTypeAlert | UIUserNotificationTypeBadge | UIUserNotificationTypeSound
-                                           categories:nil]];
-    }
-}
 
 
 @end

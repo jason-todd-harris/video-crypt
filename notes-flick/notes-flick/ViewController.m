@@ -52,6 +52,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [UIApplication sharedApplication].applicationIconBadgeNumber = -1;
     self.transformScalar = 3;
     self.animationDuration = 0.5;
     self.noteSize = [AllTheNotes sharedNotes].defaultNoteSize;
