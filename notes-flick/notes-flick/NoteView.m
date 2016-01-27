@@ -274,8 +274,6 @@
         [[UIApplication sharedApplication] scheduleLocalNotification:localNotification];
         
     }
-
-    NSLog(@"%@",[[UIApplication sharedApplication] scheduledLocalNotifications]);
 }
 
 

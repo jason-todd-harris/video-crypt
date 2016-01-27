@@ -22,7 +22,8 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
-    [UIApplication sharedApplication].applicationIconBadgeNumber = 0;
+    NSLog(@"%@",[[UIApplication sharedApplication] scheduledLocalNotifications]);
+    [UIApplication sharedApplication].applicationIconBadgeNumber = -1;
     [self setScreenHeightandWidth];
     [AllTheNotes sharedNotes].navigationBarSize = 64;
     [AllTheNotes sharedNotes].defaultNoteSize = self.screenWidth;
@@ -105,7 +106,7 @@
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
-    [UIApplication sharedApplication].applicationIconBadgeNumber = 0;
+    [UIApplication sharedApplication].applicationIconBadgeNumber = -1;
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
