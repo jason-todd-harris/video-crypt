@@ -70,7 +70,7 @@
     [self.fontSlider mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.mas_topLayoutGuideBottom).offset(self.offsetSpacing);
         make.centerX.equalTo(self.view);
-        make.width.equalTo(@([AllTheNotes sharedNotes].screenWidth / 2));
+        make.width.equalTo(@([AllTheNotes sharedNotes].screenWidth *2/3));
     }];
 }
 

@@ -10,6 +10,7 @@
 		9637F7241C528DA000D9B2F2 /* FontViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9637F7231C528DA000D9B2F2 /* FontViewController.m */; };
 		9637F7281C529EAC00D9B2F2 /* FontNameTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9637F7271C529EAC00D9B2F2 /* FontNameTableViewController.m */; };
 		9650330E1C57FAB000914CDB /* DatePickerVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 9650330D1C57FAB000914CDB /* DatePickerVC.m */; };
+		965249611C59900900B94397 /* AlignmentTableVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 965249601C59900900B94397 /* AlignmentTableVC.m */; };
 		966E538D1C2AE834001F93CB /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 966E538C1C2AE834001F93CB /* main.m */; };
 		966E53901C2AE834001F93CB /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 966E538F1C2AE834001F93CB /* AppDelegate.m */; };
 		966E53931C2AE834001F93CB /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 966E53921C2AE834001F93CB /* ViewController.m */; };
@@ -58,6 +59,8 @@
 		9637F7271C529EAC00D9B2F2 /* FontNameTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FontNameTableViewController.m; sourceTree = "<group>"; };
 		9650330C1C57FAB000914CDB /* DatePickerVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DatePickerVC.h; sourceTree = "<group>"; };
 		9650330D1C57FAB000914CDB /* DatePickerVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DatePickerVC.m; sourceTree = "<group>"; };
+		9652495F1C59900900B94397 /* AlignmentTableVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlignmentTableVC.h; sourceTree = "<group>"; };
+		965249601C59900900B94397 /* AlignmentTableVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlignmentTableVC.m; sourceTree = "<group>"; };
 		966E53881C2AE834001F93CB /* notes-flick.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "notes-flick.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		966E538C1C2AE834001F93CB /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		966E538E1C2AE834001F93CB /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -139,6 +142,8 @@
 			children = (
 				96D34EE01C496212001FD1E8 /* SettingsTableViewController.h */,
 				96D34EE11C496212001FD1E8 /* SettingsTableViewController.m */,
+				9652495F1C59900900B94397 /* AlignmentTableVC.h */,
+				965249601C59900900B94397 /* AlignmentTableVC.m */,
 				96D34EE31C497153001FD1E8 /* SortOrderTableViewController.h */,
 				96D34EE41C497153001FD1E8 /* SortOrderTableViewController.m */,
 				968AC02F1C57D07100739BD9 /* ClearNotesTableVC.h */,
@@ -445,6 +450,7 @@
 				9637F7241C528DA000D9B2F2 /* FontViewController.m in Sources */,
 				966E53931C2AE834001F93CB /* ViewController.m in Sources */,
 				966E53CE1C2DBB95001F93CB /* AllTheNotes.m in Sources */,
+				965249611C59900900B94397 /* AlignmentTableVC.m in Sources */,
 				966E53DE1C2F1EF9001F93CB /* NoteViewController.m in Sources */,
 				96D34ED91C480801001FD1E8 /* NavigationController.m in Sources */,
 				966E53991C2AE834001F93CB /* notes_flick.xcdatamodeld in Sources */,

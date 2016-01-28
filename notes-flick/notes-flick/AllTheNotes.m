@@ -127,6 +127,8 @@
     
     [[AllTheNotes sharedNotes].userDefaults setObject:[AllTheNotes sharedNotes].defaultFont
                                                forKey:@"defaultFont"];
+    [[AllTheNotes sharedNotes].userDefaults setObject:@([AllTheNotes sharedNotes].scrollVertically)
+                                               forKey:@"defaultAlignment"];
     
     //COLORS
     NSMutableArray *colorStringArray = [NSMutableArray new];
@@ -159,6 +161,12 @@
     if([[AllTheNotes sharedNotes].userDefaults objectForKey:@"defaultFont"])
     {
         [AllTheNotes sharedNotes].defaultFont = [[[AllTheNotes sharedNotes].userDefaults objectForKey:@"defaultFont"] mutableCopy];
+    }
+    
+    if([[AllTheNotes sharedNotes].userDefaults objectForKey:@"defaultAlignment"])
+    {
+        NSNumber *alignment = [[AllTheNotes sharedNotes].userDefaults objectForKey:@"defaultAlignment"];
+        [AllTheNotes sharedNotes].scrollVertically = alignment.boolValue;
     }
     
     if([[AllTheNotes sharedNotes].userDefaults objectForKey:@"colorStrings"])

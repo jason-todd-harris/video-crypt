@@ -149,11 +149,21 @@
 -(void)setUpEntireScreen
 {
     self.swipeGestureUp = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeReceived:)];
-    self.swipeGestureUp.direction = UISwipeGestureRecognizerDirectionUp;
     self.swipeGestureUp.delegate = self;
     self.swipeGestureDown = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeReceived:)];
-    self.swipeGestureDown.direction = UISwipeGestureRecognizerDirectionDown;
     self.swipeGestureDown.delegate = self;
+    
+    if ([AllTheNotes sharedNotes].scrollVertically)
+    {
+        self.swipeGestureUp.direction = UISwipeGestureRecognizerDirectionLeft;
+        self.swipeGestureDown.direction = UISwipeGestureRecognizerDirectionRight;
+    } else
+    {
+        self.swipeGestureUp.direction = UISwipeGestureRecognizerDirectionUp;
+        self.swipeGestureDown.direction = UISwipeGestureRecognizerDirectionDown;
+    }
+    
+    
     self.pinchGesture = [[UIPinchGestureRecognizer alloc]  initWithTarget:self action:@selector(pinchReceived:)];
     self.pinchGesture.delegate = self;
     self.doubleTapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleTapReceived:)];
@@ -161,13 +171,12 @@
     
     
     self.scrollView = [[UIScrollView alloc] init];
-    self.scrollView.minimumZoomScale = 0.0;
-    self.scrollView.maximumZoomScale = 5.0;
     self.scrollView.delegate = self;
     self.scrollView.userInteractionEnabled = YES;
     [self testForPaging];
     self.scrollView.clipsToBounds = NO;
     self.scrollView.showsHorizontalScrollIndicator = NO;
+    self.scrollView.showsVerticalScrollIndicator = NO;
     self.scrollView.backgroundColor = [UIColor notesBrown];
     
     [self.scrollView addGestureRecognizer:self.swipeGestureUp];
@@ -234,12 +243,20 @@
     
     [self.scrollView addSubview:self.stackView];
     
-    [self.stackView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(self.scrollView);
-        make.centerY.equalTo(self.view);
-    }];
-    
-    
+    if ([AllTheNotes sharedNotes].scrollVertically) {
+        self.stackView.axis = UILayoutConstraintAxisVertical;
+        [self.stackView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.edges.equalTo(self.scrollView);
+            make.centerX.equalTo(self.view);
+        }];
+    } else
+    {
+        self.stackView.axis = UILayoutConstraintAxisHorizontal;
+        [self.stackView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.edges.equalTo(self.scrollView);
+            make.centerY.equalTo(self.view);
+        }];
+    }
     
     [self.stackView addGestureRecognizer:self.swipeGestureUp];
     [self.stackView addGestureRecognizer:self.swipeGestureDown];
@@ -247,7 +264,6 @@
     [self.stackView addGestureRecognizer:self.doubleTapGesture];
     
     self.stackView.backgroundColor = [UIColor blueColor];
-    self.stackView.axis = UILayoutConstraintAxisHorizontal;
     self.stackView.contentMode = UIViewContentModeScaleToFill;
     self.stackView.distribution = UIStackViewDistributionEqualSpacing;
     self.stackView.alignment = UIStackViewAlignmentCenter;
@@ -385,6 +401,11 @@
 {
     CGPoint locationInView = [pinchGestureRecog locationInView:self.view];
     CGFloat offsetFranction = self.scrollView.contentOffset.x / (self.scrollView.contentSize.width - self.view.frame.size.width);
+    if ([AllTheNotes sharedNotes].scrollVertically)
+    {
+        offsetFranction = self.scrollView.contentOffset.y / (self.scrollView.contentSize.height - self.view.frame.size.height);
+    }
+    
     if(isnan(offsetFranction))
     {
         offsetFranction = 0;
@@ -410,7 +431,14 @@
                              }
                              [self testForPaging];
                              //SCROLLING AFTER ZOOM
-                             self.scrollView.contentOffset = CGPointMake(offsetFranction * (self.scrollView.contentSize.width - self.view.frame.size.width) * self.transformScalar + self.view.frame.size.width + (locationInView.x - self.view.frame.size.width/2) * self.transformScalar, 0); //REMOVE THE LAST PART IN ORDER TO STOP ZOOMING IN ON SPECIFIC NOTES AND JUST ZOOM IN GENERAL
+                             if ([AllTheNotes sharedNotes].scrollVertically)
+                             {
+                                 self.scrollView.contentOffset = CGPointMake(0,offsetFranction * (self.scrollView.contentSize.width - self.view.frame.size.width) * self.transformScalar + self.view.frame.size.width + (locationInView.x - self.view.frame.size.width/2) * self.transformScalar); //REMOVE THE LAST PART IN ORDER TO STOP ZOOMING IN ON SPECIFIC NOTES AND JUST ZOOM IN GENERAL
+                             } else
+                             {
+                                 self.scrollView.contentOffset = CGPointMake(offsetFranction * (self.scrollView.contentSize.width - self.view.frame.size.width) * self.transformScalar + self.view.frame.size.width + (locationInView.x - self.view.frame.size.width/2) * self.transformScalar, 0); //REMOVE THE LAST PART IN ORDER TO STOP ZOOMING IN ON SPECIFIC NOTES AND JUST ZOOM IN GENERAL
+                             }
+
                              [self.view layoutIfNeeded];
                          }
                          completion:^(BOOL finished) {
@@ -444,7 +472,13 @@
                              }
                              [self testForPaging];
                              //SCROLLING TO CORRECT NOTE
-                              self.scrollView.contentOffset = CGPointMake(offsetFranction * (self.scrollView.contentSize.width - self.view.frame.size.width) / self.transformScalar - self.view.frame.size.width / self.transformScalar , 0);
+                             if([AllTheNotes sharedNotes].scrollVertically)
+                             {
+                                 self.scrollView.contentOffset = CGPointMake(0,offsetFranction * (self.scrollView.contentSize.width - self.view.frame.size.width) / self.transformScalar - self.view.frame.size.width / self.transformScalar);
+                             } else
+                             {
+                                 self.scrollView.contentOffset = CGPointMake(offsetFranction * (self.scrollView.contentSize.width - self.view.frame.size.width) / self.transformScalar - self.view.frame.size.width / self.transformScalar , 0);
+                             }
                              [self.view layoutIfNeeded];
                          }
                          completion:^(BOOL finished) {
@@ -463,6 +497,12 @@
     CGPoint point = [tapGestureRecognizer locationInView:self.stackView];
     CGFloat subviewFraction = point.x / self.stackView.bounds.size.width;
     CGFloat arrayIndexFract = subviewFraction * self.stackView.arrangedSubviews.count;
+    if ([AllTheNotes sharedNotes].scrollVertically)
+    {
+        subviewFraction = point.y / self.stackView.bounds.size.height;
+        arrayIndexFract = subviewFraction * self.stackView.arrangedSubviews.count;
+        
+    }
     NoteView *tappedNoteView = self.stackView.arrangedSubviews[@(arrayIndexFract).integerValue *1];
     [self newNoteViewControllerEditing:YES noteViewToEdit:tappedNoteView];
     
@@ -470,13 +510,26 @@
 
 -(void)swipeReceived:(UISwipeGestureRecognizer *)swipeGestureRecognizer
 {
-    if (swipeGestureRecognizer.direction == UISwipeGestureRecognizerDirectionUp)
+    if ([AllTheNotes sharedNotes].scrollVertically)
     {
-        [self removeNote:swipeGestureRecognizer];
-    } else if (swipeGestureRecognizer.direction == UISwipeGestureRecognizerDirectionDown)
+        if (swipeGestureRecognizer.direction == UISwipeGestureRecognizerDirectionLeft)
+        {
+            [self removeNote:swipeGestureRecognizer];
+        } else if (swipeGestureRecognizer.direction == UISwipeGestureRecognizerDirectionRight)
+        {
+            [self crossOutNote:swipeGestureRecognizer];
+        }
+    } else
     {
-        [self crossOutNote:swipeGestureRecognizer];
+        if (swipeGestureRecognizer.direction == UISwipeGestureRecognizerDirectionUp)
+        {
+            [self removeNote:swipeGestureRecognizer];
+        } else if (swipeGestureRecognizer.direction == UISwipeGestureRecognizerDirectionDown)
+        {
+            [self crossOutNote:swipeGestureRecognizer];
+        }
     }
+
     
 }
 
@@ -485,6 +538,12 @@
     CGPoint point = [swipeGestureRecognizer locationInView:self.stackView];
     CGFloat subviewFraction = point.x / self.stackView.bounds.size.width;
     CGFloat arrayIndexFract = subviewFraction * self.stackView.arrangedSubviews.count;
+    if ([AllTheNotes sharedNotes].scrollVertically)
+    {
+        subviewFraction = point.y / self.stackView.bounds.size.height;
+        arrayIndexFract = subviewFraction * self.stackView.arrangedSubviews.count;
+    }
+    
     NoteView *crossOutNoteView = self.stackView.arrangedSubviews[@(arrayIndexFract).integerValue *1];
     [AllTheNotes updateDefaultsWithNotes];
     
@@ -510,6 +569,13 @@
     CGPoint pointInWindow = [swipeGestureRecognizer locationInView:self.view];
     CGFloat subviewFraction = point.x / self.stackView.bounds.size.width;
     CGFloat arrayIndexFract = subviewFraction * self.stackView.arrangedSubviews.count;
+    
+    if ([AllTheNotes sharedNotes].scrollVertically)
+    {
+        subviewFraction = point.y / self.stackView.bounds.size.height;
+        arrayIndexFract = subviewFraction * self.stackView.arrangedSubviews.count;
+    }
+    
 //    NSLog(@". \n point in stack: %@ \n point in view: %@ \n index fract: %1.3f \n index # %lu \n subview count: %lu",NSStringFromCGPoint(point),NSStringFromCGPoint(pointInWindow), subviewFraction * self.stackView.arrangedSubviews.count,@(arrayIndexFract).integerValue *1 ,self.stackView.arrangedSubviews.count);
     [self updateNoteOrderNumbers];
     NoteView *oldNoteView = self.stackView.arrangedSubviews[@(arrayIndexFract).integerValue *1];
@@ -545,11 +611,23 @@
                           delay:0.0
                         options: UIViewAnimationOptionCurveEaseIn
                      animations:^{
-                         [animatedNote mas_remakeConstraints:^(MASConstraintMaker *make) {
-                             make.bottom.equalTo(self.view.mas_top);
-                             make.centerX.equalTo(self.view.mas_left).offset(pointInWindow.x);
-                             make.height.and.width.equalTo(@(self.noteSize/2.0));
-                         }];
+                         if([AllTheNotes sharedNotes].scrollVertically)
+                         {
+                             [animatedNote mas_remakeConstraints:^(MASConstraintMaker *make) {
+                                 make.right.equalTo(self.view.mas_left);
+                                 make.centerY.equalTo(self.view.mas_top).offset(pointInWindow.y);
+                                 make.height.and.width.equalTo(@(self.noteSize/2.0));
+                             }];
+                         } else
+                         {
+                             [animatedNote mas_remakeConstraints:^(MASConstraintMaker *make) {
+                                 make.bottom.equalTo(self.view.mas_top);
+                                 make.centerX.equalTo(self.view.mas_left).offset(pointInWindow.x);
+                                 make.height.and.width.equalTo(@(self.noteSize/2.0));
+                             }];
+                         }
+                         
+
                          animatedNote.interiorTextBox.transform = CGAffineTransformScale(animatedNote.interiorTextBox.transform, 1.0/2, 1.0/2);
                          [self.view layoutIfNeeded];
                      }
@@ -575,11 +653,14 @@
         CGFloat objectFraction = @(lastDeletion.orderNumber).floatValue / ([AllTheNotes sharedNotes].notesArray.count);
         CGFloat fractionalWidth = objectFraction * contentWidth;
         
-//        NSLog(@"fraction: %1.3f",objectFraction);
-//        NSLog(@"fraction width: %1.3f",fractionalWidth);
-//        NSLog(@"offset: %1.1f",contentOffset);
-//        NSLog(@"end: %1.1f",contentEnd);
-//        NSLog(@"width: %1.1f",contentWidth);
+        if ([AllTheNotes sharedNotes].scrollVertically)
+        {
+            contentOffset = self.scrollView.contentOffset.y;
+            contentEnd = self.scrollView.contentOffset.y + self.view.frame.size.height;
+            contentWidth = self.scrollView.contentSize.height;
+            objectFraction = @(lastDeletion.orderNumber).floatValue / ([AllTheNotes sharedNotes].notesArray.count);
+            fractionalWidth = objectFraction * contentWidth;
+        }
         
         lastDeletion.interiorTextBox.font = [UIFont fontWithName:lastDeletion.noteFontName size:self.noteSize / self.fontDivisor];
         lastDeletion.noteSizeValue = self.noteSize;
@@ -596,7 +677,13 @@
                                  //THE SCREEN IS ALREADY CENTERED AROUND WHERE PREVIOUS NOTE SHOULD BE
                              } else if (self.stackView.arrangedSubviews.count > 1) // WON'T RUN IF THE STACKVIEW WAS PREVIOUSLY EMPTY
                              {
-                                 self.scrollView.contentOffset = CGPointMake(objectFraction*contentWidth, 0); //SCROLL TO CONTENT
+                                 if ([AllTheNotes sharedNotes].scrollVertically)
+                                 {
+                                     self.scrollView.contentOffset = CGPointMake(0,objectFraction*contentWidth); //SCROLL TO CONTENT
+                                 } else
+                                 {
+                                     self.scrollView.contentOffset = CGPointMake(objectFraction*contentWidth, 0); //SCROLL TO CONTENT
+                                 }
                              }
                              
                              
@@ -769,6 +856,10 @@
     {
         self.scrollView.pagingEnabled = NO;
     }
+    if ([AllTheNotes sharedNotes].scrollVertically)
+    {
+        self.scrollView.pagingEnabled = NO;
+    }
 }
 
 
@@ -807,6 +898,14 @@
     _zoomedIn = zoomedIn;
     [AllTheNotes sharedNotes].zoomedIn = zoomedIn;
     [AllTheNotes updateDefaultsWithSettings];
+    
+    if ([AllTheNotes sharedNotes].scrollVertically)
+    {
+        
+    } else
+    {
+        
+    }
 }
 
 
