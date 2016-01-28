@@ -433,7 +433,7 @@
                              //SCROLLING AFTER ZOOM
                              if ([AllTheNotes sharedNotes].scrollVertically)
                              {
-                                 self.scrollView.contentOffset = CGPointMake(0,offsetFranction * (self.scrollView.contentSize.width - self.view.frame.size.width) * self.transformScalar + self.view.frame.size.width + (locationInView.x - self.view.frame.size.width/2) * self.transformScalar); //REMOVE THE LAST PART IN ORDER TO STOP ZOOMING IN ON SPECIFIC NOTES AND JUST ZOOM IN GENERAL
+                                 self.scrollView.contentOffset = CGPointMake(0,offsetFranction * (self.scrollView.contentSize.height - self.view.frame.size.height) * self.transformScalar + self.view.frame.size.height + (locationInView.y - self.view.frame.size.height/2) * self.transformScalar); //REMOVE THE LAST PART IN ORDER TO STOP ZOOMING IN ON SPECIFIC NOTES AND JUST ZOOM IN GENERAL
                              } else
                              {
                                  self.scrollView.contentOffset = CGPointMake(offsetFranction * (self.scrollView.contentSize.width - self.view.frame.size.width) * self.transformScalar + self.view.frame.size.width + (locationInView.x - self.view.frame.size.width/2) * self.transformScalar, 0); //REMOVE THE LAST PART IN ORDER TO STOP ZOOMING IN ON SPECIFIC NOTES AND JUST ZOOM IN GENERAL
@@ -474,7 +474,7 @@
                              //SCROLLING TO CORRECT NOTE
                              if([AllTheNotes sharedNotes].scrollVertically)
                              {
-                                 self.scrollView.contentOffset = CGPointMake(0,offsetFranction * (self.scrollView.contentSize.width - self.view.frame.size.width) / self.transformScalar - self.view.frame.size.width / self.transformScalar);
+                                 self.scrollView.contentOffset = CGPointMake(0,offsetFranction * (self.scrollView.contentSize.height - self.view.frame.size.height) / self.transformScalar - self.view.frame.size.height / self.transformScalar);
                              } else
                              {
                                  self.scrollView.contentOffset = CGPointMake(offsetFranction * (self.scrollView.contentSize.width - self.view.frame.size.width) / self.transformScalar - self.view.frame.size.width / self.transformScalar , 0);
