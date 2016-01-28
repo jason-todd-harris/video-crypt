@@ -32,7 +32,7 @@
     [AllTheNotes sharedNotes].scrollVertically = YES;
     [AllTheNotes settingsFromNSDefaults];
     [AllTheNotes updateAppNotesFromNSDefaults];
-//    [self setUpSomeDummyNotes];
+    [self setUpSomeDummyNotes];
     
     [self launchOptionsHandler:launchOptions];
     return YES;
@@ -53,7 +53,7 @@
     NSUInteger i = 0;
     NSMutableArray *mutableNotes = [@[] mutableCopy];
     NSMutableArray *defaultNotes = [@[] mutableCopy];// [AllTheNotes sharedNotes].notesArray;
-    for (i = 0; i <13; i++)
+    for (i = 0; i <30; i++)
     {
         
         NSString *string = [NSString stringWithFormat:@"%@ text",@(i+1).stringValue];
@@ -71,6 +71,9 @@
         } else if (i < 13)
         {
             color = [AllTheNotes sharedNotes].colorArray[3];
+        } else if (i < 17)
+        {
+            color = [AllTheNotes sharedNotes].colorArray[4];
         }
         
         

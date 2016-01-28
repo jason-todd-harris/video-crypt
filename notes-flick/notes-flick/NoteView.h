@@ -15,6 +15,7 @@
 
 @property (nonatomic, strong) NSString *textValue;
 @property (nonatomic, strong) NSString *noteFontName;
+@property (nonatomic, assign) BOOL aNewFont;
 @property (nonatomic, strong) NSString *UUID;
 
 @property (nonatomic, assign) CGFloat noteSizeValue;

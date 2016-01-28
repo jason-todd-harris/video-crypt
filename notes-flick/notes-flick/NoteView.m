@@ -111,6 +111,7 @@
     _noteFontName = theNoteFontName;
     CGFloat fontSize = self.interiorTextBox.font.pointSize;
     self.interiorTextBox.font = [UIFont fontWithName:theNoteFontName size:fontSize];
+    
 }
 
 
