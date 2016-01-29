@@ -195,7 +195,7 @@
     }];
     
     [self populateStackview];
-    [self populateStackviewAGAIN];
+//    [self populateStackviewAGAIN];
     self.topView = UIView.new;
     [self.view addSubview:self.topView];
     self.topView.userInteractionEnabled = NO;
