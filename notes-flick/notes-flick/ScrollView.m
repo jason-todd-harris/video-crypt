@@ -1,11 +1,12 @@
 //
-//  ViewController.m
+//  ScrollView.m
 //  notes-flick
 //
-//  Created by JASON HARRIS on 12/23/15.
-//  Copyright © 2015 jason harris. All rights reserved.
+//  Created by JASON HARRIS on 1/29/16.
+//  Copyright © 2016 jason harris. All rights reserved.
 //
 
+#import "ScrollView.h"
 #import "ViewController.h"
 #import <Masonry.h>
 #import "NoteViewController.h"
@@ -14,76 +15,51 @@
 #import "SettingsViewController.h"
 #import "SettingsTableViewController.h"
 
-@interface ViewController () <UIGestureRecognizerDelegate, UIScrollViewDelegate, NoteViewControllerDelegate, SettingsTableViewControllerDelegate>
-@property (nonatomic, strong) UIScrollView *scrollView;
-@property (nonatomic, strong) UIScrollView *scrollViewTWO;
-@property (nonatomic, strong) UIStackView *stackView;
-@property (nonatomic, strong) UIStackView *stackViewTWO;
-@property (nonatomic, strong) UIView *topView;
+@interface ScrollView () <UIGestureRecognizerDelegate, UIScrollViewDelegate, NoteViewControllerDelegate, SettingsTableViewControllerDelegate>
 
-@property (nonatomic, strong) UIBarButtonItem *addNoteButton;
-@property (nonatomic, strong) UIBarButtonItem *undoBarButton;
-@property (nonatomic, strong) UIBarButtonItem *settingsBarButton;
-
-@property (nonatomic, strong) NoteViewController *veryNewNoteVC;
-@property (nonatomic, strong) SettingsViewController *settingsVC;
-@property (nonatomic, strong) SettingsTableViewController *settingsTableVC;
-
-@property (nonatomic, strong) UISwipeGestureRecognizer *swipeGestureUp;
-@property (nonatomic, strong) UISwipeGestureRecognizer *swipeGestureDown;
-@property (nonatomic, strong) UITapGestureRecognizer *doubleTapGesture;
-@property (nonatomic, strong) UIPinchGestureRecognizer *pinchGesture;
-
-@property (nonatomic, assign) CGFloat screenHeight;
-@property (nonatomic, assign) CGFloat screenWidth;
-@property (nonatomic, assign) CGFloat transformScalar;
-@property (nonatomic, assign) CGFloat animationDuration;
-@property (nonatomic, assign) CGFloat spacing;
-@property (nonatomic, assign) CGFloat noteSize;
-@property (nonatomic, assign) CGFloat fontDivisor;
-@property (nonatomic, assign) CGFloat largeFontSize;
-@property (nonatomic, assign) BOOL alreadyLoaded;
-@property (nonatomic, assign) BOOL zoomedIn;
-@property (nonatomic, assign) BOOL stackOneIsSelected;
 
 
 
 @end
 
-@implementation ViewController
 
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    [UIApplication sharedApplication].applicationIconBadgeNumber = -1;
-    self.transformScalar = 3;
-    self.animationDuration = 0.5;
-    self.noteSize = [AllTheNotes sharedNotes].defaultNoteSize;
-    self.fontDivisor = [AllTheNotes sharedNotes].fontDivisor;
-    self.largeFontSize = [AllTheNotes sharedNotes].defaultNoteSize / self.fontDivisor;
-    self.zoomedIn = [AllTheNotes sharedNotes].zoomedIn;
-    if(!self.zoomedIn)
+@implementation ScrollView
+
+
+
+-(instancetype)init
+{
+    self = [super init];
+    if(self)
     {
-        self.noteSize = [AllTheNotes sharedNotes].defaultNoteSize / self.transformScalar;
+        [UIApplication sharedApplication].applicationIconBadgeNumber = -1;
+        self.transformScalar = 3;
+        self.animationDuration = 0.5;
+        self.noteSize = [AllTheNotes sharedNotes].defaultNoteSize;
+        self.fontDivisor = [AllTheNotes sharedNotes].fontDivisor;
+        self.largeFontSize = [AllTheNotes sharedNotes].defaultNoteSize / self.fontDivisor;
+        self.zoomedIn = [AllTheNotes sharedNotes].zoomedIn;
+        if(!self.zoomedIn)
+        {
+            self.noteSize = [AllTheNotes sharedNotes].defaultNoteSize / self.transformScalar;
+        }
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(notificationReceived:)
+                                                     name:@"ALARM ALERT"
+                                                   object:nil];
     }
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(notificationReceived:)
-                                                 name:@"ALARM ALERT"
-                                               object:nil];
+    return self;
 }
 
--(void)viewWillAppear:(BOOL)animated
+
+-(void)proxyViewWillAppear
 {
-    [super viewWillAppear:animated];
-    [self checkIfUndoShouldInteract];
     [self checkIfAlarmsHavePassed];
 }
 
-
--(void)viewDidAppear:(BOOL)animated
+-(void)proxyViewDidAppear
 {
-    [super viewDidAppear:animated];
-    
     if(!self.alreadyLoaded)
     {
         [self runOnFirstLoad];
@@ -93,63 +69,17 @@
 
 -(void)runOnFirstLoad
 {
-    [AllTheNotes sharedNotes].navigationBarSize = self.topLayoutGuide.length;
     [self setScreenHeightandWidth];
-    [self setUpNavigationBar];
     [self setUpEntireScreen];
-    [self setUpSecondScrollview];
-    [self setUpTopView];
     [self loadFocusedOnNotification];
     self.alreadyLoaded = YES;
     
 }
 
--(void)notificationReceived:(NSNotification *)notification
-{
-    UILocalNotification *alarmNotification = notification.object;
-    [self checkIfAlarmsHavePassed];
-    [self displayAlertViewController:@"ALARM" message:alarmNotification.userInfo[@"NOTE"] completion:nil];
-}
 
 
 #pragma mark - screen setup
 
--(void)setUpNavigationBar
-{
-    //PLUS BUTTON
-    self.addNoteButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd
-                                                                       target:self
-                                                                       action:@selector(addNoteButtonWasPressed:)];
-    
-    //FLEXIBLE SPACE
-    UIBarButtonItem *flexibleSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
-    
-    //UNDO BUTTON
-    UIImage *undoImage = [UIImage imageNamed:@"undoButton.png"];
-    CGFloat imageScaling = undoImage.size.height;
-    undoImage = [UIImage imageWithCGImage:undoImage.CGImage scale:1.8 orientation:undoImage.imageOrientation];
-    self.undoBarButton = [[UIBarButtonItem alloc] initWithImage:undoImage
-                                                          style:UIBarButtonItemStylePlain
-                                                         target:self
-                                                         action:@selector(undoLastDeletion:)];
-    
-    //SETTINGS BUTTON
-    UIImage *settingsImage = [UIImage imageNamed:@"gearButton"];
-    settingsImage = [UIImage imageWithCGImage:settingsImage.CGImage scale:1.8 orientation:settingsImage.imageOrientation];
-    self.settingsBarButton = [[UIBarButtonItem alloc] initWithImage:settingsImage
-                                                          style:UIBarButtonItemStylePlain
-                                                         target:self
-                                                         action:@selector(settingsButtonPressed:)];
-    self.navigationController.navigationBar.tintColor = [UIColor notesBrown];
-    
-
-    
-    self.navigationItem.leftBarButtonItems = @[self.settingsBarButton,flexibleSpace,self.undoBarButton,flexibleSpace,self.addNoteButton];
-    UIView *addNoteView = [self.undoBarButton valueForKey:@"view"];
-    imageScaling = addNoteView.frame.size.height;
-    [self checkIfUndoShouldInteract];
-    
-}
 
 -(void)setUpEntireScreen
 {
@@ -174,61 +104,55 @@
     self.doubleTapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleTapReceived:)];
     self.doubleTapGesture.numberOfTapsRequired = 2;
     
-    if(self.scrollView)
-    {
-        [self.scrollView removeFromSuperview];
-    }
     
-    self.scrollView = [[UIScrollView alloc] init];
-    self.scrollView.delegate = self;
-    self.scrollView.userInteractionEnabled = YES;
-    self.scrollView.directionalLockEnabled = NO;
-    self.scrollView.clipsToBounds = NO;
-    self.scrollView.showsHorizontalScrollIndicator = NO;
-    self.scrollView.showsVerticalScrollIndicator = NO;
-    self.scrollView.backgroundColor = [UIColor notesBrown];
+    self.delegate = self;
+    self.userInteractionEnabled = YES;
+    self.directionalLockEnabled = NO;
+    [self testForPaging];
+    self.clipsToBounds = NO;
+    self.showsHorizontalScrollIndicator = NO;
+    self.showsVerticalScrollIndicator = NO;
+    self.backgroundColor = [UIColor notesBrown];
     
-    [self.scrollView addGestureRecognizer:self.swipeGestureUp];
-    [self.scrollView addGestureRecognizer:self.swipeGestureDown];
-    [self.scrollView addGestureRecognizer:self.pinchGesture];
-    [self.scrollView addGestureRecognizer:self.doubleTapGesture];
+    [self addGestureRecognizer:self.swipeGestureUp];
+    [self addGestureRecognizer:self.swipeGestureDown];
+    [self addGestureRecognizer:self.pinchGesture];
+    [self addGestureRecognizer:self.doubleTapGesture];
     
-    [self.view addSubview:self.scrollView];
+    
+    NSLog(@"VDERT %u",[AllTheNotes sharedNotes].scrollVertically);
     if ([AllTheNotes sharedNotes].scrollVertically)
     {
-        [self.scrollView mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.bottom.and.left.equalTo(self.view);
-            make.right.equalTo(self.view).offset(-self.view.frame.size.width / 2);
-            make.top.equalTo(self.mas_topLayoutGuide);
+        [self mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.bottom.and.left.equalTo(self.superview);
+            make.right.equalTo(self.superview).offset(-self.superview.frame.size.width / 2);
+            make.top.equalTo(self.superview.mas_topMargin);
         }];
     } else
     {
-        [self.scrollView mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.right.and.left.equalTo(self.view);
-            make.bottom.equalTo(self.view).offset(-self.view.frame.size.height /2 +64/2);
-            make.top.equalTo(self.mas_topLayoutGuide);
+        [self mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.right.and.left.equalTo(self.superview);
+            make.bottom.equalTo(self.superview).offset(-self.superview.frame.size.height /2 +64/2);
+            make.top.equalTo(self.superview.mas_topMargin);
         }];
     }
-
-    [self testForPaging];
+    
+    
     [self populateStackview];
-}
-
-
--(void)setUpTopView
-{
     self.topView = UIView.new;
-    [self.view addSubview:self.topView];
+    self.topView.backgroundColor = [[UIColor orangeColor] colorWithAlphaComponent:0.90];
+    [self addSubview:self.topView];
     self.topView.userInteractionEnabled = NO;
-    [self.topView mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(self.view);
+    [self.topView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(self);
     }];
 }
+
 
 -(void)loadFocusedOnNotification
 {
     NSString *theUUID;
-    [self.view layoutIfNeeded];
+    [self.superview layoutIfNeeded];
     if([AllTheNotes sharedNotes].launchNotification)
     {
         theUUID = [AllTheNotes sharedNotes].launchNotification.userInfo[@"UUID KEY"];
@@ -236,7 +160,7 @@
         for (NoteView *eachNote in self.stackView.arrangedSubviews) {
             if([eachNote.UUID isEqualToString:theUUID])
             {
-                CGFloat contentWidth = self.scrollView.contentSize.width;
+                CGFloat contentWidth = self.contentSize.width;
                 CGFloat objectFraction = @(eachNote.orderNumber).floatValue / ([AllTheNotes sharedNotes].notesArray.count);
                 [UIView animateWithDuration:self.animationDuration
                                       delay:0.0
@@ -244,8 +168,8 @@
                                  animations:^{
                                      if (self.stackView.arrangedSubviews.count > 1)
                                      {
-                                         self.scrollView.contentOffset = CGPointMake(objectFraction*contentWidth, 0); //SCROLL TO CONTENT
-                                         [self.view layoutIfNeeded];
+                                         self.contentOffset = CGPointMake(objectFraction*contentWidth, 0); //SCROLL TO CONTENT
+                                         [self.superview layoutIfNeeded];
                                      }
                                  }
                                  completion:nil];
@@ -265,20 +189,20 @@
 {
     self.stackView = [[UIStackView alloc] initWithArrangedSubviews:[self returnSubviewsBasedOnDataStore]];
     
-    [self.scrollView addSubview:self.stackView];
+    [self addSubview:self.stackView];
     
     if ([AllTheNotes sharedNotes].scrollVertically) {
         self.stackView.axis = UILayoutConstraintAxisVertical;
-        [self.stackView mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.edges.equalTo(self.scrollView);
-            make.centerX.equalTo(self.scrollView);
+        [self.stackView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.edges.equalTo(self);
+            make.centerX.equalTo(self);
         }];
     } else
     {
         self.stackView.axis = UILayoutConstraintAxisHorizontal;
-        [self.stackView mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.edges.equalTo(self.scrollView);
-            make.centerY.equalTo(self.scrollView);
+        [self.stackView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.edges.equalTo(self);
+            make.centerY.equalTo(self);
         }];
     }
     
@@ -287,11 +211,20 @@
     [self.stackView addGestureRecognizer:self.pinchGesture];
     [self.stackView addGestureRecognizer:self.doubleTapGesture];
     
+    self.stackView.backgroundColor = [UIColor blueColor];
     
+    //DEBUG
+    self.stackView.backgroundColor = [UIColor greenColor];
     self.stackView.contentMode = UIViewContentModeScaleToFill;
     self.stackView.distribution = UIStackViewDistributionEqualSpacing;
     self.stackView.alignment = UIStackViewAlignmentCenter;
     self.stackView.spacing = 0;
+    UIView *dummy = [[UIView alloc] init];
+    dummy.backgroundColor = [[UIColor blueColor] colorWithAlphaComponent:0.33];
+    [self.stackView addSubview:dummy];
+    [dummy mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(self.stackView);
+    }];
 }
 
 -(NSMutableArray *)returnSubviewsBasedOnDataStore
@@ -311,104 +244,9 @@
     return mutableSubviews;
 }
 
--(void)newNoteViewControllerEditing:(BOOL)areWeEditing noteViewToEdit:(NoteView *)noteViewToEdit
-{
-    self.veryNewNoteVC = [[NoteViewController alloc] init];
-    self.veryNewNoteVC.notificationDate = noteViewToEdit.notificationDate;
-    self.veryNewNoteVC.delegate = self;
-    self.veryNewNoteVC.layoutGuideSize = [AllTheNotes sharedNotes].navigationBarSize;
-    self.veryNewNoteVC.fontSize = self.largeFontSize;
-    
-    if (areWeEditing)
-    {
-        self.veryNewNoteVC.theNoteView = noteViewToEdit;
-        self.veryNewNoteVC.noteTextView.text = noteViewToEdit.textValue;
-        self.veryNewNoteVC.noteOrder = noteViewToEdit.orderNumber;
-    } else
-    {
-        self.veryNewNoteVC.noteOrder = self.stackView.arrangedSubviews.count;
-    }
-    
-    self.veryNewNoteVC.areWeEditing = areWeEditing;
-    [self showViewController:self.veryNewNoteVC sender:self];
-}
 
 #pragma mark - second stack view
 
--(void)setUpSecondScrollview
-{
-    if(self.scrollViewTWO)
-    {
-        [self.scrollViewTWO removeFromSuperview];
-    }
-    self.scrollViewTWO = [[UIScrollView alloc] init];
-    self.scrollViewTWO.delegate = self;
-    self.scrollViewTWO.userInteractionEnabled = YES;
-    self.scrollViewTWO.directionalLockEnabled = NO;
-    self.scrollViewTWO.clipsToBounds = NO;
-    self.scrollViewTWO.showsHorizontalScrollIndicator = NO;
-    self.scrollViewTWO.showsVerticalScrollIndicator = NO;
-    self.scrollViewTWO.backgroundColor = [UIColor notesBrown];
-    
-    [self.scrollViewTWO addGestureRecognizer:self.swipeGestureUp];
-    [self.scrollViewTWO addGestureRecognizer:self.swipeGestureDown];
-    [self.scrollViewTWO addGestureRecognizer:self.pinchGesture];
-    [self.scrollViewTWO addGestureRecognizer:self.doubleTapGesture];
-    
-    
-    [self.view addSubview:self.scrollViewTWO];
-
-    
-    if ([AllTheNotes sharedNotes].scrollVertically)
-    {
-        [self.scrollViewTWO mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.bottom.and.right.equalTo(self.view);
-            make.left.equalTo(self.scrollView.mas_right);
-            make.top.equalTo(self.mas_topLayoutGuide);
-        }];
-    } else
-    {
-        [self.scrollViewTWO mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.right.and.left.bottom.equalTo(self.view);
-            make.top.equalTo(self.scrollView.mas_bottomMargin);
-        }];
-    }
-    
-    [self populateStackviewAGAIN];
-    [self testForPaging];
-}
-
--(void)populateStackviewAGAIN
-{
-    self.stackViewTWO = [[UIStackView alloc] initWithArrangedSubviews:[self returnSubviewsBasedOnDataStoreTWO]];
-    
-    [self.scrollViewTWO addSubview:self.stackViewTWO];
-    
-    if ([AllTheNotes sharedNotes].scrollVertically) {
-        self.stackViewTWO.axis = UILayoutConstraintAxisVertical;
-        [self.stackViewTWO mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.edges.equalTo(self.scrollViewTWO);
-            make.centerX.equalTo(self.scrollViewTWO);
-        }];
-    } else
-    {
-        self.stackViewTWO.axis = UILayoutConstraintAxisHorizontal;
-        [self.stackViewTWO mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.edges.equalTo(self.scrollViewTWO);
-            make.centerY.equalTo(self.scrollViewTWO);
-        }];
-    }
-    
-    [self.stackViewTWO addGestureRecognizer:self.swipeGestureUp];
-    [self.stackViewTWO addGestureRecognizer:self.swipeGestureDown];
-    [self.stackViewTWO addGestureRecognizer:self.pinchGesture];
-    [self.stackViewTWO addGestureRecognizer:self.doubleTapGesture];
-    
-    self.stackViewTWO.contentMode = UIViewContentModeScaleToFill;
-    self.stackViewTWO.distribution = UIStackViewDistributionEqualSpacing;
-    self.stackViewTWO.alignment = UIStackViewAlignmentCenter;
-    self.stackViewTWO.spacing = 0;
-}
 
 
 -(NSMutableArray *)returnSubviewsBasedOnDataStoreTWO
@@ -430,16 +268,9 @@
 
 #pragma mark - ADDING NEW NOTES
 
--(void)addNoteButtonWasPressed:(UIButton *)buttonPressed
-{
-    [self newNoteViewControllerEditing:NO noteViewToEdit:nil];
-    
-}
-
 
 -(void)newNoteResult:(NSDictionary *)result updatedNoteView:(NoteView *)updatedNoteView notificationDate:(NSDate *)notificationDate UUID:(NSString *)UUID
 {
-    [self.navigationController popViewControllerAnimated:YES];
     NSNumber *orderNSNumber = result[@"noteOrder"];
     NSUInteger orderNumber = orderNSNumber.integerValue;
     NSNumber *nsNumberPriority = result[@"priority"];
@@ -466,7 +297,7 @@
                                               notificationDate:notificationDate
                                                           UUID:UUID];
         newNoteView.interiorTextBox.font = [UIFont fontWithName:newNoteView.noteFontName size:self.noteSize / self.fontDivisor];
-
+        
         //ADD THE NOTE TO DATA STORE
         [[AllTheNotes sharedNotes].notesArray insertObject:newNoteView atIndex:orderNumber];
         
@@ -476,30 +307,29 @@
     }
     
     //REMEMBER OFFSET TO DETERMINE WHETHER OR NOT TO SCROLL
-    CGFloat contentOffset = self.scrollView.contentOffset.x;
+    CGFloat contentOffset = self.contentOffset.x;
     [AllTheNotes sortNotesByValue:@[]];
     [self updateNoteOrderNumbers];
     [self setUpEntireScreen];
-    [self setUpSecondScrollview];
-    [self.view layoutIfNeeded];
+    [self.superview layoutIfNeeded];
     
     //SCROLL HERE TO PROPER NOTE
-    CGFloat contentEnd = contentOffset + self.view.frame.size.width;
-    CGFloat contentWidth = self.scrollView.contentSize.width;
+    CGFloat contentEnd = contentOffset + self.superview.frame.size.width;
+    CGFloat contentWidth = self.contentSize.width;
     CGFloat objectFraction = @([self.stackView.arrangedSubviews indexOfObject:updatedNoteView]).floatValue / ([AllTheNotes sharedNotes].notesArray.count);
     CGFloat fractionalWidth = objectFraction * contentWidth;
     
     if((fractionalWidth > contentOffset) && (fractionalWidth < contentEnd - self.noteSize/3*2)) //NO NEED TO SCROLL TO OBJECT
     {
         //THE SCREEN IS ALREADY CENTERED AROUND WHERE PREVIOUS NOTE SHOULD BE
-        self.scrollView.contentOffset = CGPointMake(contentOffset, 0); //SCROLL TO CONTENT
+        self.contentOffset = CGPointMake(contentOffset, 0); //SCROLL TO CONTENT
     } else if (self.stackView.arrangedSubviews.count > 1) // WON'T RUN IF THE STACKVIEW WAS PREVIOUSLY EMPTY
     {
-        CGFloat notPastEnd = MIN(objectFraction*contentWidth, self.scrollView.contentSize.width - self.view.frame.size.width);
-        self.scrollView.contentOffset = CGPointMake(notPastEnd, 0); //SCROLL TO CONTENT
+        CGFloat notPastEnd = MIN(objectFraction*contentWidth, self.contentSize.width - self.superview.frame.size.width);
+        self.contentOffset = CGPointMake(notPastEnd, 0); //SCROLL TO CONTENT
     }
     
-    [self.view layoutIfNeeded];
+    [self.superview layoutIfNeeded];
     [AllTheNotes updateDefaultsWithNotes];
 }
 
@@ -516,19 +346,11 @@
 
 -(void)pinchReceived:(UIPinchGestureRecognizer *)pinchGestureRecog
 {
-    CGPoint locationInScrollOne = [pinchGestureRecog locationInView:self.stackView];
-    CGPoint locationInScrollTwo = [pinchGestureRecog locationInView:self.stackViewTWO];
-    NSLog(@"scrollview One: %@, scrollview Two: %@",NSStringFromCGPoint(locationInScrollOne),NSStringFromCGPoint(locationInScrollTwo));
-    
-}
-
--(void)zoomFromPinch:(UIPinchGestureRecognizer *)pinchGestureRecog scrollView:(UIScrollView *)activeScrollView
-{
-    CGPoint locationInView = [pinchGestureRecog locationInView:self.view];
-    CGFloat offsetFranction = activeScrollView.contentOffset.x / (activeScrollView.contentSize.width - self.view.frame.size.width);
+    CGPoint locationInView = [pinchGestureRecog locationInView:self.superview];
+    CGFloat offsetFranction = self.contentOffset.x / (self.contentSize.width - self.superview.frame.size.width);
     if ([AllTheNotes sharedNotes].scrollVertically)
     {
-        offsetFranction = activeScrollView.contentOffset.y / (activeScrollView.contentSize.height - self.view.frame.size.height);
+        offsetFranction = self.contentOffset.y / (self.contentSize.height - self.superview.frame.size.height);
     }
     
     if(isnan(offsetFranction))
@@ -558,19 +380,19 @@
                              //SCROLLING AFTER ZOOM
                              if ([AllTheNotes sharedNotes].scrollVertically)
                              {
-                                 activeScrollView.contentOffset = CGPointMake(0,offsetFranction * (activeScrollView.contentSize.height - self.view.frame.size.height) * self.transformScalar + self.view.frame.size.height + (locationInView.y - self.view.frame.size.height/2) * self.transformScalar); //REMOVE THE LAST PART IN ORDER TO STOP ZOOMING IN ON SPECIFIC NOTES AND JUST ZOOM IN GENERAL
+                                 self.contentOffset = CGPointMake(0,offsetFranction * (self.contentSize.height - self.superview.frame.size.height) * self.transformScalar + self.superview.frame.size.height + (locationInView.y - self.superview.frame.size.height/2) * self.transformScalar); //REMOVE THE LAST PART IN ORDER TO STOP ZOOMING IN ON SPECIFIC NOTES AND JUST ZOOM IN GENERAL
                              } else
                              {
-                                 activeScrollView.contentOffset = CGPointMake(offsetFranction * (activeScrollView.contentSize.width - self.view.frame.size.width) * self.transformScalar + self.view.frame.size.width + (locationInView.x - self.view.frame.size.width/2) * self.transformScalar, 0); //REMOVE THE LAST PART IN ORDER TO STOP ZOOMING IN ON SPECIFIC NOTES AND JUST ZOOM IN GENERAL
+                                 self.contentOffset = CGPointMake(offsetFranction * (self.contentSize.width - self.superview.frame.size.width) * self.transformScalar + self.superview.frame.size.width + (locationInView.x - self.superview.frame.size.width/2) * self.transformScalar, 0); //REMOVE THE LAST PART IN ORDER TO STOP ZOOMING IN ON SPECIFIC NOTES AND JUST ZOOM IN GENERAL
                              }
                              
-                             [self.view layoutIfNeeded];
+                             [self.superview layoutIfNeeded];
                          }
                          completion:^(BOOL finished) {
                              for (NoteView *eachNote in self.stackView.arrangedSubviews) {
                                  //                                 eachNote.interiorTextBox.transform = CGAffineTransformScale(eachNote.interiorTextBox.transform, 1/self.transformScalar, 1/self.transformScalar);  //FOR ANIMATING FONT SIZE
                                  eachNote.interiorTextBox.font = [UIFont fontWithName:eachNote.noteFontName size:self.largeFontSize];
-                                 [self.view layoutIfNeeded];
+                                 [self.superview layoutIfNeeded];
                              }
                              [[UIApplication sharedApplication] endIgnoringInteractionEvents];
                          }];
@@ -584,7 +406,7 @@
             eachNote.interiorTextBox.font = [UIFont fontWithName:eachNote.noteFontName size:self.largeFontSize / self.transformScalar];
         }
         
-        [self.view layoutIfNeeded];
+        [self.superview layoutIfNeeded];
         [UIView animateWithDuration:self.animationDuration
                               delay:0.0
                             options: UIViewAnimationOptionCurveEaseInOut
@@ -599,12 +421,12 @@
                              //SCROLLING TO CORRECT NOTE
                              if([AllTheNotes sharedNotes].scrollVertically)
                              {
-                                 activeScrollView.contentOffset = CGPointMake(0,offsetFranction * (activeScrollView.contentSize.height - self.view.frame.size.height) / self.transformScalar - self.view.frame.size.height / self.transformScalar);
+                                 self.contentOffset = CGPointMake(0,offsetFranction * (self.contentSize.height - self.superview.frame.size.height) / self.transformScalar - self.superview.frame.size.height / self.transformScalar);
                              } else
                              {
-                                 activeScrollView.contentOffset = CGPointMake(offsetFranction * (activeScrollView.contentSize.width - self.view.frame.size.width) / self.transformScalar - self.view.frame.size.width / self.transformScalar , 0);
+                                 self.contentOffset = CGPointMake(offsetFranction * (self.contentSize.width - self.superview.frame.size.width) / self.transformScalar - self.superview.frame.size.width / self.transformScalar , 0);
                              }
-                             [self.view layoutIfNeeded];
+                             [self.superview layoutIfNeeded];
                          }
                          completion:^(BOOL finished) {
                              for (NoteView *eachNote in self.stackView.arrangedSubviews) { //FOR SETTING CORRECT FONT SIZE AFTER ANIMATION
@@ -615,6 +437,7 @@
         
     }
 }
+
 
 -(void)doubleTapReceived:(UITapGestureRecognizer *)tapGestureRecognizer
 {
@@ -628,7 +451,6 @@
         
     }
     NoteView *tappedNoteView = self.stackView.arrangedSubviews[@(arrayIndexFract).integerValue *1];
-    [self newNoteViewControllerEditing:YES noteViewToEdit:tappedNoteView];
     
 }
 
@@ -653,7 +475,7 @@
             [self crossOutNote:swipeGestureRecognizer];
         }
     }
-
+    
     
 }
 
@@ -671,7 +493,7 @@
     NoteView *crossOutNoteView = self.stackView.arrangedSubviews[@(arrayIndexFract).integerValue *1];
     [AllTheNotes updateDefaultsWithNotes];
     
-    [self.view layoutIfNeeded];
+    [self.superview layoutIfNeeded];
     
     [UIView animateWithDuration:self.animationDuration
                           delay:0.0
@@ -679,7 +501,7 @@
                      animations:^{
                          [crossOutNoteView toggleCrossedOut];
                          [AllTheNotes updateDefaultsWithNotes];
-                         [self.view layoutIfNeeded];
+                         [self.superview layoutIfNeeded];
                      }
                      completion:nil];
     
@@ -689,69 +511,23 @@
 
 -(void)removeNote:(UISwipeGestureRecognizer *)swipeGestureRecognizer
 {
-    CGPoint point = [swipeGestureRecognizer locationInView:self.view];
-    UIStackView *swipedStackView;
-    if(self.zoomedIn)
-    {
-        if(self.stackOneIsSelected)
-        {
-            swipedStackView = self.stackView;
-        } else
-        {
-            swipedStackView = self.stackViewTWO;
-        }
-    } else
-    {
-        if([AllTheNotes sharedNotes].scrollVertically)
-        {
-            NSLog(@"%1.1f",self.view.frame.size.width);
-            if(point.x < self.view.frame.size.width/2)
-            {
-                swipedStackView = self.stackView;
-            } else
-            {
-                swipedStackView = self.stackViewTWO;
-            }
-        } else
-        {
-            if(point.y < self.view.frame.size.height)
-            {
-                swipedStackView = self.stackView;
-            } else
-            {
-                swipedStackView = self.stackViewTWO;
-            }
-        }
-
-        
-        
-    }
-    
-    
-    
-    [self removeNote:swipeGestureRecognizer stackView:swipedStackView];
-    
-}
-
--(void)removeNote:(UISwipeGestureRecognizer *)swipeGestureRecognizer stackView:(UIStackView *)workingStackView
-{
-    CGPoint point = [swipeGestureRecognizer locationInView:workingStackView];
-    CGPoint pointInWindow = [swipeGestureRecognizer locationInView:self.view];
-    CGFloat subviewFraction = point.x / workingStackView.bounds.size.width;
-    CGFloat arrayIndexFract = subviewFraction * workingStackView.arrangedSubviews.count;
+    CGPoint point = [swipeGestureRecognizer locationInView:self.stackView];
+    CGPoint pointInWindow = [swipeGestureRecognizer locationInView:self.superview];
+    CGFloat subviewFraction = point.x / self.stackView.bounds.size.width;
+    CGFloat arrayIndexFract = subviewFraction * self.stackView.arrangedSubviews.count;
     
     if ([AllTheNotes sharedNotes].scrollVertically)
     {
-        subviewFraction = point.y / workingStackView.bounds.size.height;
-        arrayIndexFract = subviewFraction * workingStackView.arrangedSubviews.count;
+        subviewFraction = point.y / self.stackView.bounds.size.height;
+        arrayIndexFract = subviewFraction * self.stackView.arrangedSubviews.count;
     }
     
-    //    NSLog(@". \n point in stack: %@ \n point in view: %@ \n index fract: %1.3f \n index # %lu \n subview count: %lu",NSStringFromCGPoint(point),NSStringFromCGPoint(pointInWindow), subviewFraction * workingStackView.arrangedSubviews.count,@(arrayIndexFract).integerValue *1 ,workingStackView.arrangedSubviews.count);
+    //    NSLog(@". \n point in stack: %@ \n point in view: %@ \n index fract: %1.3f \n index # %lu \n subview count: %lu",NSStringFromCGPoint(point),NSStringFromCGPoint(pointInWindow), subviewFraction * self.stackView.arrangedSubviews.count,@(arrayIndexFract).integerValue *1 ,self.stackView.arrangedSubviews.count);
     [self updateNoteOrderNumbers];
-    NoteView *oldNoteView = workingStackView.arrangedSubviews[@(arrayIndexFract).integerValue *1];
+    NoteView *oldNoteView = self.stackView.arrangedSubviews[@(arrayIndexFract).integerValue *1];
     
     //    CGPoint relativeToWindow = [oldNoteView convertPoint:oldNoteView.bounds.origin toView:[UIApplication sharedApplication].keyWindow.rootViewController.view];
-    CGPoint relativeToWindow = [oldNoteView convertPoint:oldNoteView.bounds.origin toView:self.view];
+    CGPoint relativeToWindow = [oldNoteView convertPoint:oldNoteView.bounds.origin toView:self.superview];
     
     [UIView animateWithDuration:self.animationDuration * 2 / 3
                           delay:0.0
@@ -760,7 +536,7 @@
                          oldNoteView.hidden = YES;
                          [[AllTheNotes sharedNotes].deletedArray addObject:oldNoteView];
                          [oldNoteView removeFromSuperview];
-                         [self.view layoutIfNeeded];
+                         [self.superview layoutIfNeeded];
                      }
                      completion:nil];
     
@@ -769,12 +545,12 @@
     
     [self.topView addSubview:animatedNote];
     
-    [animatedNote mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.view).offset(relativeToWindow.x);
-        make.top.equalTo(self.view).offset(relativeToWindow.y);
+    [animatedNote mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(self.superview).offset(relativeToWindow.x);
+        make.top.equalTo(self.superview).offset(relativeToWindow.y);
     }];
     
-    [self.view layoutIfNeeded];
+    [self.superview layoutIfNeeded];
     animatedNote.interiorTextBox.transform = CGAffineTransformScale(animatedNote.interiorTextBox.transform, 2, 2);
     animatedNote.interiorTextBox.font = [UIFont fontWithName:animatedNote.noteFontName size:self.noteSize / self.fontDivisor / 2];
     [UIView animateWithDuration:self.animationDuration * 2 / 3
@@ -784,28 +560,27 @@
                          if([AllTheNotes sharedNotes].scrollVertically)
                          {
                              [animatedNote mas_remakeConstraints:^(MASConstraintMaker *make) {
-                                 make.right.equalTo(self.view.mas_left);
-                                 make.centerY.equalTo(self.view.mas_top).offset(pointInWindow.y);
+                                 make.right.equalTo(self.superview.mas_left);
+                                 make.centerY.equalTo(self.superview.mas_top).offset(pointInWindow.y);
                                  make.height.and.width.equalTo(@(self.noteSize/2.0));
                              }];
                          } else
                          {
                              [animatedNote mas_remakeConstraints:^(MASConstraintMaker *make) {
-                                 make.bottom.equalTo(self.view.mas_top);
-                                 make.centerX.equalTo(self.view.mas_left).offset(pointInWindow.x);
+                                 make.bottom.equalTo(self.superview.mas_top);
+                                 make.centerX.equalTo(self.superview.mas_left).offset(pointInWindow.x);
                                  make.height.and.width.equalTo(@(self.noteSize/2.0));
                              }];
                          }
                          
                          
                          animatedNote.interiorTextBox.transform = CGAffineTransformScale(animatedNote.interiorTextBox.transform, 1.0/2, 1.0/2);
-                         [self.view layoutIfNeeded];
+                         [self.superview layoutIfNeeded];
                      }
                      completion:^(BOOL finished) {
                          [animatedNote removeFromSuperview];
                          [AllTheNotes updateDefaultsWithNotes];
                      }];
-    [self checkIfUndoShouldInteract];
     [self updateNoteOrderNumbers];
     [AllTheNotes renumberBadgesOfPendingNotifications];
 }
@@ -817,17 +592,17 @@
     {
         NoteView *lastDeletion = [[NoteView alloc] initWithNoteView:[AllTheNotes sharedNotes].deletedArray.lastObject];
         lastDeletion.notificationDate = lastDeletion.notificationDate;
-        CGFloat contentOffset = self.scrollView.contentOffset.x;
-        CGFloat contentEnd = self.scrollView.contentOffset.x + self.view.frame.size.width;
-        CGFloat contentWidth = self.scrollView.contentSize.width;
+        CGFloat contentOffset = self.contentOffset.x;
+        CGFloat contentEnd = self.contentOffset.x + self.superview.frame.size.width;
+        CGFloat contentWidth = self.contentSize.width;
         CGFloat objectFraction = @(lastDeletion.orderNumber).floatValue / ([AllTheNotes sharedNotes].notesArray.count);
         CGFloat fractionalWidth = objectFraction * contentWidth;
         
         if ([AllTheNotes sharedNotes].scrollVertically)
         {
-            contentOffset = self.scrollView.contentOffset.y;
-            contentEnd = self.scrollView.contentOffset.y + self.view.frame.size.height;
-            contentWidth = self.scrollView.contentSize.height;
+            contentOffset = self.contentOffset.y;
+            contentEnd = self.contentOffset.y + self.superview.frame.size.height;
+            contentWidth = self.contentSize.height;
             objectFraction = @(lastDeletion.orderNumber).floatValue / ([AllTheNotes sharedNotes].notesArray.count);
             fractionalWidth = objectFraction * contentWidth;
         }
@@ -849,15 +624,15 @@
                              {
                                  if ([AllTheNotes sharedNotes].scrollVertically)
                                  {
-                                     self.scrollView.contentOffset = CGPointMake(0,objectFraction*contentWidth); //SCROLL TO CONTENT
+                                     self.contentOffset = CGPointMake(0,objectFraction*contentWidth); //SCROLL TO CONTENT
                                  } else
                                  {
-                                     self.scrollView.contentOffset = CGPointMake(objectFraction*contentWidth, 0); //SCROLL TO CONTENT
+                                     self.contentOffset = CGPointMake(objectFraction*contentWidth, 0); //SCROLL TO CONTENT
                                  }
                              }
                              
                              
-                             [self.view layoutIfNeeded];
+                             [self.superview layoutIfNeeded];
                          }
                          completion:^(BOOL finished) {
                              
@@ -867,28 +642,20 @@
                                               animations:^{
                                                   [UIView setAnimationRepeatCount:3];
                                                   lastDeletion.backgroundColor = [UIColor notesMilk];
-                                                  [self.view layoutIfNeeded];
+                                                  [self.superview layoutIfNeeded];
                                               } completion:^(BOOL finished) {
                                                   lastDeletion.backgroundColor = [UIColor clearColor];
-                                                  [self.view layoutIfNeeded];
+                                                  [self.superview layoutIfNeeded];
                                               }];
                              
                          }];
         
         [self updateNoteOrderNumbers];
     }
-    [self checkIfUndoShouldInteract];
 }
 
 #pragma mark - settings
 
--(void)settingsButtonPressed:(UIButton *)buttonPressed
-{
-    self.settingsTableVC = [[SettingsTableViewController alloc] init];
-    self.settingsTableVC.delegate = self;
-    [self showViewController:self.settingsTableVC sender:self];
-    
-}
 -(void)changeInSettings:(NSString *)theChange
 {
     NSLog(@"ran change in settings delegate method");
@@ -900,8 +667,6 @@
     
     [AllTheNotes sortNotesByValue:@[]];
     [self setUpEntireScreen];
-    [self setUpSecondScrollview];
-    [self checkIfUndoShouldInteract];
     
 }
 
@@ -917,64 +682,6 @@
     NSLog(@"user touched this object: %@",touches.anyObject.view.class);
 }
 
-
-
-
-//-(BOOL)scrollViewShouldScrollToTop:(UIScrollView *)scrollView
-//{
-//
-//    return YES;
-//}
-
-//- (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset{
-//    CGFloat pageWidth = self.noteSize + scrollView.contentInset.left;
-//    CGFloat pageX = self.pageIndex*pageWidth-scrollView.contentInset.left;
-//    CGFloat pagesScrolled = (targetContentOffset->x - pageX)/ pageWidth;
-//    if (targetContentOffset->x<pageX)
-//    {
-//        if (self.pageIndex>0) {
-//            self.pageIndex += pagesScrolled;
-//        }
-//    }
-//    else if(targetContentOffset->x>pageX){
-//        if (self.pageIndex<self.stackView.arrangedSubviews.count)
-//        {
-//            self.pageIndex += pagesScrolled;
-//        }
-//    }
-//    targetContentOffset->x = self.pageIndex*pageWidth-scrollView.contentInset.left;
-//    NSLog(@"%lu %d", self.pageIndex, (int)targetContentOffset->x);
-//}
-
-#pragma mark - alert view controller
--(void)displayAlertViewController:(NSString *)title
-                          message:(NSString *)message
-                       completion:(void (^)(bool alertResult))completionBlock
-{
-    UIAlertController *alert = [UIAlertController
-                                alertControllerWithTitle:title
-                                message:message
-                                preferredStyle:UIAlertControllerStyleAlert];
-    
-    UIAlertAction *yesButton = [UIAlertAction
-                                actionWithTitle:@"OK"
-                                style:UIAlertActionStyleDestructive
-                                handler:^(UIAlertAction * action)
-                                {
-//                                    completionBlock(YES);
-                                }];
-        [alert addAction:yesButton];
-//    UIAlertAction *noButton = [UIAlertAction
-//                               actionWithTitle:@"No"
-//                               style:UIAlertActionStyleDefault
-//                               handler:nil];
-//    [alert addAction:noButton];
-    
-    [self presentViewController:alert animated:YES completion:nil];
-    
-}
-
-
 #pragma mark - update order
 -(void)updateNoteOrderNumbers
 {
@@ -989,18 +696,13 @@
 }
 
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
 #pragma mark - helpers
 
 
 - (void)killScroll
 {
-    CGPoint offset = self.scrollView.contentOffset;
-    [self.scrollView setContentOffset:offset animated:NO];
+    CGPoint offset = self.contentOffset;
+    [self setContentOffset:offset animated:NO];
 }
 
 -(void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection
@@ -1022,31 +724,17 @@
     UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
     if ((orientation == UIDeviceOrientationPortrait || orientation == UIDeviceOrientationPortraitUpsideDown) && self.zoomedIn)
     {
-        self.scrollView.pagingEnabled = YES;
-        self.scrollViewTWO.pagingEnabled = YES;
+        self.pagingEnabled = YES;
     } else
     {
-        self.scrollView.pagingEnabled = NO;
-        self.scrollViewTWO.pagingEnabled = NO;
+        self.pagingEnabled = NO;
     }
     if ([AllTheNotes sharedNotes].scrollVertically)
     {
-        self.scrollView.pagingEnabled = NO;
-        self.scrollViewTWO.pagingEnabled = NO;
+        self.pagingEnabled = NO;
     }
 }
 
-
--(void)checkIfUndoShouldInteract
-{
-    if([AllTheNotes sharedNotes].deletedArray.count > 0)
-    {
-        self.undoBarButton.enabled = YES;
-    } else
-    {
-        self.undoBarButton.enabled = NO;
-    }
-}
 
 -(void)setScreenHeightandWidth
 {
@@ -1084,3 +772,4 @@
 
 
 @end
+
