@@ -16,9 +16,11 @@
 
 @interface ViewController () <UIGestureRecognizerDelegate, UIScrollViewDelegate, NoteViewControllerDelegate, SettingsTableViewControllerDelegate>
 @property (nonatomic, strong) UIScrollView *scrollView;
+@property (nonatomic, strong) UIScrollView *scrollViewTWO;
 @property (nonatomic, strong) UIStackView *stackView;
 @property (nonatomic, strong) UIStackView *stackViewTWO;
 @property (nonatomic, strong) UIView *topView;
+@property (nonatomic, strong) UIView *topViewTWO;
 
 @property (nonatomic, strong) UIBarButtonItem *addNoteButton;
 @property (nonatomic, strong) UIBarButtonItem *undoBarButton;
@@ -95,6 +97,7 @@
     [self setScreenHeightandWidth];
     [self setUpNavigationBar];
     [self setUpEntireScreen];
+    [self setUpSecondScrollview];
     [self loadFocusedOnNotification];
     self.alreadyLoaded = YES;
     
@@ -174,7 +177,6 @@
     self.scrollView = [[UIScrollView alloc] init];
     self.scrollView.delegate = self;
     self.scrollView.userInteractionEnabled = YES;
-    //dummy
     self.scrollView.directionalLockEnabled = NO;
     [self testForPaging];
     self.scrollView.clipsToBounds = NO;
@@ -189,18 +191,31 @@
     
     
     [self.view addSubview:self.scrollView];
-    [self.scrollView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.and.left.and.right.equalTo(self.view);
-        make.top.equalTo(self.mas_topLayoutGuide);
-    }];
+    NSLog(@"VDERT %u",[AllTheNotes sharedNotes].scrollVertically);
+    if ([AllTheNotes sharedNotes].scrollVertically)
+    {
+        [self.scrollView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.bottom.and.left.equalTo(self.view);
+            make.right.equalTo(self.view).offset(-self.view.frame.size.width / 2);
+            make.top.equalTo(self.mas_topLayoutGuide);
+        }];
+    } else
+    {
+        [self.scrollView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.right.and.left.equalTo(self.view);
+            make.bottom.equalTo(self.view).offset(-self.view.frame.size.height /2 +64/2);
+            make.top.equalTo(self.mas_topLayoutGuide);
+        }];
+    }
+
     
     [self populateStackview];
-    [self populateStackviewAGAIN];
     self.topView = UIView.new;
+    self.topView.backgroundColor = [[UIColor orangeColor] colorWithAlphaComponent:0.90];
     [self.view addSubview:self.topView];
     self.topView.userInteractionEnabled = NO;
     [self.topView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(self.view);
+        make.edges.equalTo(self.scrollView);
     }];
 }
 
@@ -240,39 +255,6 @@
 
 #pragma mark - WORKING WITH THE NOTES
 
--(void)populateStackviewAGAIN
-{
-    self.stackViewTWO = [[UIStackView alloc] initWithArrangedSubviews:[self returnSubviewsBasedOnDataStore]];
-    
-    [self.scrollView addSubview:self.stackView];
-    
-    if ([AllTheNotes sharedNotes].scrollVertically) {
-        self.stackViewTWO.axis = UILayoutConstraintAxisVertical;
-        [self.stackViewTWO mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.and.bottom.equalTo(self.scrollView);
-            make.left.equalTo(self.stackView.mas_right);
-            make.right.equalTo(self.view);
-        }];
-    } else
-    {
-        self.stackViewTWO.axis = UILayoutConstraintAxisHorizontal;
-        [self.stackViewTWO mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.and.right.equalTo(self.scrollView);
-            make.left.equalTo(self.stackView.mas_right);
-        }];
-    }
-    
-    [self.stackViewTWO addGestureRecognizer:self.swipeGestureUp];
-    [self.stackViewTWO addGestureRecognizer:self.swipeGestureDown];
-    [self.stackViewTWO addGestureRecognizer:self.pinchGesture];
-    [self.stackViewTWO addGestureRecognizer:self.doubleTapGesture];
-    
-    self.stackViewTWO.backgroundColor = [UIColor blueColor];
-    self.stackViewTWO.contentMode = UIViewContentModeScaleToFill;
-    self.stackViewTWO.distribution = UIStackViewDistributionEqualSpacing;
-    self.stackViewTWO.alignment = UIStackViewAlignmentCenter;
-    self.stackViewTWO.spacing = 0;
-}
 
 -(void)populateStackview
 {
@@ -284,14 +266,14 @@
         self.stackView.axis = UILayoutConstraintAxisVertical;
         [self.stackView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.edges.equalTo(self.scrollView);
-            make.centerX.equalTo(self.view);
+            make.centerX.equalTo(self.scrollView);
         }];
     } else
     {
         self.stackView.axis = UILayoutConstraintAxisHorizontal;
         [self.stackView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.edges.equalTo(self.scrollView);
-            make.centerY.equalTo(self.view);
+            make.centerY.equalTo(self.scrollView);
         }];
     }
     
@@ -301,10 +283,19 @@
     [self.stackView addGestureRecognizer:self.doubleTapGesture];
     
     self.stackView.backgroundColor = [UIColor blueColor];
+    
+    //DEBUG
+    self.stackView.backgroundColor = [UIColor greenColor];
     self.stackView.contentMode = UIViewContentModeScaleToFill;
     self.stackView.distribution = UIStackViewDistributionEqualSpacing;
     self.stackView.alignment = UIStackViewAlignmentCenter;
     self.stackView.spacing = 0;
+    UIView *dummy = [[UIView alloc] init];
+    dummy.backgroundColor = [[UIColor blueColor] colorWithAlphaComponent:0.33];
+    [self.stackView addSubview:dummy];
+    [dummy mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(self.stackView);
+    }];
 }
 
 -(NSMutableArray *)returnSubviewsBasedOnDataStore
@@ -346,13 +337,110 @@
     [self showViewController:self.veryNewNoteVC sender:self];
 }
 
+#pragma mark - second stack view
 
+-(void)setUpSecondScrollview
+{
+    self.scrollViewTWO = [[UIScrollView alloc] init];
+    self.scrollViewTWO.delegate = self;
+    self.scrollViewTWO.userInteractionEnabled = YES;
+    self.scrollViewTWO.directionalLockEnabled = NO;
+    [self testForPaging];
+    self.scrollViewTWO.clipsToBounds = NO;
+    self.scrollViewTWO.showsHorizontalScrollIndicator = NO;
+    self.scrollViewTWO.showsVerticalScrollIndicator = NO;
+    self.scrollViewTWO.backgroundColor = [UIColor notesBrown];
+    
+    [self.scrollViewTWO addGestureRecognizer:self.swipeGestureUp];
+    [self.scrollViewTWO addGestureRecognizer:self.swipeGestureDown];
+    [self.scrollViewTWO addGestureRecognizer:self.pinchGesture];
+    [self.scrollViewTWO addGestureRecognizer:self.doubleTapGesture];
+    
+    
+    [self.view addSubview:self.scrollViewTWO];
+
+    
+    if ([AllTheNotes sharedNotes].scrollVertically)
+    {
+        [self.scrollViewTWO mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.bottom.and.right.equalTo(self.view);
+            make.left.equalTo(self.scrollView.mas_right);
+            make.top.equalTo(self.mas_topLayoutGuide);
+        }];
+    } else
+    {
+        [self.scrollViewTWO mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.right.and.left.equalTo(self.view);
+            make.bottom.equalTo(self.scrollView);
+            make.top.equalTo(self.mas_topLayoutGuideBottom);
+        }];
+    }
+    
+    [self populateStackviewAGAIN];
+    self.topViewTWO = UIView.new;
+    self.topViewTWO.backgroundColor = [[UIColor blueColor] colorWithAlphaComponent:0.15];
+    [self.view addSubview:self.topViewTWO];
+    self.topViewTWO.userInteractionEnabled = NO;
+    [self.topViewTWO mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(self.scrollViewTWO);
+    }];
+}
+
+-(void)populateStackviewAGAIN
+{
+    self.stackViewTWO = [[UIStackView alloc] initWithArrangedSubviews:[self returnSubviewsBasedOnDataStoreTWO]];
+    
+    [self.scrollViewTWO addSubview:self.stackViewTWO];
+    
+    if ([AllTheNotes sharedNotes].scrollVertically) {
+        self.stackViewTWO.axis = UILayoutConstraintAxisVertical;
+        [self.stackViewTWO mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.edges.equalTo(self.scrollViewTWO);
+            make.centerX.equalTo(self.scrollViewTWO);
+        }];
+    } else
+    {
+        self.stackViewTWO.axis = UILayoutConstraintAxisHorizontal;
+        self.stackViewTWO.axis = UILayoutConstraintAxisVertical;
+        [self.stackViewTWO mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.edges.equalTo(self.scrollViewTWO);
+            make.centerY.equalTo(self.scrollViewTWO);
+        }];
+    }
+    
+    [self.stackViewTWO addGestureRecognizer:self.swipeGestureUp];
+    [self.stackViewTWO addGestureRecognizer:self.swipeGestureDown];
+    [self.stackViewTWO addGestureRecognizer:self.pinchGesture];
+    [self.stackViewTWO addGestureRecognizer:self.doubleTapGesture];
+    
+    self.stackViewTWO.contentMode = UIViewContentModeScaleToFill;
+    self.stackViewTWO.distribution = UIStackViewDistributionEqualSpacing;
+    self.stackViewTWO.alignment = UIStackViewAlignmentCenter;
+    self.stackViewTWO.spacing = 0;
+}
+
+
+-(NSMutableArray *)returnSubviewsBasedOnDataStoreTWO
+{
+    NSMutableArray *mutableSubviews = [@[] mutableCopy];
+    for (NoteView *eachNoteView in [AllTheNotes sharedNotes].secondNotesArraty)
+    {
+        eachNoteView.noteSizeValue = [AllTheNotes sharedNotes].currentNoteSize;
+        CGFloat fontSize = self.largeFontSize;
+        if(!self.zoomedIn)
+        {
+            fontSize = self.largeFontSize / self.transformScalar;
+        }
+        eachNoteView.interiorTextBox.font = [UIFont fontWithName:eachNoteView.noteFontName size:fontSize];
+        [mutableSubviews addObject:eachNoteView];
+    }
+    return mutableSubviews;
+}
 
 #pragma mark - ADDING NEW NOTES
 
 -(void)addNoteButtonWasPressed:(UIButton *)buttonPressed
 {
-    
     [self newNoteViewControllerEditing:NO noteViewToEdit:nil];
     
 }
@@ -889,13 +977,16 @@
     if ((orientation == UIDeviceOrientationPortrait || orientation == UIDeviceOrientationPortraitUpsideDown) && self.zoomedIn)
     {
         self.scrollView.pagingEnabled = YES;
+        self.scrollViewTWO.pagingEnabled = YES;
     } else
     {
         self.scrollView.pagingEnabled = NO;
+        self.scrollViewTWO.pagingEnabled = NO;
     }
     if ([AllTheNotes sharedNotes].scrollVertically)
     {
         self.scrollView.pagingEnabled = NO;
+        self.scrollViewTWO.pagingEnabled = NO;
     }
 }
 

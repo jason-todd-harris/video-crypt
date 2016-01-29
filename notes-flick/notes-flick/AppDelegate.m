@@ -32,7 +32,9 @@
     [AllTheNotes sharedNotes].scrollVertically = YES;
     [AllTheNotes settingsFromNSDefaults];
     [AllTheNotes updateAppNotesFromNSDefaults];
-
+    [self setUpSomeDummyNotes];
+    [self testingSecondNotesArray];
+    
     
     [self launchOptionsHandler:launchOptions];
     return YES;
@@ -53,30 +55,30 @@
     NSUInteger i = 0;
     NSMutableArray *mutableNotes = [@[] mutableCopy];
     NSMutableArray *defaultNotes = [@[] mutableCopy];// [AllTheNotes sharedNotes].notesArray;
-    for (i = 0; i <30; i++)
+    for (i = 0; i <10; i++)
     {
         
         NSString *string = [NSString stringWithFormat:@"%@ text",@(i+1).stringValue];
 //        string = [UIColor stringFromColor:[AllTheNotes sharedNotes].colorArray[i%5]];
         UIColor *color;
-        if(i<3)
-        {
-            color = [AllTheNotes sharedNotes].colorArray[0];
-        } else if (i < 6)
-        {
-            color = [AllTheNotes sharedNotes].colorArray[1];
-        } else if (i < 9)
-        {
-            color = [AllTheNotes sharedNotes].colorArray[2];
-        } else if (i < 13)
-        {
-            color = [AllTheNotes sharedNotes].colorArray[3];
-        } else if (i < 17)
-        {
-            color = [AllTheNotes sharedNotes].colorArray[4];
-        }
+//        if(i<3)
+//        {
+//            color = [AllTheNotes sharedNotes].colorArray[0];
+//        } else if (i < 6)
+//        {
+//            color = [AllTheNotes sharedNotes].colorArray[1];
+//        } else if (i < 9)
+//        {
+//            color = [AllTheNotes sharedNotes].colorArray[2];
+//        } else if (i < 13)
+//        {
+//            color = [AllTheNotes sharedNotes].colorArray[3];
+//        } else if (i < 17)
+//        {
+//            color = [AllTheNotes sharedNotes].colorArray[4];
+//        }
         
-        
+        color = [UIColor purpleColor];
         NoteView *dummyNote = [[NoteView alloc] initWithText:string
                                                     noteSize:0
                                                     withDate:nil
@@ -92,6 +94,56 @@
     
     [defaultNotes addObjectsFromArray:mutableNotes];
     [AllTheNotes sharedNotes].notesArray = defaultNotes;
+    [AllTheNotes updateDefaultsWithNotes];
+    //DELETES ALL SCHEDULED ALARMS
+    [[UIApplication sharedApplication] cancelAllLocalNotifications];
+    
+}
+
+-(void)testingSecondNotesArray
+{
+    NSUInteger i = 0;
+    NSMutableArray *mutableNotes = [@[] mutableCopy];
+    NSMutableArray *defaultNotes = [@[] mutableCopy];// [AllTheNotes sharedNotes].notesArray;
+    for (i = 0; i <30; i++)
+    {
+        
+        NSString *string = [NSString stringWithFormat:@"%@ text",@(i+1).stringValue];
+        //        string = [UIColor stringFromColor:[AllTheNotes sharedNotes].colorArray[i%5]];
+        UIColor *color;
+//        if(i<3)
+//        {
+//            color = [AllTheNotes sharedNotes].colorArray[0];
+//        } else if (i < 6)
+//        {
+//            color = [AllTheNotes sharedNotes].colorArray[1];
+//        } else if (i < 9)
+//        {
+//            color = [AllTheNotes sharedNotes].colorArray[2];
+//        } else if (i < 13)
+//        {
+//            color = [AllTheNotes sharedNotes].colorArray[3];
+//        } else if (i < 17)
+//        {
+//            color = [AllTheNotes sharedNotes].colorArray[4];
+//        }
+            color = [UIColor notesMilk];
+        
+        NoteView *dummyNote = [[NoteView alloc] initWithText:string
+                                                    noteSize:0
+                                                    withDate:nil
+                                                 orderNumber:i
+                                                    priority:1
+                                                       color:color
+                                                  crossedOut:NO
+                                                    fontName:nil
+                                            notificationDate:nil
+                                                        UUID:nil];
+        [mutableNotes addObject:dummyNote];
+    }
+    
+    [defaultNotes addObjectsFromArray:mutableNotes];
+    [AllTheNotes sharedNotes].secondNotesArraty = defaultNotes;
     [AllTheNotes updateDefaultsWithNotes];
     //DELETES ALL SCHEDULED ALARMS
     [[UIApplication sharedApplication] cancelAllLocalNotifications];

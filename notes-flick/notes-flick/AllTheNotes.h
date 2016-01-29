@@ -14,6 +14,7 @@
 @interface AllTheNotes : NSObject
 @property (nonatomic, strong) NSUserDefaults *userDefaults;
 @property (nonatomic, strong) NSMutableArray<NoteView *> *notesArray;
+@property (nonatomic, strong) NSMutableArray<NoteView *> *secondNotesArraty;
 @property (nonatomic, strong) NSMutableArray<NoteView *> *deletedArray;
 @property (nonatomic, strong) NSMutableArray<UIColor *> *colorArray;
 
