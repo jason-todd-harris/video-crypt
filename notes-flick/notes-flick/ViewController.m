@@ -17,6 +17,7 @@
 @interface ViewController () <UIGestureRecognizerDelegate, UIScrollViewDelegate, NoteViewControllerDelegate, SettingsTableViewControllerDelegate>
 @property (nonatomic, strong) UIScrollView *scrollView;
 @property (nonatomic, strong) UIStackView *stackView;
+@property (nonatomic, strong) UIStackView *stackViewTWO;
 @property (nonatomic, strong) UIView *topView;
 
 @property (nonatomic, strong) UIBarButtonItem *addNoteButton;
@@ -173,6 +174,8 @@
     self.scrollView = [[UIScrollView alloc] init];
     self.scrollView.delegate = self;
     self.scrollView.userInteractionEnabled = YES;
+    //dummy
+    self.scrollView.directionalLockEnabled = NO;
     [self testForPaging];
     self.scrollView.clipsToBounds = NO;
     self.scrollView.showsHorizontalScrollIndicator = NO;
@@ -192,7 +195,7 @@
     }];
     
     [self populateStackview];
-    
+    [self populateStackviewAGAIN];
     self.topView = UIView.new;
     [self.view addSubview:self.topView];
     self.topView.userInteractionEnabled = NO;
@@ -236,6 +239,40 @@
 }
 
 #pragma mark - WORKING WITH THE NOTES
+
+-(void)populateStackviewAGAIN
+{
+    self.stackViewTWO = [[UIStackView alloc] initWithArrangedSubviews:[self returnSubviewsBasedOnDataStore]];
+    
+    [self.scrollView addSubview:self.stackView];
+    
+    if ([AllTheNotes sharedNotes].scrollVertically) {
+        self.stackViewTWO.axis = UILayoutConstraintAxisVertical;
+        [self.stackViewTWO mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.and.bottom.equalTo(self.scrollView);
+            make.left.equalTo(self.stackView.mas_right);
+            make.right.equalTo(self.view);
+        }];
+    } else
+    {
+        self.stackViewTWO.axis = UILayoutConstraintAxisHorizontal;
+        [self.stackViewTWO mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.and.right.equalTo(self.scrollView);
+            make.left.equalTo(self.stackView.mas_right);
+        }];
+    }
+    
+    [self.stackViewTWO addGestureRecognizer:self.swipeGestureUp];
+    [self.stackViewTWO addGestureRecognizer:self.swipeGestureDown];
+    [self.stackViewTWO addGestureRecognizer:self.pinchGesture];
+    [self.stackViewTWO addGestureRecognizer:self.doubleTapGesture];
+    
+    self.stackViewTWO.backgroundColor = [UIColor blueColor];
+    self.stackViewTWO.contentMode = UIViewContentModeScaleToFill;
+    self.stackViewTWO.distribution = UIStackViewDistributionEqualSpacing;
+    self.stackViewTWO.alignment = UIStackViewAlignmentCenter;
+    self.stackViewTWO.spacing = 0;
+}
 
 -(void)populateStackview
 {
