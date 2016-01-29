@@ -32,7 +32,7 @@
     [AllTheNotes sharedNotes].scrollVertically = YES;
     [AllTheNotes settingsFromNSDefaults];
     [AllTheNotes updateAppNotesFromNSDefaults];
-    [self setUpSomeDummyNotes];
+//    [self setUpSomeDummyNotes];
     
     [self launchOptionsHandler:launchOptions];
     return YES;
