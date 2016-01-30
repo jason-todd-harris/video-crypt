@@ -42,6 +42,7 @@
 @property (nonatomic, assign) CGFloat largeFontSize;
 @property (nonatomic, assign) BOOL alreadyLoaded;
 @property (nonatomic, assign) BOOL zoomedIn;
+@property (nonatomic, assign) NSUInteger lastOrientation;
 
 
 
@@ -69,13 +70,17 @@
                                                object:nil];
 }
 
+
+
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
     [self checkIfUndoShouldInteract];
     [self checkIfAlarmsHavePassed];
-}
+    [[NSNotificationCenter defaultCenter] addObserver:self  selector:@selector(orientationChanged:) name:UIDeviceOrientationDidChangeNotification  object:nil];
+    
 
+}
 
 -(void)viewDidAppear:(BOOL)animated
 {
@@ -84,6 +89,7 @@
     if(!self.alreadyLoaded)
     {
         [self runOnFirstLoad];
+        self.lastOrientation = [[UIApplication sharedApplication] statusBarOrientation];
     }
 }
 
@@ -560,6 +566,47 @@
                      completion:nil];
     
 }
+
+#pragma mark - orientation changed
+
+- (void)orientationChanged:(NSNotification *)notification{
+    if(self.lastOrientation == [[UIApplication sharedApplication] statusBarOrientation])
+    {
+        //NO CHANGE IN ORIENTATION
+    } else
+    {
+        switch ([[UIApplication sharedApplication] statusBarOrientation])
+        {
+            case UIInterfaceOrientationPortrait:
+            {
+                CGFloat offset = self.scrollView.contentOffset.x;
+                [AllTheNotes sharedNotes].scrollVertically = YES;
+                [self setUpEntireScreen];
+                [self.view layoutIfNeeded];
+                self.scrollView.contentOffset = CGPointMake(0, offset);
+                [self.view layoutIfNeeded];
+            }
+                self.lastOrientation = [[UIApplication sharedApplication] statusBarOrientation];
+                break;
+            case UIInterfaceOrientationLandscapeLeft:
+            case UIInterfaceOrientationLandscapeRight:
+            {
+                //load the landscape view
+                CGFloat offset = self.scrollView.contentOffset.y;
+                [AllTheNotes sharedNotes].scrollVertically = NO;
+                [self setUpEntireScreen];
+                [self.view layoutIfNeeded];
+                self.scrollView.contentOffset = CGPointMake(offset,0);
+                [self.view layoutIfNeeded];
+            }
+                self.lastOrientation = [[UIApplication sharedApplication] statusBarOrientation];
+                break;
+            case UIInterfaceOrientationPortraitUpsideDown:break;
+            case UIInterfaceOrientationUnknown:break;
+        }
+    }
+}
+
 
 #pragma mark - remove and undo remove
 
