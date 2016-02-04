@@ -33,7 +33,13 @@
     [AllTheNotes sharedNotes].scrollVertically = YES;
     [AllTheNotes settingsFromNSDefaults];
     [AllTheNotes updateAppNotesFromNSDefaults];
-//    [self setUpSomeDummyNotes];
+    if(![AllTheNotes sharedNotes].notFirstLoad)
+    {
+        NSLog(@"First Time Loading App");
+        [self setUpSomeDummyNotes];
+    }
+    
+
     
     [self launchOptionsHandler:launchOptions];
     return YES;
@@ -96,6 +102,8 @@
     [AllTheNotes updateDefaultsWithNotes];
     //DELETES ALL SCHEDULED ALARMS
     [[UIApplication sharedApplication] cancelAllLocalNotifications];
+    [AllTheNotes sharedNotes].notFirstLoad = YES;
+    
     
 }
 

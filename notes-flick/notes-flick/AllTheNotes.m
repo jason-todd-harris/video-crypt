@@ -127,8 +127,9 @@
     
     [[AllTheNotes sharedNotes].userDefaults setObject:[AllTheNotes sharedNotes].defaultFont
                                                forKey:@"defaultFont"];
-//    [[AllTheNotes sharedNotes].userDefaults setObject:@([AllTheNotes sharedNotes].scrollVertically)
-//                                               forKey:@"defaultAlignment"];
+    
+    [[AllTheNotes sharedNotes].userDefaults setObject:@([AllTheNotes sharedNotes].notFirstLoad)
+                                               forKey:@"notFirstLoad"];
     
     //COLORS
     NSMutableArray *colorStringArray = [NSMutableArray new];
@@ -168,6 +169,13 @@
 //        NSNumber *alignment = [[AllTheNotes sharedNotes].userDefaults objectForKey:@"defaultAlignment"];
 //        [AllTheNotes sharedNotes].scrollVertically = alignment.boolValue;
 //    }
+    
+    if([[AllTheNotes sharedNotes].userDefaults objectForKey:@"notFirstLoad"])
+    {
+        NSNumber *notFirstLoad = [[AllTheNotes sharedNotes].userDefaults objectForKey:@"notFirstLoad"];
+        [AllTheNotes sharedNotes].notFirstLoad = notFirstLoad.boolValue;
+    }
+    
     
     if([[AllTheNotes sharedNotes].userDefaults objectForKey:@"colorStrings"])
     {

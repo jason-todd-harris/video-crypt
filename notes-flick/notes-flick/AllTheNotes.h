@@ -30,6 +30,7 @@
 @property (nonatomic, assign) CGFloat fontDivisor;
 @property (nonatomic, assign) BOOL zoomedIn;
 @property (nonatomic, assign) BOOL scrollVertically;
+@property (nonatomic, assign) BOOL notFirstLoad;
 @property (nonatomic, strong) NSString *defaultFont;
 
 //SORT SETTINGS
