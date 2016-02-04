@@ -294,12 +294,12 @@
                               @"While editing: click clock to set alarm",
                               @"While editing: click font to change font"
                               ];
-    instructions = @[@"Buy groceries",
-                     @"Pick up Rx",
-                     @"Finish slides",
-                     @"Reservation for Anniversary",
-                     @"Put on pants"
-                     ];
+//    instructions = @[@"Buy groceries",
+//                     @"Pick up Rx",
+//                     @"Finish slides",
+//                     @"Reservation for Anniversary",
+//                     @"Put on pants"
+//                     ];
     _beginningInstructions = instructions;
 }
 
