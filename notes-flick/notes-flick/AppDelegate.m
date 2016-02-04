@@ -33,6 +33,7 @@
     [AllTheNotes sharedNotes].scrollVertically = YES;
     [AllTheNotes settingsFromNSDefaults];
     [AllTheNotes updateAppNotesFromNSDefaults];
+    [AllTheNotes sharedNotes].notFirstLoad = NO; //DEBUG SCREENSHOTS
     if(![AllTheNotes sharedNotes].notFirstLoad)
     {
         NSLog(@"First Time Loading App");
@@ -60,7 +61,8 @@
     NSMutableArray *defaultNotes = [@[] mutableCopy];
     for (i = 0; i <[AllTheNotes sharedNotes].beginningInstructions.count; i++)
     {
-        
+        BOOL crossedOut = NO;
+        NSDate *notificationDate;
         NSString *string = [AllTheNotes sharedNotes].beginningInstructions[i];
         UIColor *color;
         if(i<3)
@@ -81,15 +83,35 @@
         }
         
         
+        //DEBUG FOR TAKING SCREEN SHOTS
+        if(i==1)
+        {
+            crossedOut = YES;
+            notificationDate = [NSDate dateWithTimeIntervalSinceNow:-120];
+
+        }
+        
+        if(i==2)
+        {
+            color = [UIColor notesBlue];
+        }
+        
+        if(i==4)
+        {
+            notificationDate = [NSDate dateWithTimeIntervalSinceNow:120];
+            color = [UIColor notesRed];
+        }
+        
+        
         NoteView *dummyNote = [[NoteView alloc] initWithText:string
                                                     noteSize:0
                                                     withDate:nil
                                                  orderNumber:i
                                                     priority:1
                                                        color:color
-                                                  crossedOut:NO
+                                                  crossedOut:crossedOut
                                                     fontName:nil
-                                            notificationDate:nil
+                                            notificationDate:notificationDate
                                                         UUID:nil];
         [mutableNotes addObject:dummyNote];
     }

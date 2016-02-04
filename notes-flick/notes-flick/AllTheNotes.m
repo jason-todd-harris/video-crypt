@@ -34,7 +34,7 @@
     _userDefaults = [NSUserDefaults standardUserDefaults];
     _colorArray = [@[[UIColor notesYellow], [UIColor notesOrange], [UIColor notesRed], [UIColor notesBlue], [UIColor notesGreen]] mutableCopy];
     _sortOrderArray = [@[@"Date Created", @"Colors", @"Completed Status"] mutableCopy];
-    _fontDivisor = 8;
+    _fontDivisor = 7.5;
     _defaultFont = @"Noteworthy-Light";
     [self setBeginningInstructions:@[]];
     
@@ -294,6 +294,12 @@
                               @"While editing: click clock to set alarm",
                               @"While editing: click font to change font"
                               ];
+    instructions = @[@"Buy groceries",
+                     @"Pick up Rx",
+                     @"Finish slides",
+                     @"Reservation for Anniversary",
+                     @"Put on pants"
+                     ];
     _beginningInstructions = instructions;
 }
 
