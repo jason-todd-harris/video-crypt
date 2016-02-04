@@ -33,7 +33,7 @@
     [AllTheNotes sharedNotes].scrollVertically = YES;
     [AllTheNotes settingsFromNSDefaults];
     [AllTheNotes updateAppNotesFromNSDefaults];
-//    [AllTheNotes sharedNotes].notFirstLoad = NO; //DEBUG SCREENSHOTS
+    [AllTheNotes sharedNotes].notFirstLoad = NO; //DEBUG SCREENSHOTS
     if(![AllTheNotes sharedNotes].notFirstLoad)
     {
         NSLog(@"First Time Loading App");
@@ -83,24 +83,24 @@
         }
         
         
-//        //DEBUG FOR TAKING SCREEN SHOTS
-//        if(i==1)
-//        {
-//            crossedOut = YES;
-//            notificationDate = [NSDate dateWithTimeIntervalSinceNow:-120];
-//
-//        }
-//        
-//        if(i==2)
-//        {
-//            color = [UIColor notesBlue];
-//        }
-//        
-//        if(i==4)
-//        {
-//            notificationDate = [NSDate dateWithTimeIntervalSinceNow:120];
-//            color = [UIColor notesRed];
-//        }
+        //DEBUG FOR TAKING SCREEN SHOTS
+        if(i==1)
+        {
+            crossedOut = YES;
+            notificationDate = [NSDate dateWithTimeIntervalSinceNow:-120];
+
+        }
+        
+        if(i==2)
+        {
+            color = [UIColor notesBlue];
+        }
+        
+        if(i==4)
+        {
+            notificationDate = [NSDate dateWithTimeIntervalSinceNow:120];
+            color = [UIColor notesRed];
+        }
         
         
         NoteView *dummyNote = [[NoteView alloc] initWithText:string

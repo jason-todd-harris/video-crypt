@@ -59,7 +59,7 @@
     [self.saveButton addTarget:self
                         action:@selector(savePressed)
               forControlEvents:UIControlEventTouchUpInside];
-    [self.saveButton setTitle:@"Save" forState:UIControlStateNormal];
+    [self.saveButton setTitle:@"Set Alarm" forState:UIControlStateNormal];
     [self.saveButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [self.saveButton setTitleShadowColor:[UIColor blackColor] forState:UIControlStateNormal];
     self.saveButton.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:0.35];
