@@ -13,6 +13,7 @@
 #import "FontViewController.h"
 #import "ClearNotesTableVC.h"
 #import "AlignmentTableVC.h"
+#import "InstructionsVC.h"
 #import <Masonry.h>
 
 @interface SettingsTableViewController () <UITableViewDelegate,AlignmentDelegate>
@@ -46,7 +47,7 @@
     self.tableView.separatorInset = UIEdgeInsetsMake(0, 10, 0, 10);
     self.tableView.contentInset = UIEdgeInsetsMake(10, 0, 0, 0);
     
-    self.cellNameArray = @[@"Font", @"Sort Order", @"Clear Notes"];
+    self.cellNameArray = @[@"Font", @"Sort Order", @"Clear Notes",@"Instructions"];
     
 }
 -(void)viewDidAppear:(BOOL)animated
@@ -112,6 +113,10 @@
         self.alignmentTableVC = [[AlignmentTableVC alloc] init];
         self.alignmentTableVC.delegate = self;
         [self showViewController:self.alignmentTableVC sender:self];
+    } else if([self.cellNameArray[indexPath.row] isEqualToString:@"Instructions"])
+    {
+        InstructionsVC *instructionsVC = [[InstructionsVC alloc] init];
+        [self showViewController:instructionsVC sender:self];
     }
 }
 

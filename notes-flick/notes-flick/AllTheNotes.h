@@ -16,6 +16,7 @@
 @property (nonatomic, strong) NSMutableArray<NoteView *> *notesArray;
 @property (nonatomic, strong) NSMutableArray<NoteView *> *deletedArray;
 @property (nonatomic, strong) NSMutableArray<UIColor *> *colorArray;
+@property (nonatomic, strong, readonly) NSArray<NSString *> *beginningInstructions;
 
 @property (nonatomic, assign) CGFloat defaultNoteSize;
 @property (nonatomic, assign) CGFloat currentNoteSize;

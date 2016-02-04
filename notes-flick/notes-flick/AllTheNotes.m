@@ -8,6 +8,12 @@
 
 #import "AllTheNotes.h"
 
+@interface AllTheNotes ()
+@property (nonatomic, strong, readwrite) NSArray<NSString *> *beginningInstructions;
+
+@end
+
+
 @implementation AllTheNotes
 
 
@@ -28,8 +34,9 @@
     _userDefaults = [NSUserDefaults standardUserDefaults];
     _colorArray = [@[[UIColor notesYellow], [UIColor notesOrange], [UIColor notesRed], [UIColor notesBlue], [UIColor notesGreen]] mutableCopy];
     _sortOrderArray = [@[@"Date Created", @"Colors", @"Completed Status"] mutableCopy];
-    _fontDivisor = 6;
+    _fontDivisor = 8;
     _defaultFont = @"Noteworthy-Light";
+    [self setBeginningInstructions:@[]];
     
 }
 
@@ -263,6 +270,31 @@
             [[UIApplication sharedApplication] scheduleLocalNotification:notification];
         }
     }
+}
+
+
+-(void)setBeginningInstructions:(NSArray *)beginningInstructions
+{
+    NSArray *instructions = @[@"Instructions",
+                              @"Hit + to create notes",
+                              @"Rotate screen to change orientation",
+                              @"Double tap notes to edit",
+                              @"Cross out by swiping down/right",
+                              @"Swipe direction depends on orientation",
+                              @"Zoom in/out by pinching",
+                              @"Delete notes by swiping left/up",
+                              @"Tap arrow to undo delete",
+                              @"Can undo multiple deletes",
+                              @"Can’t undo after closing",
+                              @"Change default font in settings",
+                              @"Change font size in settings",
+                              @"Change sort order in settings",
+                              @"Change color order in settings",
+                              @"While editing: click color to cycle",
+                              @"While editing: click clock to set alarm",
+                              @"While editing: click font to change font"
+                              ];
+    _beginningInstructions = instructions;
 }
 
 @end

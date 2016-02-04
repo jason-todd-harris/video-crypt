@@ -11,6 +11,7 @@
 		9637F7281C529EAC00D9B2F2 /* FontNameTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9637F7271C529EAC00D9B2F2 /* FontNameTableViewController.m */; };
 		9650330E1C57FAB000914CDB /* DatePickerVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 9650330D1C57FAB000914CDB /* DatePickerVC.m */; };
 		965249611C59900900B94397 /* AlignmentTableVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 965249601C59900900B94397 /* AlignmentTableVC.m */; };
+		9652496A1C63B2D500B94397 /* InstructionsVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 965249691C63B2D500B94397 /* InstructionsVC.m */; };
 		966E538D1C2AE834001F93CB /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 966E538C1C2AE834001F93CB /* main.m */; };
 		966E53901C2AE834001F93CB /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 966E538F1C2AE834001F93CB /* AppDelegate.m */; };
 		966E53931C2AE834001F93CB /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 966E53921C2AE834001F93CB /* ViewController.m */; };
@@ -61,6 +62,8 @@
 		9650330D1C57FAB000914CDB /* DatePickerVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DatePickerVC.m; sourceTree = "<group>"; };
 		9652495F1C59900900B94397 /* AlignmentTableVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlignmentTableVC.h; sourceTree = "<group>"; };
 		965249601C59900900B94397 /* AlignmentTableVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlignmentTableVC.m; sourceTree = "<group>"; };
+		965249681C63B2D500B94397 /* InstructionsVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InstructionsVC.h; sourceTree = "<group>"; };
+		965249691C63B2D500B94397 /* InstructionsVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InstructionsVC.m; sourceTree = "<group>"; };
 		966E53881C2AE834001F93CB /* notes-flick.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "notes-flick.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		966E538C1C2AE834001F93CB /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		966E538E1C2AE834001F93CB /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -142,6 +145,8 @@
 			children = (
 				96D34EE01C496212001FD1E8 /* SettingsTableViewController.h */,
 				96D34EE11C496212001FD1E8 /* SettingsTableViewController.m */,
+				965249681C63B2D500B94397 /* InstructionsVC.h */,
+				965249691C63B2D500B94397 /* InstructionsVC.m */,
 				9652495F1C59900900B94397 /* AlignmentTableVC.h */,
 				965249601C59900900B94397 /* AlignmentTableVC.m */,
 				96D34EE31C497153001FD1E8 /* SortOrderTableViewController.h */,
@@ -462,6 +467,7 @@
 				966E538D1C2AE834001F93CB /* main.m in Sources */,
 				96D34EE21C496212001FD1E8 /* SettingsTableViewController.m in Sources */,
 				966E53D81C2DE497001F93CB /* NotesColor.m in Sources */,
+				9652496A1C63B2D500B94397 /* InstructionsVC.m in Sources */,
 				968AC0311C57D07100739BD9 /* ClearNotesTableVC.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -605,9 +611,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = "notes-flick/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "jason.harris.notes-flick";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -617,10 +625,12 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = "notes-flick/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = "jason.harris.notes-flick";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};

@@ -39,8 +39,6 @@
         [self setUpSomeDummyNotes];
     }
     
-
-    
     [self launchOptionsHandler:launchOptions];
     return YES;
 }
@@ -59,26 +57,25 @@
 {
     NSUInteger i = 0;
     NSMutableArray *mutableNotes = [@[] mutableCopy];
-    NSMutableArray *defaultNotes = [@[] mutableCopy];// [AllTheNotes sharedNotes].notesArray;
-    for (i = 0; i <30; i++)
+    NSMutableArray *defaultNotes = [@[] mutableCopy];
+    for (i = 0; i <[AllTheNotes sharedNotes].beginningInstructions.count; i++)
     {
         
-        NSString *string = [NSString stringWithFormat:@"%@ text",@(i+1).stringValue];
-//        string = [UIColor stringFromColor:[AllTheNotes sharedNotes].colorArray[i%5]];
+        NSString *string = [AllTheNotes sharedNotes].beginningInstructions[i];
         UIColor *color;
         if(i<3)
         {
             color = [AllTheNotes sharedNotes].colorArray[0];
-        } else if (i < 6)
+        } else if (i < 8)
         {
             color = [AllTheNotes sharedNotes].colorArray[1];
-        } else if (i < 9)
+        } else if (i < 11)
         {
             color = [AllTheNotes sharedNotes].colorArray[2];
-        } else if (i < 13)
+        } else if (i < 15)
         {
             color = [AllTheNotes sharedNotes].colorArray[3];
-        } else if (i < 17)
+        } else if (i < 18)
         {
             color = [AllTheNotes sharedNotes].colorArray[4];
         }
