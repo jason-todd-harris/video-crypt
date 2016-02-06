@@ -31,6 +31,7 @@
     [AllTheNotes sharedNotes].defaultNoteSize = self.screenWidth;
     [AllTheNotes sharedNotes].currentNoteSize = [AllTheNotes sharedNotes].defaultNoteSize;
     [AllTheNotes sharedNotes].scrollVertically = YES;
+    [AllTheNotes sharedNotes].ignoreScrollSettings = YES;
     [AllTheNotes settingsFromNSDefaults];
     [AllTheNotes updateAppNotesFromNSDefaults];
     if(![AllTheNotes sharedNotes].notFirstLoad)

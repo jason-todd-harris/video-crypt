@@ -12,6 +12,8 @@
 
 
 @interface AllTheNotes : NSObject
+
+
 @property (nonatomic, strong) NSUserDefaults *userDefaults;
 @property (nonatomic, strong) NSMutableArray<NoteView *> *notesArray;
 @property (nonatomic, strong) NSMutableArray<NoteView *> *deletedArray;
@@ -28,15 +30,15 @@
 @property (nonatomic, strong) UILocalNotification *launchNotification;
 
 //settings
+@property (nonatomic, strong) NSString *defaultFont;
 @property (nonatomic, assign) CGFloat fontDivisor;
 @property (nonatomic, assign) BOOL zoomedIn;
-@property (nonatomic, assign) BOOL scrollVertically;
 @property (nonatomic, assign) BOOL notFirstLoad;
-@property (nonatomic, strong) NSString *defaultFont;
+@property (nonatomic, assign) BOOL scrollVertically;
+@property (nonatomic, assign) BOOL ignoreScrollSettings;
 
 //SORT SETTINGS
 @property (nonatomic, strong) NSMutableArray<NSString *> *sortOrderArray;
-
 
 
 //@property (nonatomic, strong) NSMutableArray *notesDictionariesArray;

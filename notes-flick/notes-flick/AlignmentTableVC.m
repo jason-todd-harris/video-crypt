@@ -31,7 +31,7 @@
     self.tableView.separatorInset = UIEdgeInsetsMake(0, 10, 0, 10);
     self.tableView.contentInset = UIEdgeInsetsMake(10, 0, 0, 0);
     
-    self.cellNameArray = @[@"Horizontal", @"Vertical"];
+    self.cellNameArray = @[@"Horizontal", @"Vertical",@"Change with orientation"];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -75,9 +75,14 @@
     if([self.cellNameArray[indexPath.row] isEqualToString:@"Horizontal"])
     {
         [AllTheNotes sharedNotes].scrollVertically = NO;
+        [AllTheNotes sharedNotes].ignoreScrollSettings = NO;
     } else if([self.cellNameArray[indexPath.row] isEqualToString:@"Vertical"])
     {
         [AllTheNotes sharedNotes].scrollVertically = YES;
+        [AllTheNotes sharedNotes].ignoreScrollSettings = NO;
+    } else if([self.cellNameArray[indexPath.row] isEqualToString:@"Change with orientation"])
+    {
+        [AllTheNotes sharedNotes].ignoreScrollSettings = YES;
     }
     [AllTheNotes updateDefaultsWithSettings];
     [self.delegate alignmentChosen];

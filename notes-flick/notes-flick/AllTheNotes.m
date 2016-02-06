@@ -138,6 +138,12 @@
     [[AllTheNotes sharedNotes].userDefaults setObject:@([AllTheNotes sharedNotes].notFirstLoad)
                                                forKey:@"notFirstLoad"];
     
+    [[AllTheNotes sharedNotes].userDefaults setObject:@([AllTheNotes sharedNotes].scrollVertically)
+                                               forKey:@"defaultAlignment"];
+    
+    [[AllTheNotes sharedNotes].userDefaults setObject:@([AllTheNotes sharedNotes].ignoreScrollSettings)
+                                               forKey:@"ignoreScrollSettings"];
+    
     //COLORS
     NSMutableArray *colorStringArray = [NSMutableArray new];
     for (UIColor *eachColor in [AllTheNotes sharedNotes].colorArray) {
@@ -171,11 +177,17 @@
         [AllTheNotes sharedNotes].defaultFont = [[[AllTheNotes sharedNotes].userDefaults objectForKey:@"defaultFont"] mutableCopy];
     }
     
-//    if([[AllTheNotes sharedNotes].userDefaults objectForKey:@"defaultAlignment"])
-//    {
-//        NSNumber *alignment = [[AllTheNotes sharedNotes].userDefaults objectForKey:@"defaultAlignment"];
-//        [AllTheNotes sharedNotes].scrollVertically = alignment.boolValue;
-//    }
+    if([[AllTheNotes sharedNotes].userDefaults objectForKey:@"defaultAlignment"])
+    {
+        NSNumber *alignment = [[AllTheNotes sharedNotes].userDefaults objectForKey:@"defaultAlignment"];
+        [AllTheNotes sharedNotes].scrollVertically = alignment.boolValue;
+    }
+    
+    if([[AllTheNotes sharedNotes].userDefaults objectForKey:@"ignoreScrollSettings"])
+    {
+        NSNumber *ignoreSettings = [[AllTheNotes sharedNotes].userDefaults objectForKey:@"ignoreScrollSettings"];
+        [AllTheNotes sharedNotes].ignoreScrollSettings = ignoreSettings.boolValue;
+    }
     
     if([[AllTheNotes sharedNotes].userDefaults objectForKey:@"notFirstLoad"])
     {

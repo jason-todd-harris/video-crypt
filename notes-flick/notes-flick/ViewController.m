@@ -220,6 +220,7 @@
             if([eachNote.UUID isEqualToString:theUUID])
             {
                 CGFloat contentWidth = self.scrollView.contentSize.width;
+                CGFloat contentHeight = self.scrollView.contentSize.height;
                 CGFloat objectFraction = @(eachNote.orderNumber).floatValue / ([AllTheNotes sharedNotes].notesArray.count);
                 [UIView animateWithDuration:self.animationDuration
                                       delay:0.0
@@ -227,12 +228,12 @@
                                  animations:^{
                                      if (self.stackView.arrangedSubviews.count > 1)
                                      {
-                                         self.scrollView.contentOffset = CGPointMake(objectFraction*contentWidth, 0); //SCROLL TO CONTENT
+                                         self.scrollView.contentOffset = CGPointMake(objectFraction*contentWidth, objectFraction*contentHeight); //SCROLL TO CONTENT
+                                         //DOESN'T CARE ABOUT ORIENTATION
                                          [self.view layoutIfNeeded];
                                      }
                                  }
                                  completion:nil];
-                
             }
         }
         
@@ -569,41 +570,46 @@
 
 #pragma mark - orientation changed
 
-- (void)orientationChanged:(NSNotification *)notification{
-    if(self.lastOrientation == [[UIApplication sharedApplication] statusBarOrientation])
+- (void)orientationChanged:(NSNotification *)notification
+{
+    if ([AllTheNotes sharedNotes].ignoreScrollSettings)
     {
-        //NO CHANGE IN ORIENTATION
-    } else
-    {
-        switch ([[UIApplication sharedApplication] statusBarOrientation])
+        if(self.lastOrientation == [[UIApplication sharedApplication] statusBarOrientation])
         {
-            case UIInterfaceOrientationPortrait:
+            //NO CHANGE IN ORIENTATION
+        } else
+        {
+            switch ([[UIApplication sharedApplication] statusBarOrientation])
             {
-                CGFloat offset = self.scrollView.contentOffset.x;
-                [AllTheNotes sharedNotes].scrollVertically = YES;
-                [self setUpEntireScreen];
-                [self.view layoutIfNeeded];
-                self.scrollView.contentOffset = CGPointMake(0, offset);
-                [self.view layoutIfNeeded];
+                case UIInterfaceOrientationPortrait:
+                {
+                    CGFloat offset = self.scrollView.contentOffset.x;
+                    [AllTheNotes sharedNotes].scrollVertically = YES;
+                    [self setUpEntireScreen];
+                    [self.view layoutIfNeeded];
+                    self.scrollView.contentOffset = CGPointMake(0, offset);
+                    [self.view layoutIfNeeded];
+                }
+                    self.lastOrientation = [[UIApplication sharedApplication] statusBarOrientation];
+                    break;
+                case UIInterfaceOrientationLandscapeLeft:
+                case UIInterfaceOrientationLandscapeRight:
+                {
+                    //load the landscape view
+                    CGFloat offset = self.scrollView.contentOffset.y;
+                    [AllTheNotes sharedNotes].scrollVertically = NO;
+                    [self setUpEntireScreen];
+                    [self.view layoutIfNeeded];
+                    self.scrollView.contentOffset = CGPointMake(offset,0);
+                    [self.view layoutIfNeeded];
+                }
+                    self.lastOrientation = [[UIApplication sharedApplication] statusBarOrientation];
+                    break;
+                case UIInterfaceOrientationPortraitUpsideDown:break;
+                case UIInterfaceOrientationUnknown:break;
             }
-                self.lastOrientation = [[UIApplication sharedApplication] statusBarOrientation];
-                break;
-            case UIInterfaceOrientationLandscapeLeft:
-            case UIInterfaceOrientationLandscapeRight:
-            {
-                //load the landscape view
-                CGFloat offset = self.scrollView.contentOffset.y;
-                [AllTheNotes sharedNotes].scrollVertically = NO;
-                [self setUpEntireScreen];
-                [self.view layoutIfNeeded];
-                self.scrollView.contentOffset = CGPointMake(offset,0);
-                [self.view layoutIfNeeded];
-            }
-                self.lastOrientation = [[UIApplication sharedApplication] statusBarOrientation];
-                break;
-            case UIInterfaceOrientationPortraitUpsideDown:break;
-            case UIInterfaceOrientationUnknown:break;
         }
+
     }
 }
 

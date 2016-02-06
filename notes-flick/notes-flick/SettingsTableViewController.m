@@ -47,7 +47,7 @@
     self.tableView.separatorInset = UIEdgeInsetsMake(0, 10, 0, 10);
     self.tableView.contentInset = UIEdgeInsetsMake(10, 0, 0, 0);
     
-    self.cellNameArray = @[@"Font", @"Sort Order", @"Clear Notes",@"Instructions"];
+    self.cellNameArray = @[@"Font", @"Sort Order", @"Clear Notes",@"Alignment",@"Instructions"];
     
 }
 -(void)viewDidAppear:(BOOL)animated
