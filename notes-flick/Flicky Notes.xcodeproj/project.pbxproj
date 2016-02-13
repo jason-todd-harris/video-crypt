@@ -64,7 +64,7 @@
 		965249601C59900900B94397 /* AlignmentTableVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlignmentTableVC.m; sourceTree = "<group>"; };
 		965249681C63B2D500B94397 /* InstructionsVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InstructionsVC.h; sourceTree = "<group>"; };
 		965249691C63B2D500B94397 /* InstructionsVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InstructionsVC.m; sourceTree = "<group>"; };
-		966E53881C2AE834001F93CB /* notes-flick.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "notes-flick.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		966E53881C2AE834001F93CB /* Flicky Notes.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Flicky Notes.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		966E538C1C2AE834001F93CB /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		966E538E1C2AE834001F93CB /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		966E538F1C2AE834001F93CB /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -75,10 +75,10 @@
 		966E539A1C2AE834001F93CB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		966E539D1C2AE834001F93CB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		966E539F1C2AE834001F93CB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		966E53A41C2AE835001F93CB /* notes-flickTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "notes-flickTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		966E53A41C2AE835001F93CB /* Flicky Notes.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Flicky Notes.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		966E53A81C2AE835001F93CB /* notes_flickTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = notes_flickTests.m; sourceTree = "<group>"; };
 		966E53AA1C2AE835001F93CB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		966E53AF1C2AE835001F93CB /* notes-flickUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "notes-flickUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		966E53AF1C2AE835001F93CB /* Flicky Notes.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Flicky Notes.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		966E53B31C2AE835001F93CB /* notes_flickUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = notes_flickUITests.m; sourceTree = "<group>"; };
 		966E53B51C2AE835001F93CB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		966E53C41C2C763E001F93CB /* NoteView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NoteView.h; sourceTree = "<group>"; };
@@ -178,9 +178,9 @@
 		966E53891C2AE834001F93CB /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				966E53881C2AE834001F93CB /* notes-flick.app */,
-				966E53A41C2AE835001F93CB /* notes-flickTests.xctest */,
-				966E53AF1C2AE835001F93CB /* notes-flickUITests.xctest */,
+				966E53881C2AE834001F93CB /* Flicky Notes.app */,
+				966E53A41C2AE835001F93CB /* Flicky Notes.xctest */,
+				966E53AF1C2AE835001F93CB /* Flicky Notes.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -256,9 +256,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		966E53871C2AE834001F93CB /* notes-flick */ = {
+		966E53871C2AE834001F93CB /* Flicky Notes */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 966E53B81C2AE835001F93CB /* Build configuration list for PBXNativeTarget "notes-flick" */;
+			buildConfigurationList = 966E53B81C2AE835001F93CB /* Build configuration list for PBXNativeTarget "Flicky Notes" */;
 			buildPhases = (
 				77DD7B7DE53CFEA31E8014C9 /* Check Pods Manifest.lock */,
 				966E53841C2AE834001F93CB /* Sources */,
@@ -272,14 +272,14 @@
 			);
 			dependencies = (
 			);
-			name = "notes-flick";
+			name = "Flicky Notes";
 			productName = "notes-flick";
-			productReference = 966E53881C2AE834001F93CB /* notes-flick.app */;
+			productReference = 966E53881C2AE834001F93CB /* Flicky Notes.app */;
 			productType = "com.apple.product-type.application";
 		};
-		966E53A31C2AE835001F93CB /* notes-flickTests */ = {
+		966E53A31C2AE835001F93CB /* Flicky NotesTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 966E53BB1C2AE835001F93CB /* Build configuration list for PBXNativeTarget "notes-flickTests" */;
+			buildConfigurationList = 966E53BB1C2AE835001F93CB /* Build configuration list for PBXNativeTarget "Flicky NotesTests" */;
 			buildPhases = (
 				966E53A01C2AE835001F93CB /* Sources */,
 				966E53A11C2AE835001F93CB /* Frameworks */,
@@ -290,14 +290,14 @@
 			dependencies = (
 				966E53A61C2AE835001F93CB /* PBXTargetDependency */,
 			);
-			name = "notes-flickTests";
+			name = "Flicky NotesTests";
 			productName = "notes-flickTests";
-			productReference = 966E53A41C2AE835001F93CB /* notes-flickTests.xctest */;
+			productReference = 966E53A41C2AE835001F93CB /* Flicky Notes.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		966E53AE1C2AE835001F93CB /* notes-flickUITests */ = {
+		966E53AE1C2AE835001F93CB /* Flicky NotesUITests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 966E53BE1C2AE835001F93CB /* Build configuration list for PBXNativeTarget "notes-flickUITests" */;
+			buildConfigurationList = 966E53BE1C2AE835001F93CB /* Build configuration list for PBXNativeTarget "Flicky NotesUITests" */;
 			buildPhases = (
 				966E53AB1C2AE835001F93CB /* Sources */,
 				966E53AC1C2AE835001F93CB /* Frameworks */,
@@ -308,9 +308,9 @@
 			dependencies = (
 				966E53B11C2AE835001F93CB /* PBXTargetDependency */,
 			);
-			name = "notes-flickUITests";
+			name = "Flicky NotesUITests";
 			productName = "notes-flickUITests";
-			productReference = 966E53AF1C2AE835001F93CB /* notes-flickUITests.xctest */;
+			productReference = 966E53AF1C2AE835001F93CB /* Flicky Notes.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
@@ -341,7 +341,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 966E53831C2AE834001F93CB /* Build configuration list for PBXProject "notes-flick" */;
+			buildConfigurationList = 966E53831C2AE834001F93CB /* Build configuration list for PBXProject "Flicky Notes" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -354,9 +354,9 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				966E53871C2AE834001F93CB /* notes-flick */,
-				966E53A31C2AE835001F93CB /* notes-flickTests */,
-				966E53AE1C2AE835001F93CB /* notes-flickUITests */,
+				966E53871C2AE834001F93CB /* Flicky Notes */,
+				966E53A31C2AE835001F93CB /* Flicky NotesTests */,
+				966E53AE1C2AE835001F93CB /* Flicky NotesUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -499,12 +499,12 @@
 /* Begin PBXTargetDependency section */
 		966E53A61C2AE835001F93CB /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 966E53871C2AE834001F93CB /* notes-flick */;
+			target = 966E53871C2AE834001F93CB /* Flicky Notes */;
 			targetProxy = 966E53A51C2AE835001F93CB /* PBXContainerItemProxy */;
 		};
 		966E53B11C2AE835001F93CB /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 966E53871C2AE834001F93CB /* notes-flick */;
+			target = 966E53871C2AE834001F93CB /* Flicky Notes */;
 			targetProxy = 966E53B01C2AE835001F93CB /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -623,7 +623,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "jason.harris.notes-flick";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "Flicky Notes";
 				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -643,7 +643,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = "jason.harris.notes-flick";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "Flicky Notes";
 				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -656,8 +656,8 @@
 				INFOPLIST_FILE = "notes-flickTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "jason.harris.notes-flickTests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/notes-flick.app/notes-flick";
+				PRODUCT_NAME = "Flicky Notes";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Flicky Notes.app/Flicky Notes";
 			};
 			name = Debug;
 		};
@@ -668,8 +668,8 @@
 				INFOPLIST_FILE = "notes-flickTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "jason.harris.notes-flickTests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/notes-flick.app/notes-flick";
+				PRODUCT_NAME = "Flicky Notes";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Flicky Notes.app/Flicky Notes";
 			};
 			name = Release;
 		};
@@ -680,7 +680,7 @@
 				INFOPLIST_FILE = "notes-flickUITests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "jason.harris.notes-flickUITests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "Flicky Notes";
 				TEST_TARGET_NAME = "notes-flick";
 				USES_XCTRUNNER = YES;
 			};
@@ -693,7 +693,7 @@
 				INFOPLIST_FILE = "notes-flickUITests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "jason.harris.notes-flickUITests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "Flicky Notes";
 				TEST_TARGET_NAME = "notes-flick";
 				USES_XCTRUNNER = YES;
 			};
@@ -702,7 +702,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		966E53831C2AE834001F93CB /* Build configuration list for PBXProject "notes-flick" */ = {
+		966E53831C2AE834001F93CB /* Build configuration list for PBXProject "Flicky Notes" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				966E53B61C2AE835001F93CB /* Debug */,
@@ -711,7 +711,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		966E53B81C2AE835001F93CB /* Build configuration list for PBXNativeTarget "notes-flick" */ = {
+		966E53B81C2AE835001F93CB /* Build configuration list for PBXNativeTarget "Flicky Notes" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				966E53B91C2AE835001F93CB /* Debug */,
@@ -720,7 +720,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		966E53BB1C2AE835001F93CB /* Build configuration list for PBXNativeTarget "notes-flickTests" */ = {
+		966E53BB1C2AE835001F93CB /* Build configuration list for PBXNativeTarget "Flicky NotesTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				966E53BC1C2AE835001F93CB /* Debug */,
@@ -729,7 +729,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		966E53BE1C2AE835001F93CB /* Build configuration list for PBXNativeTarget "notes-flickUITests" */ = {
+		966E53BE1C2AE835001F93CB /* Build configuration list for PBXNativeTarget "Flicky NotesUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				966E53BF1C2AE835001F93CB /* Debug */,

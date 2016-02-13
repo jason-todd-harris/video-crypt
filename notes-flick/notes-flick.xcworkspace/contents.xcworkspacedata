@@ -2,7 +2,7 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:/Users/jason/Flatiron/JTH-coding/crypt-video/notes-flick/notes-flick.xcodeproj">
+      location = "group:/Users/jason/Flatiron/JTH-coding/crypt-video/notes-flick/Flicky Notes.xcodeproj">
    </FileRef>
    <FileRef
       location = "group:Pods/Pods.xcodeproj">

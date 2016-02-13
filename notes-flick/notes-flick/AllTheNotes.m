@@ -227,10 +227,10 @@
         
         if([eachString isEqualToString:@"Colors"])
         {
-            [sortDescriptorArray addObject:[NSSortDescriptor sortDescriptorWithKey:@"noteColor" ascending:NO]];
+            [sortDescriptorArray addObject:[NSSortDescriptor sortDescriptorWithKey:@"noteColor" ascending:YES]];
         } else if([eachString isEqualToString:@"Date Created"])
         {
-            [sortDescriptorArray addObject:[NSSortDescriptor sortDescriptorWithKey:@"noteDate" ascending:YES]];
+            [sortDescriptorArray addObject:[NSSortDescriptor sortDescriptorWithKey:@"noteDate" ascending:NO]];
         } else if([eachString isEqualToString:@"Completed Status"])
         {
             [sortDescriptorArray addObject:[NSSortDescriptor sortDescriptorWithKey:@"crossedOut" ascending:YES]];
