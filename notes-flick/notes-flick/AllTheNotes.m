@@ -227,7 +227,7 @@
         
         if([eachString isEqualToString:@"Colors"])
         {
-            [sortDescriptorArray addObject:[NSSortDescriptor sortDescriptorWithKey:@"noteColor" ascending:YES]];
+            [sortDescriptorArray addObject:[NSSortDescriptor sortDescriptorWithKey:@"noteColor" ascending:NO]];
         } else if([eachString isEqualToString:@"Date Created"])
         {
             [sortDescriptorArray addObject:[NSSortDescriptor sortDescriptorWithKey:@"noteDate" ascending:YES]];
