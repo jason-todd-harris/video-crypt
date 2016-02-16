@@ -144,6 +144,12 @@
     [[AllTheNotes sharedNotes].userDefaults setObject:@([AllTheNotes sharedNotes].ignoreScrollSettings)
                                                forKey:@"ignoreScrollSettings"];
     
+    [[AllTheNotes sharedNotes].userDefaults setObject:@([AllTheNotes sharedNotes].sortDateAscending)
+                                               forKey:@"sortDateAscending"];
+    
+    [[AllTheNotes sharedNotes].userDefaults setObject:@([AllTheNotes sharedNotes].sortCrossOutAscending)
+                                               forKey:@"sortCrossOutAscending"];
+    
     //COLORS
     NSMutableArray *colorStringArray = [NSMutableArray new];
     for (UIColor *eachColor in [AllTheNotes sharedNotes].colorArray) {
@@ -195,6 +201,17 @@
         [AllTheNotes sharedNotes].notFirstLoad = notFirstLoad.boolValue;
     }
     
+    if([[AllTheNotes sharedNotes].userDefaults objectForKey:@"sortDateAscending"])
+    {
+        NSNumber *sortDateAscending = [[AllTheNotes sharedNotes].userDefaults objectForKey:@"sortDateAscending"];
+        [AllTheNotes sharedNotes].sortDateAscending = sortDateAscending.boolValue;
+    }
+    
+    if([[AllTheNotes sharedNotes].userDefaults objectForKey:@"sortCrossOutAscending"])
+    {
+        NSNumber *sortCrossOutAscending = [[AllTheNotes sharedNotes].userDefaults objectForKey:@"sortCrossOutAscending"];
+        [AllTheNotes sharedNotes].sortCrossOutAscending = sortCrossOutAscending.boolValue;
+    }
     
     if([[AllTheNotes sharedNotes].userDefaults objectForKey:@"colorStrings"])
     {
@@ -230,10 +247,10 @@
             [sortDescriptorArray addObject:[NSSortDescriptor sortDescriptorWithKey:@"noteColor" ascending:YES]];
         } else if([eachString isEqualToString:@"Date Created"])
         {
-            [sortDescriptorArray addObject:[NSSortDescriptor sortDescriptorWithKey:@"noteDate" ascending:NO]];
+            [sortDescriptorArray addObject:[NSSortDescriptor sortDescriptorWithKey:@"noteDate" ascending:[AllTheNotes sharedNotes].sortDateAscending]];
         } else if([eachString isEqualToString:@"Completed Status"])
         {
-            [sortDescriptorArray addObject:[NSSortDescriptor sortDescriptorWithKey:@"crossedOut" ascending:YES]];
+            [sortDescriptorArray addObject:[NSSortDescriptor sortDescriptorWithKey:@"crossedOut" ascending:[AllTheNotes sharedNotes].sortCrossOutAscending]];
         }
     }
     

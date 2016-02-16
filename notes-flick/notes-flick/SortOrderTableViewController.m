@@ -10,9 +10,10 @@
 #import "NotesColor.h"
 #import "AllTheNotes.h"
 #import "ColorOrderTableVC.h"
+#import "SortAscendOrDescendTableVC.h"
 #import <Masonry.h>
 
-@interface SortOrderTableViewController ()
+@interface SortOrderTableViewController () <SortOrderDelegate>
 @property (nonatomic, strong) NSMutableArray *sortOrderArray;
 
 @end
@@ -113,14 +114,28 @@
     {
         ColorOrderTableVC *colorOrderVC = [[ColorOrderTableVC alloc] init];
         [self showViewController:colorOrderVC sender:self];
-    } else
+    } if([self.sortOrderArray[indexPath.row] isEqualToString:@"Date Created"])
     {
-        [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+        SortAscendOrDescendTableVC *ascendDescendVC = [[SortAscendOrDescendTableVC alloc] init];
+        ascendDescendVC.delegate = self;
+        ascendDescendVC.variableToSort = @"Date";
+        [self showViewController:ascendDescendVC sender:self];
+    } if([self.sortOrderArray[indexPath.row] isEqualToString:@"Completed Status"])
+    {
+        SortAscendOrDescendTableVC *ascendDescendVC = [[SortAscendOrDescendTableVC alloc] init];
+        ascendDescendVC.delegate = self;
+        ascendDescendVC.variableToSort = @"Status";
+        [self showViewController:ascendDescendVC sender:self];
     }
-    
+
+    [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
 
+-(void)sortChosen
+{
+    [self.navigationController popToViewController:self animated:YES];
+}
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

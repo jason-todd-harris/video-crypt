@@ -36,6 +36,9 @@
 @property (nonatomic, assign) BOOL notFirstLoad;
 @property (nonatomic, assign) BOOL scrollVertically;
 @property (nonatomic, assign) BOOL ignoreScrollSettings;
+@property (nonatomic, assign) BOOL sortDateAscending;
+@property (nonatomic, assign) BOOL sortCrossOutAscending;
+
 
 //SORT SETTINGS
 @property (nonatomic, strong) NSMutableArray<NSString *> *sortOrderArray;

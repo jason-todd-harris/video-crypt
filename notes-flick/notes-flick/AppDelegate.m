@@ -32,6 +32,8 @@
     [AllTheNotes sharedNotes].currentNoteSize = [AllTheNotes sharedNotes].defaultNoteSize;
     [AllTheNotes sharedNotes].scrollVertically = YES;
     [AllTheNotes sharedNotes].ignoreScrollSettings = YES;
+    [AllTheNotes sharedNotes].sortDateAscending = NO;
+    [AllTheNotes sharedNotes].sortCrossOutAscending = YES;
     [AllTheNotes settingsFromNSDefaults];
     [AllTheNotes updateAppNotesFromNSDefaults];
     if(![AllTheNotes sharedNotes].notFirstLoad)

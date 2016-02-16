@@ -32,6 +32,7 @@
 		96D34EDF1C494405001FD1E8 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96D34EDE1C494405001FD1E8 /* SettingsViewController.m */; };
 		96D34EE21C496212001FD1E8 /* SettingsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96D34EE11C496212001FD1E8 /* SettingsTableViewController.m */; };
 		96D34EE51C497153001FD1E8 /* SortOrderTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96D34EE41C497153001FD1E8 /* SortOrderTableViewController.m */; };
+		96F85A321C6F008400932E14 /* SortAscendOrDescendTableVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 96F85A311C6F008400932E14 /* SortAscendOrDescendTableVC.m */; };
 		9AF889F4E0F5256C71C6967F /* libPods-notes-flick.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BA11649155924697D49ED49B /* libPods-notes-flick.a */; };
 /* End PBXBuildFile section */
 
@@ -102,6 +103,8 @@
 		96D34EE11C496212001FD1E8 /* SettingsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsTableViewController.m; sourceTree = "<group>"; };
 		96D34EE31C497153001FD1E8 /* SortOrderTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SortOrderTableViewController.h; sourceTree = "<group>"; };
 		96D34EE41C497153001FD1E8 /* SortOrderTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SortOrderTableViewController.m; sourceTree = "<group>"; };
+		96F85A301C6F008400932E14 /* SortAscendOrDescendTableVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SortAscendOrDescendTableVC.h; sourceTree = "<group>"; };
+		96F85A311C6F008400932E14 /* SortAscendOrDescendTableVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SortAscendOrDescendTableVC.m; sourceTree = "<group>"; };
 		9CF1B1C01B7DCDA54A3FFB95 /* Pods-notes-flick.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-notes-flick.debug.xcconfig"; path = "Pods/Target Support Files/Pods-notes-flick/Pods-notes-flick.debug.xcconfig"; sourceTree = "<group>"; };
 		BA11649155924697D49ED49B /* libPods-notes-flick.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-notes-flick.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -149,12 +152,8 @@
 				965249691C63B2D500B94397 /* InstructionsVC.m */,
 				9652495F1C59900900B94397 /* AlignmentTableVC.h */,
 				965249601C59900900B94397 /* AlignmentTableVC.m */,
-				96D34EE31C497153001FD1E8 /* SortOrderTableViewController.h */,
-				96D34EE41C497153001FD1E8 /* SortOrderTableViewController.m */,
 				968AC02F1C57D07100739BD9 /* ClearNotesTableVC.h */,
 				968AC0301C57D07100739BD9 /* ClearNotesTableVC.m */,
-				968AC0291C56C18A00739BD9 /* ColorOrderTableVC.h */,
-				968AC02A1C56C18A00739BD9 /* ColorOrderTableVC.m */,
 				9637F7221C528DA000D9B2F2 /* FontViewController.h */,
 				9637F7231C528DA000D9B2F2 /* FontViewController.m */,
 				9637F7261C529EAC00D9B2F2 /* FontNameTableViewController.h */,
@@ -208,6 +207,7 @@
 				966E53D61C2DE497001F93CB /* NotesColor.h */,
 				966E53D71C2DE497001F93CB /* NotesColor.m */,
 				9637F7251C529E6E00D9B2F2 /* Settings View Controllers */,
+				96F85A331C6F00DF00932E14 /* Sort View Controllers */,
 				966E538B1C2AE834001F93CB /* Supporting Files */,
 			);
 			path = "notes-flick";
@@ -242,6 +242,19 @@
 				966E53B51C2AE835001F93CB /* Info.plist */,
 			);
 			path = "notes-flickUITests";
+			sourceTree = "<group>";
+		};
+		96F85A331C6F00DF00932E14 /* Sort View Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				96F85A301C6F008400932E14 /* SortAscendOrDescendTableVC.h */,
+				96F85A311C6F008400932E14 /* SortAscendOrDescendTableVC.m */,
+				96D34EE31C497153001FD1E8 /* SortOrderTableViewController.h */,
+				96D34EE41C497153001FD1E8 /* SortOrderTableViewController.m */,
+				968AC0291C56C18A00739BD9 /* ColorOrderTableVC.h */,
+				968AC02A1C56C18A00739BD9 /* ColorOrderTableVC.m */,
+			);
+			name = "Sort View Controllers";
 			sourceTree = "<group>";
 		};
 		ADC3046A744B2FE4BF9E63AE /* Pods */ = {
@@ -467,6 +480,7 @@
 				966E53991C2AE834001F93CB /* notes_flick.xcdatamodeld in Sources */,
 				968AC02B1C56C18A00739BD9 /* ColorOrderTableVC.m in Sources */,
 				9637F7281C529EAC00D9B2F2 /* FontNameTableViewController.m in Sources */,
+				96F85A321C6F008400932E14 /* SortAscendOrDescendTableVC.m in Sources */,
 				966E53901C2AE834001F93CB /* AppDelegate.m in Sources */,
 				966E53C61C2C763E001F93CB /* NoteView.m in Sources */,
 				96D34EDF1C494405001FD1E8 /* SettingsViewController.m in Sources */,

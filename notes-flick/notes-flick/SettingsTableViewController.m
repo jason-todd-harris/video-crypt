@@ -14,7 +14,9 @@
 #import "ClearNotesTableVC.h"
 #import "AlignmentTableVC.h"
 #import "InstructionsVC.h"
+#import "SortAscendOrDescendTableVC.h"
 #import <Masonry.h>
+
 
 @interface SettingsTableViewController () <UITableViewDelegate,AlignmentDelegate>
 @property (nonatomic, strong) NSArray *cellNameArray;
@@ -46,6 +48,7 @@
     self.tableView.delegate = self;
     self.tableView.separatorInset = UIEdgeInsetsMake(0, 10, 0, 10);
     self.tableView.contentInset = UIEdgeInsetsMake(10, 0, 0, 0);
+    self.navigationItem.title = @"Settings";
     
     self.cellNameArray = @[@"Font", @"Sort Order", @"Clear Notes",@"Alignment",@"Instructions"];
     
